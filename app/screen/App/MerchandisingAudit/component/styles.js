@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
     header_txt:{
         color:"#fff",
         fontSize:18
+
     },
     box_body:{
         padding:20
@@ -64,3 +65,4 @@ export const styles = StyleSheet.create({
         borderRadius:20
     }
 })
+
