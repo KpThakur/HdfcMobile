@@ -2,8 +2,7 @@ import { StyleSheet } from "react-native"
 export const styles = StyleSheet.create({
     contianer:{
         flex:1,
-        padding:20,
-        justifyContent:"space-evenly"
+       
     },
     txt_head:{
         color:"#000",
@@ -19,3 +18,4 @@ export const styles = StyleSheet.create({
         backgroundColor:"#eee"
     }
 })
+
