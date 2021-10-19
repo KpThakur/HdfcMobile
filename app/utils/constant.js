@@ -1,13 +1,20 @@
 //Font name
-export const FONT_FAMILY_BOLD = 'Roboto-Bold';
-export const FONT_FAMILY_REGULAR = 'Roboto-Regular';
-export const FONT_FAMILY_THIN = 'Roboto-Thin';
-export const FONT_FAMILY_BLACK = 'Roboto-Black';
-export const FONT_FAMILY_LIGHT = 'Roboto-Light';
+export const FONT_FAMILY_BOLD = 'Poppins-Bold';
+export const FONT_FAMILY_REGULAR = 'Poppins-Regular';
+export const FONT_FAMILY_THIN = 'Poppins-Thin';
+export const FONT_FAMILY_SEMI_BOLD = 'Poppins-SemiBold';
 
 //Color
 export const DARK_BLUE_COLOR="#004c8f"
 export const PRIMARY_BLUE_COLOR="#1b7dec"
+
+export const MAIN_BG_GREY_COLOR="#f5f5f5"
+export const WHITE_BG_COLOR="#ffffff"
+
+export const GREY_TEXT_COLOR="#808080"
+
+export const PRIMARY_TEXT_COLOR="#ffffff"
+export const PRIMARY_BTN_COLOR="#1b7dec"
 
 //Images
 export const BRAND_ICON=require('../assets/images/HDFC_Bank_Logo.svg.png')

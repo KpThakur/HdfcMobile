@@ -1,25 +1,42 @@
-import React from 'react'
-import { TouchableOpacity, Text,StyleSheet } from 'react-native'
-import {PRIMARY_BLUE_COLOR } from "../../utils/constant"
-export default function index({title}) {
+import React from 'react';
+import { Text, TouchableOpacity, Image } from 'react-native';
+import { ButtonStyle } from "./commonBtnStyles";
+const Button = (props) => {
+    const {
+        buttonText, style, buttonLabelStyle, onPress, disabled, buttonType, showBtnImage, btnLeftImage
+    } = props;
+    let btnStyle;
+    let btnLabelStyle;
+    switch (buttonType) {
+        case "tertiary":
+            btnStyle = ButtonStyle.terButton;
+            btnLabelStyle = ButtonStyle.terButtonLabel;
+            break;
+        case "secondary":
+            btnStyle = ButtonStyle.secondaryButton;
+            btnLabelStyle = ButtonStyle.secondaryButtonLabel;
+            break;
+        case "primary":
+        default:
+            btnStyle = ButtonStyle.primaryButton;
+            btnLabelStyle = ButtonStyle.primaryButtonLabel;
+            break;
+    }
     return (
-        <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btn_text}>{title}</Text>
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={onPress}
+            style={[btnStyle, style]}>
+            {showBtnImage && <Image style={{ width: 25, height: 25, right: 10 }} source={btnLeftImage} />}
+            <Text
+                style={[btnLabelStyle, buttonLabelStyle]}>
+                {buttonText}
+            </Text>
         </TouchableOpacity>
-    )
+    );
 }
-const styles = StyleSheet.create({
-    btn:{
-        backgroundColor:PRIMARY_BLUE_COLOR,
-        borderRadius:20,
-        alignItems:"center",
-        paddingVertical:12,
-        marginTop:30
-    },
-    btn_text:{
-        color:"#fff",
-        fontWeight:"600",
-        fontSize:17
-    },
-})
-
+Button.defaultProps = {
+    buttonText: "Submit",
+    buttonType: "primary"
+};
+export default Button;
