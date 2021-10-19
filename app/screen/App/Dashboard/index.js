@@ -364,12 +364,10 @@ const DashboardScreen = () => {
     return (
         <DashboardView
             option={option}
-            // renderTabOption={renderTabOption}
             tabBar={tabBar}
             onPressSelectedTab={onPressSelectedTab}
             renderTodayAudit={renderTodayAudit}
         />
     )
 }
-
 export default DashboardScreen;

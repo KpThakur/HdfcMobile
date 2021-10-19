@@ -5,7 +5,7 @@ import Button from '../../../../component/Button';
 import { styles } from "./styles";
 import { FONT_FAMILY_REGULAR } from "../../../../utils/constant";
 
-const BranchStartCall = (props) => {
+const Question = (props) => {
     return (
         <View style={styles.container}>
             <Header leftImg={require('../../../../assets/images/arrow-down.png')} headerText={"Branch f Name"} />
@@ -81,4 +81,4 @@ const BranchStartCall = (props) => {
         </View>
     )
 }
-export default BranchStartCall;
+export default Question;

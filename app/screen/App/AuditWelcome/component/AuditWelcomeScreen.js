@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Button from '../../../../component/Button';
 import { normalize } from '../../../../component/scaleFontSize';
 import { FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, GREY_TEXT_COLOR, MAIN_BG_GREY_COLOR, PRIMARY_BLUE_COLOR, WHITE_BG_COLOR } from '../../../../utils/constant';
-const NetworkCheckScreen = () => {
+const AuditWelcomeScreen = () => {
     return (
         <View style={{ flex: 1, backgroundColor: MAIN_BG_GREY_COLOR }}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -42,4 +42,4 @@ const NetworkCheckScreen = () => {
     )
 
 }
-export default NetworkCheckScreen;
+export default AuditWelcomeScreen;

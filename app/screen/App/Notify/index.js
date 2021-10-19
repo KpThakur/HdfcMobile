@@ -1,13 +1,13 @@
 import React from "react";
 import { Share } from 'react-native';
-import BranchNameView from './components/BranchName';
-const BranchNameScreen = () => {
-    
+import NotifyView from './components/Notify';
+const Notify = () => {
+
     const onShare = async () => {
         try {
             const result = await Share.share({
                 message:
-                    'React Native | A framework for building native apps using React',
+                    'HDFC Bank Limited is an Indian banking and financial services company, headquartered in Mumbai, Maharashtra.HDFC Bank is India'
             });
             if (result.action === Share.sharedAction) {
                 if (result.activityType) {
@@ -23,9 +23,9 @@ const BranchNameScreen = () => {
         }
     };
     return (
-        <BranchNameView
+        <NotifyView
             onShare={onShare}
         />
     )
 }
-export default BranchNameScreen;
+export default Notify;

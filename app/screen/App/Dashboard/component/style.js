@@ -6,17 +6,16 @@ export const styles = StyleSheet.create({
         ustifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 20
-
     },
     box: {
         marginVertical: 15,
         width: "100%",
         borderRadius: 20,
-        // shadowColor: 'gray',
-        // shadowOffset: { width: 1, height: 1 },
-        // shadowOpacity: 0.4,
-        // shadowRadius: 3,
-        elevation: 5,
+        shadowColor: 'gray',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.4,
+        shadowRadius: 3,
+        elevation: 1,
     },
     box_header: {
         backgroundColor: DARK_BLUE_COLOR,
@@ -25,8 +24,8 @@ export const styles = StyleSheet.create({
         padding: 10,
         borderTopStartRadius: 20,
         borderTopEndRadius: 20,
-        marginLeft: 4,
-        marginRight: 4
+        marginLeft: 18,
+        marginRight: 18
     },
     header_txt: {
         color: "#fff",

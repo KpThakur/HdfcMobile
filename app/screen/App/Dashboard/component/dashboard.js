@@ -10,18 +10,6 @@ const DashboardView = (props) => {
             "id": 1,
             "name": "Today's Audit",
         },
-        // {
-        //     "id": 2,
-        //     "name": "Upcoming Audit",
-        // },
-        // {
-        //     "id": 3,
-        //     "name": "Open Audit",
-        // },
-        // {
-        //     "id": 4,
-        //     "name": "Close Audit",
-        // }
     ])
     return (
         <View style={{ flex: 1 }}>
@@ -36,13 +24,6 @@ const DashboardView = (props) => {
                             shadowRadius: 16.00,
                             elevation: 24,
                         }}>
-                            {/* < FlatList
-                                data={props.option}
-                                renderItem={(item) => props.renderTabOption(item)}
-                                horizontal
-                                keyExtractor={(item, index) => index.toString()}
-                                showsHorizontalScrollIndicator={false}
-                            /> */}
                             <View style={{ flexDirection: "row", paddingLeft: 7, paddingRight: 10 }}>
                                 <Input
                                     placeholder={"Search"}
