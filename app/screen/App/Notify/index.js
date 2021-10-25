@@ -1,8 +1,7 @@
 import React from "react";
 import { Share } from 'react-native';
 import NotifyView from './components/Notify';
-const Notify = () => {
-
+const Notify = ({navigation}) => {
     const onShare = async () => {
         try {
             const result = await Share.share({
@@ -22,9 +21,12 @@ const Notify = () => {
             alert(error.message);
         }
     };
+    const handleStartCall=()=>{
+        navigation.navigate("QuestionScreen")
+    }
     return (
         <NotifyView
-            onShare={onShare}
+            onShare={onShare} handleStartCall={handleStartCall}
         />
     )
 }

@@ -2,11 +2,16 @@ import React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import Header from '../../../../component/Header'
 import {styles} from './styles'
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 export default function Profile() {
+    const navigation=useNavigation()
+    const OnpressDrawer=()=>{
+        navigation.dispatch(DrawerActions.toggleDrawer());
+    }
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{flexGrow:1}}>
-            <Header headerText={"Profile"}/>
+            <Header headerText={"Profile"} onPress={()=>OnpressDrawer()}/>
             <View style={styles.main}>
                 <View style={styles.display}>
                     <Text style={styles.txt}>First Name</Text>

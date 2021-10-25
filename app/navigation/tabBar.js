@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { normalize } from "../component/scaleFontSize";
-import { FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../utils/constant';
+import { FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR,HOME_ICON,HOME_ICON_ACTIVE,PROFILE_ICON_ACTIVE,PROFILE_ICON,ADD_ICON_ACTIVE,ADD_ICON } from '../utils/constant';
 
 function MyTabBar({ state, descriptors, navigation }) {
     const focusedOptions = descriptors[state.routes[state.index].key].options;
@@ -65,46 +65,46 @@ function MyTabBar({ state, descriptors, navigation }) {
                         }}
                     >
                         {
-                            label === 'NetworkCheckScreen' ?
+                            label === 'DashboardScreen' ?
                                 <View style={styles.tabBarContain}>
                                     {isFocused ?
-                                        <Image style={{ width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR }} source={require('../assets/images/wifi-line.png')} />
+                                        <Image style={{ width: 20, height: 20}} source={HOME_ICON_ACTIVE} />
                                         :
-                                        <Image source={require('../assets/images/wifi-line.png')} />
+                                        <Image style={{ width: 20, height: 20}} source={HOME_ICON} />
                                     }
                                     <Text style={{
                                         fontFamily: FONT_FAMILY_REGULAR,
                                         fontWeight: "500",
-                                        color: isFocused === true ? PRIMARY_BLUE_COLOR : GREY_TEXT_COLOR,
+                                        color: isFocused === true ? PRIMARY_BLUE_COLOR : "#000",
                                         fontSize: normalize(11),
                                     }}>{"Home"}</Text>
                                 </View>
 
-                                : label === 'MerchandisingAudit' ?
+                                : label === 'ScheduleNewAuditScreen' ?
                                     <View style={styles.tabBarContain}>
                                         {isFocused ?
-                                            <Image style={{ width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR }} source={require('../assets/images/wifi-line.png')} />
+                                            <Image style={{ width: 20, height: 20,resizeMode:"contain"}} source={ADD_ICON_ACTIVE} />
                                             :
-                                            <Image source={require('../assets/images/wifi-line.png')} />
+                                            <Image style={{ width: 20, height: 20,resizeMode:"contain"}} source={ADD_ICON} />
                                         }
                                         <Text style={{
                                             fontFamily: FONT_FAMILY_REGULAR,
                                             fontWeight: "500",
-                                            color: isFocused === true ? PRIMARY_BLUE_COLOR : GREY_TEXT_COLOR,
+                                            color: isFocused === true ? PRIMARY_BLUE_COLOR : "#000",
                                             fontSize: normalize(11),
                                         }}>{"Schedule Audit"}</Text>
                                     </View>
-                                    : label === 'Dashboard' ?
+                                    : label === 'Profile' ?
                                         <View style={styles.tabBarContain}>
                                             {isFocused ?
-                                                <Image style={{ width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR }} source={require('../assets/images/wifi-line.png')} />
+                                                <Image style={{ width: 20, height: 20 ,resizeMode:"contain"}} source={PROFILE_ICON_ACTIVE} />
                                                 :
-                                                <Image source={require('../assets/images/wifi-line.png')} />
+                                                <Image style={{ width: 20, height: 20,resizeMode:"contain"}} source={PROFILE_ICON} />
                                             }
                                             <Text style={{
                                                 fontFamily: FONT_FAMILY_REGULAR,
                                                 fontWeight: "500",
-                                                color: isFocused === true ? PRIMARY_BLUE_COLOR : GREY_TEXT_COLOR,
+                                                color: isFocused === true ? PRIMARY_BLUE_COLOR : "#000",
                                                 fontSize: normalize(11),
                                             }}>{"Profile"}</Text>
                                         </View>

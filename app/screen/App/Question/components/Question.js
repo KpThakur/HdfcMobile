@@ -1,34 +1,57 @@
-import React from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
 import { styles } from "./styles";
-import { FONT_FAMILY_REGULAR } from "../../../../utils/constant";
-
+import { STAR, UNSTAR, ARROW, INFO_ICON, CROSS, PRIMARY_BLUE_COLOR } from "../../../../utils/constant";
+import DropDown from '../../../../component/DropDown'
+import { useNavigation } from "@react-navigation/native";
 const Question = (props) => {
+    const data = [{ name: "demo1" }, { name: "demo2" }, { name: "demo3" },]
+    const [onInfo, setonInfo] = useState(false)
+    const handleInfo = () => {
+        setonInfo(!onInfo)
+    }
+    const navigation=useNavigation()
+    const { handleNext } = props
     return (
         <View style={styles.container}>
-            <Header leftImg={require('../../../../assets/images/arrow-down.png')} headerText={"Branch f Name"} />
+            <Header leftImg={ARROW} headerText={"Audit Question"} onPress={()=>navigation.goBack()}/>
             <ScrollView>
                 <View style={styles.mainvwe}>
+                    <TouchableOpacity style={{
+                        position: "absolute", right: 1,
+                        zIndex: 10, padding: 10
+                    }}
+                        onPress={() => handleInfo()}
+                    ><Image source={INFO_ICON} style={{ width: 20, height: 20 }}/>
+                    </TouchableOpacity>
+                    {
+                        onInfo && (
+                            <View style={styles.info}>
+                                <View style={{ flexDirection: 'row', justifyContent: "space-between", alignItems: "center" }}>
+                                    <Text style={styles.info_txt}>More information</Text>
+                                    <TouchableOpacity onPress={()=>handleInfo()}>
+                                        <Image source={CROSS} style={{tintColor:PRIMARY_BLUE_COLOR,width:25,height:25}}/>
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={styles.info_ptxt}>Photo requirment : Mondatory</Text>
+                                <Text style={styles.info_ptxt}>Remark requirment : Optional</Text>
+                                <Text style={styles.info_ptxt}>is RMM Actionable : Yes</Text>
+                                <Text style={styles.info_ptxt}>is Admin Actionable : No</Text>
+                                <Text style={styles.info_ptxt}>is Branch Manager Actionable : Yes</Text>
+                            </View>
+                        )
+                    }
                     <View style={styles.body}>
-                        <View style={{ flexDirection: 'row', margin: 10 }}>
+                        <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 5, }}>
                                 <Text style={styles.branname}>
                                     Lorem ipsum Title
                                 </Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <Image
-                                    style={{ width: 10, height: 10 }}
-                                    soure={require('../../../../assets/images/Audit.png')}
-                                />
-                            </View>
                         </View>
-                        <Text style={{
-                            fontSize: 14, marginLeft: 12, fontFamily: FONT_FAMILY_REGULAR,
-                            marginRight: 8
-                        }}>
+                        <Text style={styles.txt}>
                             Lorem ipsum Title Lorem ipsum Title Lorem ipsum Title
                             Lorem ipsum Title
                         </Text>
@@ -42,10 +65,10 @@ const Question = (props) => {
                         </View>
                         <View style={styles.brnchmannme}>
                             <View style={styles.brnachnme}>
-                                <Text style={styles.branname}>Capture The image</Text>
+                                <Text style={styles.txt}>Capture The image</Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => props.onShare()}
+                                
                                 style={{
                                     backgroundColor: '#1b7dec',
                                     justifyContent: 'center',
@@ -60,21 +83,41 @@ const Question = (props) => {
                                 }}>Capture Screenshot</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* <View style={{ marginLeft: 15 }}>
-                            <Text style={styles.branname}>
-                                Rating
+
+                        <View style={styles.img_sec}>
+                            <View style={styles.d_sec_img}>
+                                <Image source={require('../../../../assets/images/MaskGroup6.png')} style={styles.sec_img} />
+                                <TouchableOpacity style={{ position: "absolute", right: 1, backgroundColor: "#fff", borderRadius: 100 }}>
+                                    <Image source={CROSS} style={styles.cross_icon} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        <View style={{ marginLeft: 15 }}>
+                            <Text style={styles.branname}>Rating</Text>
+                            <View style={styles.star}>
+                                <Image source={STAR} style={styles.star_icon} />
+                                <Image source={STAR} style={styles.star_icon} />
+                                <Image source={STAR} style={styles.star_icon} />
+                                <Image source={UNSTAR} style={styles.star_icon} />
+                                <Image source={UNSTAR} style={styles.star_icon} />
+                            </View>
+                        </View>
+                        <View style={{ marginTop: 20 }}>
+                            <Text style={[styles.branname, { marginLeft: 10 }]}>
+                                Actionable
                             </Text>
-                            <Image style={{ width: 10, height: 10 }}
-                                soure={require('../../../../assets/images/Group_107.png')}
-                            />
-                        </View> */}
-                        <Text style={[styles.branname, { marginLeft: 10 }]}>
-                            Actionable
-                        </Text>
-                        <Button
-                            style={{ marginBottom: 10, marginTop: 10 }}
-                            buttonText={"Next"}
-                        />
+                            <DropDown title={"BM/RMM/AC"} data={data} />
+                        </View>
+                        <View>
+                            <Text style={[styles.branname, { marginLeft: 10 }]}>
+                                Remarks
+                            </Text>
+                            <TextInput placeholder="Remarks" style={styles.input} />
+                        </View>
+                        <View style={{ marginVertical: 20 }}>
+                            <Button buttonText={"Next"} onPress={() => handleNext()} />
+                        </View>
                     </View>
                 </View>
             </ScrollView>

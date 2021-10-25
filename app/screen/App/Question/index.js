@@ -1,9 +1,12 @@
 import React from "react";
 import { Share } from 'react-native';
 import QuestionView from './components/Question';
-const Question = () => {
+const Question = ({navigation}) => {
+    const handleNext=()=>{
+        navigation.navigate("Question1Screen")
+    }
     return (
-        <QuestionView
+        <QuestionView handleNext={handleNext}
         />
     )
 }

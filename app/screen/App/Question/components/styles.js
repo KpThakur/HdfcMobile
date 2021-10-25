@@ -1,10 +1,13 @@
-import { StyleSheet } from "react-native"
-import { DARK_BLUE_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant'
+import { Dimensions, StyleSheet } from "react-native"
+import { DARK_BLUE_COLOR, FONT_FAMILY_REGULAR, FONT_FAMILY_THIN, GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR, SMALL_FONT_SIZE, TINY_FONT_SIZE } from '../../../../utils/constant'
+import {normalize} from '../../../../utils/scaleFontSize'
+const windowHeight=Dimensions.get('window').height
+const windowWidth=Dimensions.get('window').width
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
-    mainvwe: { flex: 1 },
+    mainvwe: { flex: 1 ,padding:10},
     centfrstvwe: {
         flex: 2,
         justifyContent: 'center',
@@ -34,14 +37,16 @@ export const styles = StyleSheet.create({
     brnchmannme: {
         flexDirection: 'row',
         margin: 8,
-        height: 38
+        height: 38,
+        alignItems:"center"
     },
     brnachnme: {
         flex: 4, margin: 4,
         paddingLeft: 12,
     },
     branname: {
-        fontSize: 15,
+        fontSize: normalize(SMALL_FONT_SIZE),
+        fontFamily:FONT_FAMILY_REGULAR,
         fontWeight: '500',
         color: '#000'
     },
@@ -69,5 +74,59 @@ export const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
         color: '#ffffff'
+    },
+    star:{
+        flexDirection:"row"
+    },
+    star_icon:{
+        marginRight:10
+    },
+    txt:{fontSize:normalize(12), 
+        fontFamily: FONT_FAMILY_REGULAR,
+        color:"#000"
+    },
+    input:{
+        backgroundColor:"#eee",
+        padding:10
+    },
+    img_sec:{
+        paddingHorizontal:10,
+        marginVertical:10
+    },
+    sec_img:{
+        width:70,
+        height:70,
+        borderRadius:10
+    },
+    d_sec_img:{
+        width:70,
+        height:70
+    },
+    cross_icon:{
+        tintColor:PRIMARY_BLUE_COLOR,
+        width:15,
+        height:15
+    },
+    info:{
+        backgroundColor:"#fff",
+        width:windowWidth-100,
+        height:windowHeight-500,
+        padding:10,
+        borderRadius:10,
+        justifyContent:'space-evenly',
+        position:"absolute",
+        right:1,
+        zIndex:999,
+        marginTop:5,
+        marginRight:5
+    },
+    info_txt:{
+        color:PRIMARY_BLUE_COLOR,
+        fontFamily:FONT_FAMILY_REGULAR
+    },
+    info_ptxt:{
+        color:"gray",
+        fontFamily:FONT_FAMILY_REGULAR,
+        fontSize:normalize(12)
     }
 })

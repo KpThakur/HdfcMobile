@@ -6,7 +6,7 @@ const Input = React.forwardRef((props, i) => {
     const {
         autoCapitalize, autoFocus, keyboardType, multiline,
         placeholder, returnKeyType, value,
-        onChangeText, textInputStyle,
+        onChangeText, textInputStyle,onPressOut,
         containerStyle, blurOnSubmit, editable,
         numberOfLines, maxLength, minLength, onSubmitEditing, InputHeading
     } = props;
@@ -55,6 +55,7 @@ const Input = React.forwardRef((props, i) => {
                     style={[textInput, textInputStyle]}
                     editable={editable}
                     onSubmitEditing={onSubmitEditing}
+                    onPressOut={onPressOut}
                 />
                 {
                     (InputHeading === "Password") &&
@@ -85,7 +86,6 @@ Input.defaultProps = {
 const style = StyleSheet.create({
     container: {
         height: 55,
-        marginTop: 15,
         borderRadius: 6,
         backgroundColor: "blue",
         justifyContent: 'space-between',
