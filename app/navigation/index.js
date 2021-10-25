@@ -11,7 +11,9 @@ import DashboardScreen from '../screen/App/Dashboard';
 import NotifyScreen from '../screen/App/Notify';
 import QuestionScreen from '../screen/App/Question';
 import AuditWelcomeScreen from '../screen/App/AuditWelcome';
+import ProfileScreen from '../screen/App/Profile'
 import MyTabBar from './tabBar';
+import AuditScoreScreen from '../screen/App/AuditScore';
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,6 +47,8 @@ function AppStack() {
             <App.Screen name="QuestionScreen" component={QuestionScreen} />
             <App.Screen name="AuditWelcomeScreen" component={TabStack} />
             <App.Screen name="NotifyScreen" component={NotifyScreen} />
+            <App.Screen name="Profile" component={ProfileScreen}/>
+            <App.Screen name="AuditScore"component={AuditScoreScreen}/>
             <App.Screen name="Login" component={LoginScreen} />
         </App.Navigator>
     )
