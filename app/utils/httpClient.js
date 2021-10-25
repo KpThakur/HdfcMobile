@@ -9,6 +9,7 @@ export function setDefaultHeader(header, value) {
 export async function apiCall(method, url, data, header = { 'Content-Type': 'application/json' }) {
     try {
         const res = await httpClient({
+            
             method,
             url,
             data: data,

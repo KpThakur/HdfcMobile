@@ -14,6 +14,7 @@ export const WHITE_BG_COLOR="#ffffff"
 export const GREY_TEXT_COLOR="#808080"
 
 export const PRIMARY_TEXT_COLOR="#ffffff"
+
 export const PRIMARY_BTN_COLOR="#1b7dec"
 
 //Images

@@ -15,6 +15,7 @@ const BaseStyle = StyleSheet.create({
         marginHorizontal: 10
     },
 
+    
     buttonLabel: {
         fontSize: normalize(15),
         fontFamily: FONT_FAMILY_SEMI_BOLD,

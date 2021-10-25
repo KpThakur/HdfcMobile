@@ -9,6 +9,7 @@ const LoginScreen = () => {
     const [isChecked, setisChecked] = useState(false)
     const handlePassword = () => {
         setisSecure(!isSecure)
+        
     }
     const handleCheck = () => {
         setisChecked(!isChecked)

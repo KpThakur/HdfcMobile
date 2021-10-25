@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
         paddingHorizontal:30,
         backgroundColor:"white",
         justifyContent:"space-evenly"
+        
     },
     header:{
         fontSize:normalize(LARGE_FONT_SIZE),
