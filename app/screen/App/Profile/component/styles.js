@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
         backgroundColor:"#fff"
     },
     txt: {
-        color: GREY_TEXT_COLOR,
+        color: "gray",
         fontSize: normalize(TINY_FONT_SIZE),
         fontFamily: FONT_FAMILY_REGULAR
     },

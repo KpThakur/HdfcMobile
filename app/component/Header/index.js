@@ -2,15 +2,20 @@ import React from 'react';
 import { Text, StyleSheet, Image, View, TouchableOpacity, StatusBar } from 'react-native';
 //import { FONT_FAMILY_BOLD, THEME_BACKGROUND_SECONDRY_COLOR, MEDIUM_FONT_SIZE, THEME_NORMAL_SECONDRY_TEXT_COLOR } from '../../utils/constant';
 import {STATUS_BAR_COLOR} from '../../utils/constant';
-
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 const Header = (props) => {
     const {
         HeaderView, HeaderRightView, container
     } = styles;
     const {
-        RightImage, showRightLabel, leftImg, leftNav, mncontainer, showleftimage,
+        RightImage, showRightLabel, leftImg, leftNav, mncontainer, showleftimage,onPress,
         statusbarcolor, barStyle, showAppIcon, headerText, headerTextShouldMiddle
     } = props;
+    // const navigation = useNavigation();
+    // const OnpressDrawer=()=>{
+    //     navigation.dispatch(DrawerActions.toggleDrawer());
+
+    // }
     return (
         <>
             <View style={[container, mncontainer]}>
@@ -21,7 +26,7 @@ const Header = (props) => {
                 />
                 <View style={[HeaderView, { flex: headerTextShouldMiddle ? 3 : 4 }]}>
                     {showleftimage && <TouchableOpacity style={{ height: 60, width: 50, justifyContent: 'center', }}
-                        // onPress={() => leftNav ? navigation.goBack(null) : OnpressDrawer()}
+                        onPress={onPress}
                          >
                         <Image
                             source={leftImg}
@@ -57,7 +62,8 @@ Header.defaultProps = {
     leftNav: false,
     statusbarcolor: STATUS_BAR_COLOR,
     headerTextShouldMiddle: false,
-    headerText: "Common Name"
+    headerText: "Common Name",
+
 };
 const styles = StyleSheet.create({
     container: {

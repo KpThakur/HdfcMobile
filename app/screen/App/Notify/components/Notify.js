@@ -5,9 +5,10 @@ import Button from '../../../../component/Button';
 import { styles } from "./styles";
 
 const BranchName = (props) => {
+    const {handleStartCall}=props
     return (
         <View style={styles.container}>
-            <Header leftImg={''} headerText={"Branch Name"} />
+            <Header leftImg={''} headerText={"Start Audit"} />
             <View style={styles.mainvwe}>
                 <View style={styles.centfrstvwe}>
                     <TouchableOpacity style={styles.bluestreaming}>
@@ -73,6 +74,7 @@ const BranchName = (props) => {
                     <Button
                         style={{ marginBottom: 10 }}
                         buttonText={"Start Call"}
+                        onPress={()=>handleStartCall()}
                     />
                 </View>
             </View>

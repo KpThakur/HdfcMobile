@@ -1,5 +1,5 @@
 import { StyleSheet,Dimensions } from "react-native"
-import { DARK_BLUE_COLOR,PRIMARY_BLUE_COLOR,LARGE_FONT_SIZE,TINY_FONT_SIZE } from "../../../../utils/constant"
+import { DARK_BLUE_COLOR,PRIMARY_BLUE_COLOR,LARGE_FONT_SIZE,TINY_FONT_SIZE, FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, FONT_FAMILY_SEMI_BOLD } from "../../../../utils/constant"
 import {normalize} from '../../../../utils/scaleFontSize'
 const WindowWidth=Dimensions.get('window').width
 const WindowHeight=Dimensions.get('window').height
@@ -15,23 +15,28 @@ export const styles = StyleSheet.create({
     header:{
         fontSize:normalize(LARGE_FONT_SIZE),
         fontWeight:"700",
-        color:DARK_BLUE_COLOR
+        color:DARK_BLUE_COLOR,
+        fontFamily:FONT_FAMILY_REGULAR
     },
     text_field:{
-        backgroundColor:"#eee",
+        backgroundColor:GREY_TEXT_COLOR,
         borderRadius:20,
         width:"100%",
+        color:"gray",
         marginVertical:10,
         paddingLeft:20,
-        color:"gray"
+        paddingVertical:10,
+        fontFamily:FONT_FAMILY_SEMI_BOLD,
     },
     p_txt:{
         color:PRIMARY_BLUE_COLOR,
-        fontSize:normalize(12)
+        fontSize:normalize(TINY_FONT_SIZE),
+        fontFamily:FONT_FAMILY_REGULAR
     },
     txt:{
         color:"#000",
-        fontSize:normalize(TINY_FONT_SIZE)
+        fontSize:normalize(TINY_FONT_SIZE),
+        fontFamily:FONT_FAMILY_REGULAR
     },
     img:{
         width:WindowWidth,
@@ -50,8 +55,8 @@ export const styles = StyleSheet.create({
         height: 30, 
         resizeMode: 'contain', 
         position: "absolute", 
-        right: 20, 
-        top: 30
+        right: 2, 
+        top: 25
     },
     btn_view:{
         paddingVertical:20
@@ -59,7 +64,7 @@ export const styles = StyleSheet.create({
     check_icon:{
         width: 20, 
         height: 20,
-        resizeMode:"contain",
+        // resizeMode:"contain",
         marginRight:5
     }
 })

@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { View, Image, Text, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import Header from '../../../../component/Header';
 import Input from '../../../../component/Input';
-import Styles from './style';
+import { styles } from './style';
+import {normalize} from '../../../../utils/scaleFontSize'
+import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const DashboardView = (props) => {
     const [searchvalue, setSearchvalue] = useState();
     const [data, setdata] = useState([
@@ -11,12 +14,15 @@ const DashboardView = (props) => {
             "name": "Today's Audit",
         },
     ])
+    const navigation = useNavigation();
+    const OnpressDrawer=()=>{
+        navigation.dispatch(DrawerActions.toggleDrawer());
+    }
     return (
-        <View style={{ flex: 1 }}>
-            <Header headerText={"Merchandising Audit"} />
-            <ScrollView>
-                <View style={{ flex: 5 }}>
-                    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+        <View style={{ flex: 1,backgroundColor:"#fff"}}>
+            <Header headerText={"Merchandising Audit"} onPress={()=>OnpressDrawer()}/>
+                <View style={{ flexGrow:1}}>
+                    <View style={{ flex: 1}}>
                         <View style={{
                             flex: 1,
                             shadowColor: "#000",
@@ -24,20 +30,21 @@ const DashboardView = (props) => {
                             shadowRadius: 16.00,
                             elevation: 24,
                         }}>
-                            <View style={{ flexDirection: "row", paddingLeft: 7, paddingRight: 10 }}>
+                            <View style={{ flexDirection: "row",marginHorizontal:10,marginTop:10 }}>
                                 <Input
                                     placeholder={"Search"}
-                                    containerStyle={{ backgroundColor: "#f0f0f0" }}
-                                    placeholderTextColor={{ color: "#5d5d5d" }}
-                                    value={""}
+                                    containerStyle={{ backgroundColor: GREY_TEXT_COLOR }}
+                                    placeholderTextColor={{ color: "black" }}
+                                    value={props.search}
                                     InputHeading={"Search"}
+                                    onChangeText={text=>props.setsearch(text)}
                                 />
                             </View>
                             <FlatList
                                 data={data}
                                 ListHeaderComponent={() => {
                                     return (
-                                        <View>
+                                        <View style={styles.nav}>
                                             <FlatList
                                                 data={props.option}
                                                 horizontal={true}
@@ -47,14 +54,14 @@ const DashboardView = (props) => {
                                                         <TouchableOpacity
                                                             style={{
                                                             }}
-                                                            onPress={() => props.onPressSelectedTab(index)}
+                                                            onPress={() => props.onPressSelectedTab(item.id)}
                                                         >
                                                             <View style={{
                                                                 flex: 1, padding: 8,
-                                                                borderBottomColor: index == props.tabBar ? '#1b7dec' : null,
-                                                                borderBottomWidth: index == props.tabBar ? 2 : 0, borderRadius: 5, marginLeft: 5, marginRight: 5
+                                                                borderBottomColor: item.id == props.tabBar ? PRIMARY_BLUE_COLOR : "gray",
+                                                                borderBottomWidth: item.id == props.tabBar ? 2 : 0, borderRadius: 5, marginLeft: 5, marginRight: 5
                                                             }}>
-                                                                <Text style={{ fontSize: 13 }}>{item.name}</Text>
+                                                                <Text style={{ fontSize: normalize(12),color: item.id == props.tabBar ? PRIMARY_BLUE_COLOR : "gray", }}>{item.name}</Text>
                                                             </View>
                                                         </TouchableOpacity>
                                                     )
@@ -70,7 +77,6 @@ const DashboardView = (props) => {
                         </View>
                     </View>
                 </View>
-            </ScrollView>
         </View>
     )
 }

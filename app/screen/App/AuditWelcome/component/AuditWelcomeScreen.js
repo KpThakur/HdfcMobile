@@ -1,37 +1,40 @@
 import React from 'react';
-import { View, Image, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, Image, Text ,ScrollView} from 'react-native';
 import Button from '../../../../component/Button';
-import { normalize } from '../../../../component/scaleFontSize';
-import { FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, GREY_TEXT_COLOR, MAIN_BG_GREY_COLOR, PRIMARY_BLUE_COLOR, WHITE_BG_COLOR } from '../../../../utils/constant';
-const AuditWelcomeScreen = () => {
+import {styles} from './style'
+import Header from '../../../../component/Header';
+import {INSTRUCTION,HEADPHONE,WIFI,GROUP_17} from '../../../../utils/constant'
+const AuditWelcomeScreen = (props) => {
+    const {handleStartAudit}=props
     return (
-        <View style={{ flex: 1, backgroundColor: MAIN_BG_GREY_COLOR }}>
+        <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={{ flex: 4, elevation: 2, margin: 20, borderRadius: 6, backgroundColor: WHITE_BG_COLOR }}>
+                <Header headerText={"WelCome Online Audit"}/>
+                <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
-                        <Image resizeMode={"contain"} style={{ width: 300, height: 300 }} source={require('../../../../assets/images/Instruction.png')} />
-                        <Text style={{ fontFamily: FONT_FAMILY_SEMI_BOLD, fontSize: normalize(17), color: PRIMARY_BLUE_COLOR }}>Welcome To Online Audit</Text>
+                        <Image resizeMode={"contain"} style={styles.img} source={INSTRUCTION} />
+                        <Text style={styles.txt}>Welcome To Online Audit</Text>
                     </View>
-                    <View style={{ paddingLeft: 15, paddingTop: 20 }}>
-                        <Text style={{ color: GREY_TEXT_COLOR, fontSize: normalize(11), fontFamily: FONT_FAMILY_REGULAR }}>Following are the online/live audit requirement :</Text>
+                    <View style={styles.body}>
+                        <Text style={styles.g_txt}>Following are the online/live audit requirement :</Text>
 
-                        <View style={{ flexDirection: 'row', paddingVertical: 10, alignItems: 'center' }}>
-                            <Image resizeMode={"contain"} style={{ width: 18, height: 18 }} source={require('../../../../assets/images/headphones.png')} />
-                            <Text style={{ paddingLeft: 10, color: GREY_TEXT_COLOR, fontSize: normalize(11), fontFamily: FONT_FAMILY_REGULAR }}>Headphone</Text>
+                        <View style={styles.icon_txt}>
+                            <Image resizeMode={"contain"} style={styles.icon_img} source={HEADPHONE} />
+                            <Text style={styles.g_txt}>Headphone</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Image resizeMode={"contain"} style={{ width: 18, height: 18 }} source={require('../../../../assets/images/wifi-line.png')} />
-                            <Text style={{ paddingLeft: 10, color: GREY_TEXT_COLOR, fontSize: normalize(11), fontFamily: FONT_FAMILY_REGULAR }}>Good Network</Text>
+                        <View style={styles.icon_txt}>
+                            <Image resizeMode={"contain"} style={styles.icon_img} source={WIFI} />
+                            <Text style={styles.g_txt}>Good Network</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', paddingVertical: 10, alignItems: 'center' }}>
-                            <Image resizeMode={"contain"} style={{ width: 18, height: 18 }} source={require('../../../../assets/images/Group_107.png')} />
-                            <Text style={{ paddingLeft: 10, color: GREY_TEXT_COLOR, fontSize: normalize(11), fontFamily: FONT_FAMILY_REGULAR }}>Noise Free Surrounding</Text>
+                        <View style={styles.icon_txt}>
+                            <Image resizeMode={"contain"} style={styles.icon_img} source={GROUP_17} />
+                            <Text style={styles.g_txt}>Noise Free Surrounding</Text>
                         </View>
                     </View>
                     <Button
-                        style={{ marginTop: 30 }}
+                        style={{ marginVertical: 20 }}
                         buttonText={"Start Audit"}
+                        onPress={()=>handleStartAudit()}
                     />
                 </View>
                 <View style={{ flex: 2 }}>
