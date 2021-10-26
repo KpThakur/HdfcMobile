@@ -9,11 +9,20 @@ import { normalize } from '../../../utils/scaleFontSize';
 import { apiCall } from '../../../utils/httpClient';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import moment from 'moment';
+import { useFocusEffect } from '@react-navigation/native';
+import { Alert } from 'react-native';
 const DashboardScreen = ({ navigation }) => {
     const [tabBar, setTabBar] = useState(1)
     const [popup, setpopup] = useState(false)
     const [search, setsearch] = useState()
     const [auditList, setauditList] = useState([])
+    const [reason, setreason] = useState('')
+    useFocusEffect(
+        React.useCallback(() => {
+            AuditList(1)
+            return
+        }, [])
+    );
     const togglePopUp = () => {
         setpopup(!popup)
     }
@@ -45,11 +54,9 @@ const DashboardScreen = ({ navigation }) => {
     const AuditList = async (index) => {
         try {
             const params = { audit_type: index }
-            console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.GET_AUDIT_LIST, params)
             console.log("response", response.data.data)
             if (response.status = 200) {
-                console.log("succuccess")
                 setauditList(response.data.data);
             }
         } catch (error) {
@@ -57,15 +64,30 @@ const DashboardScreen = ({ navigation }) => {
         }
 
     }
+
     useEffect(() => {
-     AuditList(1)
+        AuditList(1)
     }, [])
 
-    console.log("tabBar",tabBar)
     useEffect(() => {
         AuditList(tabBar)
-       }, [tabBar])
-    console.log("API CALL", auditList)
+    }, [tabBar])
+    const handleCancelAudit = async(audit_id) => {
+        const params={
+            audit_id:audit_id,
+            audit_status:2,
+            reason:reason
+        }
+        console.log(params)
+        const response=await apiCall('POST',apiEndPoints.CANCEL_AUDIT,params)
+        console.log(response.data)
+        Alert.alert(
+            'Audit Cancelled',
+            response.data.message,
+        )
+        setpopup(!popup)
+        AuditList(1)
+    }
     const renderTodayAudit = ({ item, index }) => {
         return (
             <View style={{ backgroundColor: "#fff" }}>
@@ -73,6 +95,9 @@ const DashboardScreen = ({ navigation }) => {
                     auditList ?
                         auditList.map(audit => (
                             <View style={{ marginHorizontal: 10 }} key={audit.city_id}>
+                                <Cancel popup={popup} togglePopUp={togglePopUp}
+                                    reason={reason} setreason={setreason}
+                                    onPress={() => handleCancelAudit(audit.audit_id)} />
                                 <View style={styles.box}>
                                     <View style={styles.box_header}>
                                         <Text style={styles.header_txt}>{audit.branch_name}</Text>
@@ -162,231 +187,265 @@ const DashboardScreen = ({ navigation }) => {
                     null}
                 {tabBar === 2 ?
                     <View style={{ paddingLeft: 10, marginRight: 10 }}>
-                        <Cancel popup={popup} togglePopUp={togglePopUp} />
-                        <View style={styles.display_audit}>
-                            <View style={{ paddingTop: 10 }}>
-                                <Text style={styles.txt}>
-                                    September, 21
-                                </Text>
-                            </View>
-                            <View style={styles.box}>
-                                <View style={styles.box_header}>
-                                    <Text style={styles.header_txt}>Palaslya Branch</Text>
-                                    <Text style={styles.header_txt}>Bank</Text>
-                                </View>
-                                <View style={styles.box_body}>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Image source={CALENDAR} style={styles.img} />
-                                            <Text style={styles.txt}>Date : </Text>
-                                            <Text style={styles.p_txt}>07/10/2021</Text>
-                                        </View>
+                        {
+                            auditList ? auditList.map(audit => (
+                                <View style={styles.display_audit}>
+                                    <View style={{ paddingTop: 10 }}>
+                                        <Text style={styles.txt}>
+                                            {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        </Text>
+                                    </View>
+                                    {
+                                        audit?.items && audit?.items.map(item => (
+                                            <View style={styles.box}>
+                                                <Cancel popup={popup} togglePopUp={togglePopUp}
+                                                    reason={reason} setreason={setreason}
+                                                    onPress={() => handleCancelAudit(item.audit_id)} />
+                                                <View style={styles.box_header}>
+                                                    <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                    <Text style={styles.header_txt}>Bank</Text>
+                                                </View>
+                                                <View style={styles.box_body}>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Image source={CALENDAR} style={styles.img} />
+                                                            <Text style={styles.txt}>Date : </Text>
+                                                            <Text style={styles.p_txt}>
+                                                                {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                            </Text>
+                                                        </View>
 
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Image source={CLOCK} style={styles.img} />
-                                            <Text style={styles.txt}>Time : </Text>
-                                            <Text style={styles.p_txt}>08:12AM</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ marginVertical: 10 }}>
-                                        <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                        <Text style={styles.txt}>Vishwas Joshi</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
-                                        <View>
-                                            <Text style={styles.s_txt}>Actionable No.</Text>
-                                            <Text style={styles.txt}>02 Members</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.s_txt}>Audit Status</Text>
-                                            <Text style={styles.txt}>Online Audit</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ marginVertical: 10 }}>
-                                        <Text style={styles.s_txt}>City</Text>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                            <Text style={styles.txt}>Indore</Text>
-                                            <View style={{ flexDirection: "row", justifyContent: "flex-end", justifyContent: "center" }}>
-                                                <TouchableOpacity style={styles.cancel_btn} onPress={() => togglePopUp()}>
-                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Cancel Audit</Text>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
-                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Reschedule</Text>
-                                                </TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Image source={CLOCK} style={styles.img} />
+                                                            <Text style={styles.txt}>Time : </Text>
+                                                            <Text style={styles.p_txt}>
+                                                                {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ marginVertical: 10 }}>
+                                                        <Text style={styles.s_txt}>Branch Manager Name</Text>
+                                                        <Text style={styles.txt}>Vishwas Joshi</Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
+                                                        <View>
+                                                            <Text style={styles.s_txt}>Actionable No.</Text>
+                                                            <Text style={styles.txt}>02 Members</Text>
+                                                        </View>
+                                                        <View>
+                                                            <Text style={styles.s_txt}>Audit Status</Text>
+                                                            <Text style={styles.txt}>
+                                                                {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ marginVertical: 10 }}>
+                                                        <Text style={styles.s_txt}>City</Text>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                                                            <Text style={styles.txt}>Indore</Text>
+                                                            <View style={{ flexDirection: "row", justifyContent: "flex-end", justifyContent: "center" }}>
+                                                                <TouchableOpacity style={styles.cancel_btn} onPress={() => togglePopUp()}>
+                                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Cancel Audit</Text>
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
+                                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Reschedule</Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </View>
                                             </View>
+                                        ))
+                                    }
+                                </View>
+                            )) :
+                                <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
+                                    <View style={{ alignItems: "center" }}>
+                                        <Image
+                                            resizeMode={"contain"}
+                                            style={{ width: 250, height: 350 }}
+                                            source={DASHBOARD_HEROIC}
+                                        />
+                                        <View style={{ padding: 10 }}>
+                                            <Text style={{ color: "#5382b5", fontSize: 20, fontWeight: "bold" }}>No Upcoming Audit Found</Text>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        </View>
+                        }
                     </View>
                     :
                     null
                 }
                 {tabBar === 3 ?
                     <View style={{ paddingLeft: 10, marginRight: 10 }}>
-                        <View style={styles.display_audit}>
-                            <View style={{ paddingTop: 10 }}>
-                                <Text style={styles.txt}>
-                                    September, 21
-                                </Text>
-                            </View>
-                            <View style={styles.box}>
-                                <View style={styles.box_header}>
-                                    <Text style={styles.header_txt}>Palaslya Branch</Text>
-                                    <Text style={styles.header_txt}>Bank</Text>
-                                </View>
-                                <View style={styles.box_body}>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Image source={CALENDAR} style={styles.img} />
-                                            <Text style={styles.txt}>Date : </Text>
-                                            <Text style={styles.p_txt}>07/10/2021</Text>
-                                        </View>
+                        {
+                            auditList ? auditList.map(audit => (
+                                <View style={styles.display_audit}>
+                                    <View style={{ paddingTop: 10 }}>
+                                        <Text style={styles.txt}>
+                                            {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        </Text>
+                                    </View>
+                                    {
+                                        audit?.items && audit?.items.map(item => (
+                                            <View style={styles.box}>
+                                                <View style={styles.box_header}>
+                                                    <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                    <Text style={styles.header_txt}>Bank</Text>
+                                                </View>
+                                                <View style={styles.box_body}>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Image source={CALENDAR} style={styles.img} />
+                                                            <Text style={styles.txt}>Date : </Text>
+                                                            <Text style={styles.p_txt}>
+                                                                {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                            </Text>
+                                                        </View>
 
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <Image source={CLOCK} style={styles.img} />
-                                            <Text style={styles.txt}>Time : </Text>
-                                            <Text style={styles.p_txt}>08:12AM</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ marginVertical: 10 }}>
-                                        <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                        <Text style={styles.txt}>Vishwas Joshi</Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
-                                        <View>
-                                            <Text style={styles.s_txt}>Actionable No.</Text>
-                                            <Text style={styles.txt}>02 Members</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.s_txt}>Audit Status</Text>
-                                            <Text style={styles.txt}>Online Audit</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ marginVertical: 10 }}>
-                                        <Text style={styles.s_txt}>City</Text>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                            <Text style={styles.txt}>Indore</Text>
-                                            <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
-                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Update</Text>
-                                                </TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <Image source={CLOCK} style={styles.img} />
+                                                            <Text style={styles.txt}>Time : </Text>
+                                                            <Text style={styles.p_txt}>
+                                                                {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ marginVertical: 10 }}>
+                                                        <Text style={styles.s_txt}>Branch Manager Name</Text>
+                                                        <Text style={styles.txt}>Vishwas Joshi</Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
+                                                        <View>
+                                                            <Text style={styles.s_txt}>Actionable No.</Text>
+                                                            <Text style={styles.txt}>02 Members</Text>
+                                                        </View>
+                                                        <View>
+                                                            <Text style={styles.s_txt}>Audit Status</Text>
+                                                            <Text style={styles.txt}>
+                                                                {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ marginVertical: 10 }}>
+                                                        <Text style={styles.s_txt}>City</Text>
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                            <Text style={styles.txt}>Indore</Text>
+                                                            <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
+                                                                    <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Update</Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </View>
                                             </View>
+                                        ))
+                                    }
+                                </View>
+                            )) :
+                                <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
+                                    <View style={{ alignItems: "center" }}>
+                                        <Image
+                                            resizeMode={"contain"}
+                                            style={{ width: 250, height: 350 }}
+                                            source={DASHBOARD_HEROIC}
+                                        />
+                                        <View style={{ padding: 10 }}>
+                                            <Text style={{ color: "#5382b5", fontSize: 20, fontWeight: "bold" }}>No Open Audit Found</Text>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        </View>
+                        }
                     </View>
                     :
                     null
                 }
                 {tabBar === 4 ?
                     <View style={{ paddingLeft: 10, marginRight: 10 }}>
-                    <View style={styles.display_audit}>
-                        <View style={{ paddingTop: 10 }}>
-                            <Text style={styles.txt}>
-                                September, 21
-                            </Text>
-                        </View>
-                        <View style={styles.box}>
-                            <View style={styles.box_header}>
-                                <Text style={styles.header_txt}>Palaslya Branch</Text>
-                                <Text style={styles.header_txt}>Bank</Text>
-                            </View>
-                            <View style={styles.box_body}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image source={CALENDAR} style={styles.img} />
-                                        <Text style={styles.txt}>Date : </Text>
-                                        <Text style={styles.p_txt}>07/10/2021</Text>
+                        {auditList ? auditList.map((audit) => (
+                            audit?.items && audit?.items.map((item) => (
+                                <View style={styles.display_audit}>
+                                    <View style={{ paddingTop: 10 }}>
+                                        <Text style={styles.txt}>
+                                            {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        </Text>
                                     </View>
+                                    <View style={styles.box}>
+                                        <View style={styles.box_header}>
+                                            <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                            <Text style={styles.header_txt}>Bank</Text>
+                                        </View>
+                                        <View style={styles.box_body}>
+                                            <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Image source={CALENDAR} style={styles.img} />
+                                                    <Text style={styles.txt}>Date : </Text>
+                                                    <Text style={styles.p_txt}>
+                                                        {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                    </Text>
+                                                </View>
 
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image source={CLOCK} style={styles.img} />
-                                        <Text style={styles.txt}>Time : </Text>
-                                        <Text style={styles.p_txt}>08:12AM</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                    <Text style={styles.txt}>Vishwas Joshi</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
-                                    <View>
-                                        <Text style={styles.s_txt}>Actionable No.</Text>
-                                        <Text style={styles.txt}>02 Members</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={styles.s_txt}>Audit Status</Text>
-                                        <Text style={styles.txt}>Online Audit</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={styles.s_txt}>City</Text>
-                                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                        <Text style={styles.txt}>Indore</Text>
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                            <Text style={{ color: GREEN_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>Completed</Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Image source={CLOCK} style={styles.img} />
+                                                    <Text style={styles.txt}>Time : </Text>
+                                                    <Text style={styles.p_txt}>
+                                                        {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ marginVertical: 10 }}>
+                                                <Text style={styles.s_txt}>Branch Manager Name</Text>
+                                                <Text style={styles.txt}>{item.branch_manager}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
+                                                <View>
+                                                    <Text style={styles.s_txt}>Actionable No.</Text>
+                                                    <Text style={styles.txt}>02 Members</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={styles.s_txt}>Audit Status</Text>
+                                                    <Text style={styles.txt}>
+                                                        {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ marginVertical: 10 }}>
+                                                <Text style={styles.s_txt}>City</Text>
+                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <Text style={styles.txt}>{item.city_name}</Text>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                        <Text style={{ color: item.audit_status === 3 ? GREEN_COLOR : RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>
+                                                            {item.audit_status === 3 ? 'Completed' : 'Cancelled'}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        </View>
-
-                        <View style={styles.box}>
-                            <View style={styles.box_header}>
-                                <Text style={styles.header_txt}>Palaslya Branch</Text>
-                                <Text style={styles.header_txt}>Bank</Text>
-                            </View>
-                            <View style={styles.box_body}>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image source={CALENDAR} style={styles.img} />
-                                        <Text style={styles.txt}>Date : </Text>
-                                        <Text style={styles.p_txt}>07/10/2021</Text>
-                                    </View>
-
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Image source={CLOCK} style={styles.img} />
-                                        <Text style={styles.txt}>Time : </Text>
-                                        <Text style={styles.p_txt}>08:12AM</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                    <Text style={styles.txt}>Vishwas Joshi</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
-                                    <View>
-                                        <Text style={styles.s_txt}>Actionable No.</Text>
-                                        <Text style={styles.txt}>02 Members</Text>
-                                    </View>
-                                    <View>
-                                        <Text style={styles.s_txt}>Audit Status</Text>
-                                        <Text style={styles.txt}>Online Audit</Text>
-                                    </View>
-                                </View>
-                                <View style={{ marginVertical: 10 }}>
-                                    <Text style={styles.s_txt}>City</Text>
-                                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                        <Text style={styles.txt}>Indore</Text>
-                                        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                            <Text style={{ color: RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>Cancelled</Text>
-                                        </View>
+                            ))
+                        )) :
+                            <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
+                                <View style={{ alignItems: "center" }}>
+                                    <Image
+                                        resizeMode={"contain"}
+                                        style={{ width: 250, height: 350 }}
+                                        source={DASHBOARD_HEROIC}
+                                    />
+                                    <View style={{ padding: 10 }}>
+                                        <Text style={{ color: "#5382b5", fontSize: 20, fontWeight: "bold" }}>No Close Audit Found</Text>
                                     </View>
                                 </View>
                             </View>
-                        </View>
+                        }
                     </View>
-                </View>
-                :
-                null
-            }
-        </View >
-    )
-}
+                    :
+                    null
+                }
+            </View >
+        )
+    }
 
 
     return (
