@@ -1,15 +1,14 @@
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerTab from './DrawerTab'
-import {UserContext,AuthContext} from '../utils/UserContext';
+import { UserContext, AuthContext } from '../utils/UserContext';
 import { apiCall, setDefaultHeader } from '../utils/httpClient';
 import ENDPOINTS from '../utils/apiEndPoints';
 import AsyncStorage from '@react-native-community/async-storage';
-
 //Screen
 import LoginScreen from '../screen/Authentication/Login';
 import ScheduleNewAuditScreen from '../screen/App/ScheduleNewAudit';
@@ -28,7 +27,6 @@ import Question2Screen from '../screen/App/Question2'
 import Question3Screen from '../screen/App/Question3'
 import { PRIMARY_BLUE_COLOR } from '../utils/constant';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword';
-
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -87,7 +85,7 @@ function AppStack() {
             <App.Screen name="ReviewAduit" component={ReviewAuditScreen} />
             <App.Screen name="Actionable" component={ActionableScreen} />
             <App.Screen name="AuditSuccess" component={AuditSuccessScreen} />
-            <App.Screen name="ForgetPassword" component={ForgetPasswordScreen}/>
+            <App.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
             <App.Screen name="Question1Screen" component={Question1Screen} />
             <App.Screen name="Question2Screen" component={Question2Screen} />
             <App.Screen name="Question3Screen" component={Question3Screen} />
@@ -119,6 +117,7 @@ const AuthStack = () => {
 }
 
 export default function Routes({ navigation }) {
+    const [userData, setUserData] = useContext(UserContext)
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
             switch (action.type) {
@@ -159,6 +158,8 @@ export default function Routes({ navigation }) {
             let userToken;
             try {
                 userToken = await AsyncStorage.getItem('userToken');
+
+
                 console.log('userToken: ', userToken);
                 if (userToken === null) {
                     const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
@@ -166,12 +167,14 @@ export default function Routes({ navigation }) {
                         await setDefaultHeader('token', response.data.token);
                     }
                 }
-                else{
+                else {
+                    const userData = await AsyncStorage.getItem('userData')
+                    setUserData(JSON.parse(userData))
                     await setDefaultHeader('token', userToken);
                 }
                 //userToken ="abc";
             } catch (e) {
-                console.log(': ',e);
+                console.log(': ', e);
                 // Restoring token failed
             }
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
@@ -187,22 +190,22 @@ export default function Routes({ navigation }) {
                 try {
                     await setDefaultHeader('token', userToken);
                     await AsyncStorage.setItem('userToken', userToken);
-                    
+
                 } catch (e) {
-                    console.log(e,"ERRROR");
+                    console.log(e, "ERRROR");
                 }
                 dispatch({ type: 'SIGN_IN', token: userToken });
             },
             signOut: async () => {
                 console.log("SINGOUT")
                 try {
-                    
+
                     await AsyncStorage.removeItem('userToken');
                     await AsyncStorage.removeItem('userData');
                     // setUserData({})
-                    
-                    await setDefaultHeader('token', null)
-                    dispatch({ type: 'SIGN_OUT' })
+                    const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
+                    await setDefaultHeader('token', response.data.token);
+                    dispatch({ type: 'SIGN_OUT', token: response.data.token })
                 } catch (e) {
                     console.log(e);
                 }
@@ -221,8 +224,10 @@ export default function Routes({ navigation }) {
     return (
         <NavigationContainer>
             <AuthContext.Provider value={authContext}>
-                <Stack.Navigator screenOptions={{headerShown:false}}>
-                    {state.userToken ===null ? (
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    {console.log("state.userToken",state.userToken)}
+                    {state.userToken === null ? (
+
                         <Stack.Screen name="Login" component={AuthStack} />
                     ) : (
                         <Stack.Screen name="App" component={AppStack} />
