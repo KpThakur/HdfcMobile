@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import { apiCall } from '../../../utils/httpClient';
 import LoginScreen from './component/login';
-import { AuthContext } from '../../../utils/UserContext';
+import { AuthContext,UserContext } from '../../../utils/UserContext';
 import { Alert } from 'react-native';
 import Loader from '../../../utils/Loader';
-
 const Login = ({ navigation }) => {
+    const [userData, setUserData]=useContext(UserContext)
     const [email, setemail] = useState('john@mailinator.com')
     const [password, setpassword] = useState('123456')
     const [isLoading, setisLoading] = useState(false)
@@ -35,9 +35,11 @@ const Login = ({ navigation }) => {
                     password: password
                 }
                 const response = await apiCall('POST', apiEndPoints.USERLOGIN, params)
-                console.log("resposne", response)
                 if (response.status === 200) {
                     signIn(response.data.token)
+                    setUserData(response.data.data)
+                    AsyncStorage.setItem('userData',JSON.stringify(response.data.data))
+                    console.log("response.data",response.data)
                     setisLoading(false)
                 }
                 else {

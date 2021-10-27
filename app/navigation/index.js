@@ -9,7 +9,6 @@ import { UserContext, AuthContext } from '../utils/UserContext';
 import { apiCall, setDefaultHeader } from '../utils/httpClient';
 import ENDPOINTS from '../utils/apiEndPoints';
 import AsyncStorage from '@react-native-community/async-storage';
-
 //Screen
 import LoginScreen from '../screen/Authentication/Login';
 import ScheduleNewAuditScreen from '../screen/App/ScheduleNewAudit';
@@ -28,7 +27,6 @@ import Question2Screen from '../screen/App/Question2'
 import Question3Screen from '../screen/App/Question3'
 import { PRIMARY_BLUE_COLOR } from '../utils/constant';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword';
-
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -119,6 +117,7 @@ const AuthStack = () => {
 }
 
 export default function Routes({ navigation }) {
+    const [userData, setUserData] = useContext(UserContext)
     const [state, dispatch] = React.useReducer(
         (prevState, action) => {
             switch (action.type) {
@@ -159,6 +158,8 @@ export default function Routes({ navigation }) {
             let userToken;
             try {
                 userToken = await AsyncStorage.getItem('userToken');
+
+
                 console.log('userToken: ', userToken);
                 if (userToken === null) {
                     const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
@@ -167,6 +168,8 @@ export default function Routes({ navigation }) {
                     }
                 }
                 else {
+                    const userData = await AsyncStorage.getItem('userData')
+                    setUserData(JSON.parse(userData))
                     await setDefaultHeader('token', userToken);
                 }
                 //userToken ="abc";
@@ -200,15 +203,9 @@ export default function Routes({ navigation }) {
                     await AsyncStorage.removeItem('userToken');
                     await AsyncStorage.removeItem('userData');
                     // setUserData({})
-                    userToken = await AsyncStorage.getItem('userToken');
-                    console.log('userToken: ', userToken);
-                    if (userToken === null) {
-                        const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
-                        if (response.status === 200) {
-                            await setDefaultHeader('token', response.data.token);
-                        }
-                    }
-                    dispatch({ type: 'SIGN_OUT' })
+                    const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
+                    await setDefaultHeader('token', response.data.token);
+                    dispatch({ type: 'SIGN_OUT', token: response.data.token })
                 } catch (e) {
                     console.log(e);
                 }
@@ -228,7 +225,9 @@ export default function Routes({ navigation }) {
         <NavigationContainer>
             <AuthContext.Provider value={authContext}>
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    {console.log("state.userToken",state.userToken)}
                     {state.userToken === null ? (
+
                         <Stack.Screen name="Login" component={AuthStack} />
                     ) : (
                         <Stack.Screen name="App" component={AppStack} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DashboardView from './component/dashboard';
 import { Text, TouchableOpacity, View, Modal, Image, ScrollView, TextInput } from 'react-native'
 import { styles } from './component/style';
@@ -11,12 +11,17 @@ import apiEndPoints from '../../../utils/apiEndPoints';
 import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import { UserContext } from '../../../utils/UserContext';
 const DashboardScreen = ({ navigation }) => {
+    const [userData, setUserData] = useContext(UserContext)
     const [tabBar, setTabBar] = useState(1)
     const [popup, setpopup] = useState(false)
     const [search, setsearch] = useState()
     const [auditList, setauditList] = useState([])
     const [reason, setreason] = useState('')
+
+    console.log(userData, "USERDATA")
+
     useFocusEffect(
         React.useCallback(() => {
             AuditList(1)
@@ -72,14 +77,14 @@ const DashboardScreen = ({ navigation }) => {
     useEffect(() => {
         AuditList(tabBar)
     }, [tabBar])
-    const handleCancelAudit = async(audit_id) => {
-        const params={
-            audit_id:audit_id,
-            audit_status:2,
-            reason:reason
+    const handleCancelAudit = async (audit_id) => {
+        const params = {
+            audit_id: audit_id,
+            audit_status: 2,
+            reason: reason
         }
         console.log(params)
-        const response=await apiCall('POST',apiEndPoints.CANCEL_AUDIT,params)
+        const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
         console.log(response.data)
         Alert.alert(
             'Audit Cancelled',
