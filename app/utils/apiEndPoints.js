@@ -4,6 +4,8 @@ export default {
   REGISTRATION_SIGN_UP: "/api/v1/userAuth/user_signup",
   USERLOGIN:"/api/v1/userAuth/userLogin",
 
+  PROFILE_UPDATE:"/api/v1/userAuth/updateEmpProfile",
+
   GET_CITY_BRANCH:"/api/v1/service/getBranchCity",
   GET_BRANCH_NAME:"/api/v1/service/getBranchName",
   GET_MANAGER_NAME:"/api/v1/service/getBranchManagerName",
