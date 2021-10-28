@@ -27,6 +27,7 @@ import Question2Screen from '../screen/App/Question2'
 import Question3Screen from '../screen/App/Question3'
 import { PRIMARY_BLUE_COLOR } from '../utils/constant';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword';
+import ChangePasswordScreen from '../screen/App/ChangePassword'
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -47,35 +48,36 @@ function TabStack(params) {
             })}
             tabBar={props => <MyTabBar {...props} />}
         >
-            <Tab.Screen name="DashboardScreen" component={DashboardStack} />
+            <Tab.Screen name="DashboardScreen" component={DashboardScreen} />
             <Tab.Screen name="ScheduleNewAuditScreen" component={ScheduleNewAuditScreen} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
     )
 };
-function DashboardStack() {
-    return (
-        <DashboardTab.Navigator screenOptions={{ headerShown: false }}>
-            <DashboardTab.Screen name="DashboardScreen" component={DashboardScreen} />
-            <DashboardTab.Screen name="QuestionScreen" component={QuestionScreen} />
-            <DashboardTab.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
-            <DashboardTab.Screen name="NotifyScreen" component={NotifyScreen} />
-            <DashboardTab.Screen name="Profile" component={ProfileScreen} />
-            <DashboardTab.Screen name="AuditScore" component={AuditScoreScreen} />
-            <DashboardTab.Screen name="ReviewAduit" component={ReviewAuditScreen} />
-            <DashboardTab.Screen name="Actionable" component={ActionableScreen} />
-            <DashboardTab.Screen name="AuditSuccess" component={AuditSuccessScreen} />
-
-            <DashboardTab.Screen name="Question1Screen" component={Question1Screen} />
-            <DashboardTab.Screen name="Question2Screen" component={Question2Screen} />
-            <DashboardTab.Screen name="Question3Screen" component={Question3Screen} />
-        </DashboardTab.Navigator>)
-}
+// function DashboardStack() {
+//     return (
+//         <DashboardTab.Navigator screenOptions={{ headerShown: false }}>
+//             <DashboardTab.Screen name="DashboardScreen" component={DashboardScreen} />
+//             <DashboardTab.Screen name="QuestionScreen" component={QuestionScreen} />
+//             <DashboardTab.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
+//             <DashboardTab.Screen name="NotifyScreen" component={NotifyScreen} />
+//             <DashboardTab.Screen name="Profile" component={ProfileScreen} />
+//             <DashboardTab.Screen name="AuditScore" component={AuditScoreScreen} />
+//             <DashboardTab.Screen name="ReviewAduit" component={ReviewAuditScreen} />
+//             <DashboardTab.Screen name="Actionable" component={ActionableScreen} />
+//             <DashboardTab.Screen name="AuditSuccess" component={AuditSuccessScreen} />
+//             <DashboardTab.Screen name="ChangePassword" component={ChangePasswordScreen} />
+//             <DashboardTab.Screen name="Question1Screen" component={Question1Screen} />
+//             <DashboardTab.Screen name="Question2Screen" component={Question2Screen} />
+//             <DashboardTab.Screen name="Question3Screen" component={Question3Screen} />
+//         </DashboardTab.Navigator>)
+// }
 function AppStack() {
     return (
-        <App.Navigator screenOptions={{ headerShown: false }} initialRouteName={"DashboardScreen"}>
-            <App.Screen name="DashboardScreen" component={DrawerStack} />
+        <App.Navigator screenOptions={{ headerShown: false }}   >
+            <App.Screen name="DashboardScreen" component={TabStack} />
             <App.Screen name="ScheduleNewAuditScreen" component={ScheduleNewAuditScreen} />
+            <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
 
             <App.Screen name="QuestionScreen" component={QuestionScreen} />
             <App.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
@@ -92,20 +94,20 @@ function AppStack() {
         </App.Navigator>
     )
 }
-function DrawerStack() {
-    return (
-        <Drawer.Navigator initialRouteName="DashboardScreen"
-            screenOptions={{
-                headerShown: false, drawerStyle: {
-                    backgroundColor: PRIMARY_BLUE_COLOR,
-                    width: "50%"
-                }
-            }} drawerContent={(props) => <DrawerTab {...props} />}
-        >
-            <Drawer.Screen name="DashboardScreen" component={TabStack} />
-        </Drawer.Navigator>
-    )
-}
+// function DrawerStack() {
+//     return (
+//         <Drawer.Navigator initialRouteName="DashboardScreen"
+//             screenOptions={{
+//                 headerShown: false, drawerStyle: {
+//                     backgroundColor: PRIMARY_BLUE_COLOR,
+//                     width: "50%"
+//                 }
+//             }} drawerContent={(props) => <DrawerTab {...props} />}
+//         >
+//             <Drawer.Screen name="DashboardScreen" component={TabStack} />
+//         </Drawer.Navigator>
+//     )
+// }
 
 const AuthStack = () => {
 
@@ -224,15 +226,16 @@ export default function Routes({ navigation }) {
     return (
         <NavigationContainer>
             <AuthContext.Provider value={authContext}>
-                <Stack.Navigator screenOptions={{ headerShown: false }}>
-                    {console.log("state.userToken",state.userToken)}
-                    {state.userToken === null ? (
-
+                {console.log("state.userToken", state.userToken)}
+                {state.userToken === null ? (
+                    <Stack.Navigator screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="Login" component={AuthStack} />
-                    ) : (
-                        <Stack.Screen name="App" component={AppStack} />
-                    )}
-                </Stack.Navigator>
+                    </Stack.Navigator>
+                ) : (
+                    <Drawer.Navigator screenOptions={{ headerShown: false }} drawerContent={(props) => <DrawerTab {...props} />}>
+                        <Drawer.Screen name="App" component={AppStack} />
+                    </Drawer.Navigator>
+                )}
             </AuthContext.Provider>
         </NavigationContainer>
     );

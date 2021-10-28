@@ -112,6 +112,7 @@ export default function index({ navigation }) {
             ShowAlert("You can't select previous date")
             return false
         }
+        
         return true
     }
     const handleSumbit = async () => {
