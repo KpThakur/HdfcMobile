@@ -1,43 +1,74 @@
 import React from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import Header from '../../../../component/Header'
-import {styles} from './styles'
+import { styles } from './styles'
+import Button from '../../../../component/Button';
+import Input from '../../../../component/Input';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
-export default function Profile() {
-    const navigation=useNavigation()
-    const OnpressDrawer=()=>{
+
+export default function Profile(props) {
+    const navigation = useNavigation()
+    const OnpressDrawer = () => {
         navigation.dispatch(DrawerActions.toggleDrawer());
     }
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={{flexGrow:1}}>
-            <Header headerText={"Profile"} onPress={()=>OnpressDrawer()}/>
-            <View style={styles.main}>
-                <View style={styles.display}>
-                    <Text style={styles.txt}>First Name</Text>
-                    <Text style={styles.b_txt}>Rohit</Text>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <Header headerText={"Profile"} onPress={() => OnpressDrawer()} />
+                <View style={styles.main}>
+                    <Input
+                        placeholder={"First Nsame"}
+                        containerStyle={styles.display}
+                        onChangeText={(value) => props.setProfileData({
+                            ...props.profileData,
+                            firstName: value
+                        })}
+                        value={props.profileData.firstName}
+                    />
+                    <Input
+                        placeholder={"Last Name"}
+                        containerStyle={styles.display}
+                        onChangeText={(value) => props.setProfileData({
+                            ...props.profileData,
+                            lastName: value
+                        })}
+                        value={props.profileData.lastName}
+                    />
+                    <Input
+                        placeholder={"Designation"}
+                        containerStyle={styles.display}
+                        onChangeText={(value) => props.setProfileData({
+                            ...props.profileData,
+                            designation: value
+                        })}
+                        value={props.profileData.designation}
+                    />
+                    <Input
+                        placeholder={"Email"}
+                        containerStyle={styles.display}
+                        onChangeText={(value) => props.setProfileData({
+                            ...props.profileData,
+                            email: value
+                        })}
+                        value={props.profileData.email}
+                        editable={true}
+                        />
+                    <Input
+                        placeholder={"Contact Number"}
+                        containerStyle={styles.display}
+                        onChangeText={(value) => props.setProfileData({
+                            ...props.profileData,
+                            phone: value
+                        })}
+                        keyboardType={"number-pad"}
+                        value={props.profileData.phone}
+                    />
+                    <View style={{ paddingTop: 30 }}>
+                        <Button
+                            onPress={() => props._handleSubmit()}
+                            buttonText={"Submit"} />
+                    </View>
                 </View>
-
-                <View style={styles.display}>
-                    <Text style={styles.txt}>Last Name</Text>
-                    <Text style={styles.b_txt}>Verma</Text>
-                </View>
-
-                <View style={styles.display}>
-                    <Text style={styles.txt}>Designation</Text>
-                    <Text style={styles.b_txt}>Auditor</Text>
-                </View>
-
-                <View style={styles.display}>
-                    <Text style={styles.txt}>Email</Text>
-                    <Text style={styles.b_txt}>Rohitverma@gmail.com</Text>
-                </View>
-
-                <View style={styles.display}>
-                    <Text style={styles.txt}>Contact Number</Text>
-                    <Text style={styles.b_txt}>+91-783-977-1800</Text>
-                </View>
-            </View>
             </ScrollView>
         </View>
     )
