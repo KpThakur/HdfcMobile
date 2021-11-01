@@ -128,6 +128,7 @@ export default function index({ navigation }) {
             }
             try {
                 const response = await apiCall('POST', apiEndPoints.CREATE_AUDIT, params)
+                // console.log(response.data,"SCHEDULE AUDIT")
                 if(response.status===200)
                 {
                     navigation.navigate('DashboardScreen')

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Image, Text, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import Header from '../../../../component/Header';
 import Input from '../../../../component/Input';
@@ -8,6 +8,7 @@ import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const DashboardView = (props) => {
     const [searchvalue, setSearchvalue] = useState();
+    
     const [data, setdata] = useState([
         {
             "id": 1,
@@ -16,9 +17,9 @@ const DashboardView = (props) => {
     ])
     const navigation = useNavigation();
     const OnpressDrawer = () => {
-        // navigation.dispatch(DrawerActions.openDrawer());
         navigation.openDrawer()
     }
+    
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <Header headerText={"Merchandising Audit"} onPress={() => OnpressDrawer()} />

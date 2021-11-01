@@ -42,24 +42,7 @@ const Question = (props) => {
                             <Button buttonText={"Yes"} style={{paddingVertical:5}}/>
                             <Button buttonText={"No"} style={{paddingVertical:5}}/>
                             <Button buttonText={"NA"} style={{paddingVertical:5}}/>
-                            {/* <View style={styles.brnachnme}>
-                                <Text style={styles.txt}>Capture The image</Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={() => props.onShare()}
-                                style={{
-                                    backgroundColor: '#1b7dec',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: '45%',
-                                    height: 25,
-                                    borderRadius: 20,
-                                    marginTop: 10
-                                }} >
-                                <Text style={{
-                                    fontSize: 14, fontWeight: '700', color: "#ffffff"
-                                }}>Capture Screenshot</Text>
-                            </TouchableOpacity> */}
+                            
                         </View>
                         <View style={{ marginLeft: 15 }}>
                             <Text style={styles.branname}>Rating</Text>

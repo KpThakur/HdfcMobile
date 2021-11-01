@@ -4,12 +4,17 @@ import Button from '../../../../component/Button';
 import {styles} from './style'
 import Header from '../../../../component/Header';
 import {INSTRUCTION,HEADPHONE,WIFI,GROUP_17} from '../../../../utils/constant'
+import { useNavigation } from '@react-navigation/core';
 const AuditWelcomeScreen = (props) => {
     const {handleStartAudit}=props
+    const navigation=useNavigation()
+    const OnpressDrawer = () => {
+        navigation.openDrawer()
+    }
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <Header headerText={"WelCome Online Audit"}/>
+                <Header headerText={"WelCome Online Audit"} onPress={() => OnpressDrawer()}/>
                 <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
                         <Image resizeMode={"contain"} style={styles.img} source={INSTRUCTION} />

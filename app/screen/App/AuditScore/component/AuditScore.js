@@ -3,7 +3,7 @@ import { View, Text, ScrollView, FlatList } from 'react-native'
 import { styles } from './styles'
 import Button from '../../../../component/Button'
 export default function AuditScore(props) {
-    const {handleViewActionable}=props
+    const {handleViewActionable,score}=props
     const data=[{sorce:89,date:"01/10/2021"},{sorce:89,date:"01/10/2021"}]
     return (
         <View style={styles.container}>
@@ -13,7 +13,7 @@ export default function AuditScore(props) {
                         <Text style={styles.heroic_txt}>Total Branch</Text>
                         <Text style={styles.heroic_txt}>Merchandising Audit Score</Text>
                         <View style={styles.score_board}>
-                            <Text style={styles.hsn_txt}>100</Text>
+                            <Text style={styles.hsn_txt}>{score}</Text>
                             <Text style={styles.hs_txt}>Audit Score</Text>
                         </View>
                     </View>

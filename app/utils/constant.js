@@ -53,6 +53,8 @@ export const LOGOUT_ICON=require('../assets/images/logout.png')
 export const DASHBOARD_HEROIC=require('../assets/images/Group118.png')
 export const UNCHECKED_ICON=require('../assets/images/Ellipse435.png')
 export const DOWNARROW=require('../assets/images/arrow-ios-downward-outline.png')
+export const CHECKED_FILLED=require('../assets/images/check.png')
+export const GALLERY=require('../assets/images/image-gallery.png')
 // FontSize
 export const TINY_FONT_SIZE = 10;
 export const SMALL_FONT_SIZE = 15;

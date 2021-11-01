@@ -38,7 +38,8 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         margin: 8,
         height: 38,
-        alignItems:"center"
+        alignItems:"center",
+        justifyContent:"center"
     },
     brnachnme: {
         flex: 4, margin: 4,
@@ -128,5 +129,23 @@ export const styles = StyleSheet.create({
         color:"gray",
         fontFamily:FONT_FAMILY_REGULAR,
         fontSize:normalize(12)
+    },
+    drop_down_item: {
+        backgroundColor: "#fff",
+        marginVertical: 5,
+        padding: 10,
+        shadowColor:"#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 2,
+        borderRadius:5
+    },
+    drop_down_txt: {
+        color: PRIMARY_BLUE_COLOR,
+        fontSize: normalize(SMALL_FONT_SIZE)
     }
 })

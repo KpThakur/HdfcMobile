@@ -8,7 +8,6 @@ import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOC
 import Header from '../../../../component/Header'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
-import { set } from 'react-native-reanimated'
 export default function ScheduleNewAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
@@ -16,19 +15,19 @@ export default function ScheduleNewAudit(props) {
     function _handleSelect(params) {
         setauditType(params)
     }
-    const { handleSchedule, cityBranch, cityName, isLoading,citydropDown,setcitydropDown,
-        handleSelectCity,branchDetail,branchName,setbranchNameDropDown,branchNameDropDown,handleSelectBranch,
-        branchManagerName,auditType,setauditType,date,time,setdate,settime,handleSumbit } = props
+    const { handleSchedule, cityBranch, cityName, isLoading, citydropDown, setcitydropDown,
+        handleSelectCity, branchDetail, branchName, setbranchNameDropDown, branchNameDropDown, handleSelectBranch,
+        branchManagerName, auditType, setauditType, date, time, setdate, settime, handleSumbit } = props
     const displayCityDropDown = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => handleSelectCity(item.city_name,item.city_id)} style={styles.drop_down_item}>
+            <TouchableOpacity onPress={() => handleSelectCity(item.city_name, item.city_id)} style={styles.drop_down_item}>
                 <Text style={styles.txt}>{item.city_name}</Text>
             </TouchableOpacity>
         )
     }
     const displaybranchDropDown = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => handleSelectBranch(item.branch_name,item.branch_id)} style={styles.drop_down_item}>
+            <TouchableOpacity onPress={() => handleSelectBranch(item.branch_name, item.branch_id)} style={styles.drop_down_item}>
                 <Text style={styles.txt}>{item.branch_name}</Text>
             </TouchableOpacity>
         )
@@ -50,18 +49,18 @@ export default function ScheduleNewAudit(props) {
                                         <Text style={styles.txt_head}>Bank Details for Audit</Text>
                                         <DropDown title={cityName ? cityName : "City"} data={cityBranch}
                                             renderItem={displayCityDropDown} dropDown={citydropDown} data_name={'city_name'}
-                                            setdropDown={setcitydropDown}/>
-                                            
-                                            <DropDown title={branchName ? branchName : "Branch Name / ATM Name"} data={branchDetail}
+                                            setdropDown={setcitydropDown} />
+
+                                        <DropDown title={branchName ? branchName : "Branch Name / ATM Name"} data={branchDetail}
                                             renderItem={displaybranchDropDown} dropDown={branchNameDropDown} data_name={'brach_name'}
                                             setdropDown={setbranchNameDropDown} />
-                                         
-                                        <Text 
+
+                                        <Text
                                             style={{
-                                                backgroundColor: GREY_TEXT_COLOR,borderRadius: 5,
+                                                backgroundColor: GREY_TEXT_COLOR, borderRadius: 5,
                                                 paddingVertical: 10, paddingHorizontal: 10, marginVertical: 10
-                                            }} 
-                                        >{branchManagerName?branchManagerName:'Branch Manager Name / ATM Code'}</Text>
+                                            }}
+                                        >{branchManagerName ? branchManagerName : 'Branch Manager Name / ATM Code'}</Text>
                                         {/* <DropDown title="Branch Name / ATM Name" data={data} />
                                         <DropDown title="Branch Manager Name / ATM Code" data={data} /> */}
                                     </View>
@@ -75,8 +74,13 @@ export default function ScheduleNewAudit(props) {
                                                 </TouchableOpacity>
                                                 <DatePicker modal open={openDate} mode="date" date={Cdate}
                                                     onConfirm={(date) => {
-                                                        setopenDate(!openDate)
-                                                        setdate(moment(date).format('DD-MM-YYYY'))
+                                                        if (moment(date).format('DD-MM-YYYY') < moment(moment()).format('DD-MM-YYYY')) {
+                                                            Alert.alert('date',"You can't select previous date")
+                                                        }
+                                                        else {
+                                                            setopenDate(!openDate)
+                                                            setdate(moment(date).format('DD-MM-YYYY'))
+                                                        }
 
                                                     }}
                                                     onCancel={() => {
@@ -91,13 +95,13 @@ export default function ScheduleNewAudit(props) {
                                                 <DatePicker modal open={openTime} mode="time" date={new Date()}
                                                     minuteInterval={15}
                                                     onConfirm={(date) => {
-                                                        if(moment(date).format('h:mma')<='6:00pm' && moment(date).format('h:mma')>='10:00am')
-                                                        {
+                                                        if (moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am') {
                                                             setopenTime(!openTime)
-                                                        settime(moment(date).format('HH-MM'))
-                                                        } else{
-                                                            Alert.alert('Time','Please time between 10:00 AM to 6:00 PM')
-                                                        }                       
+                                                            // console.log(moment(date).format('h-mm'),"DATE")
+                                                            settime(moment(date).format('h-mm'))
+                                                        } else {
+                                                            Alert.alert('Time', 'Please time between 10:00 AM to 6:00 PM')
+                                                        }
                                                     }}
                                                     onCancel={() => {
                                                         setopenTime(false)
@@ -125,7 +129,7 @@ export default function ScheduleNewAudit(props) {
                                     </View>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
-                                    <Button title="Schedule" onPress={()=>handleSumbit()} />
+                                    <Button title="Schedule" onPress={() => handleSumbit()} />
                                 </View >
                             </View >
                         </ScrollView>

@@ -4,12 +4,17 @@ import Header from '../../../../component/Header'
 import {styles} from './styles'
 import DropDown from '../../../../component/DropDown'
 import Button from '../../../../component/Button'
+import { useNavigation } from '@react-navigation/native'
 export default function ReviewAuit(props) {
     const {handleSubmitReport}=props
+    const navigation = useNavigation();
+    const OnpressDrawer = () => {
+        navigation.openDrawer()
+    }
     const data=[{name:"Actionable 1"},{name:"Actionable 2"},{name:"Actionable 3"}]
     return (
         <View style={styles.container}>
-            <Header headerText={"Audit Actionable Review"}/>
+            <Header headerText={"Audit Actionable Review"} onPress={OnpressDrawer}/>
             <View style={styles.main}>
                 <Text style={styles.h_txt}>Audits Actions By :</Text>
                 <DropDown title={"Branch Manager"} data={data}/>

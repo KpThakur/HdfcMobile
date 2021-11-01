@@ -12,15 +12,17 @@ import moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { UserContext } from '../../../utils/UserContext';
+import { QuestionContext } from '../../../utils/QuestionContext';
 const DashboardScreen = ({ navigation }) => {
     const [userData, setUserData] = useContext(UserContext)
+    const [question,setquestion]=useContext(QuestionContext)
     const [tabBar, setTabBar] = useState(1)
     const [popup, setpopup] = useState(false)
     const [search, setsearch] = useState()
     const [auditList, setauditList] = useState([])
     const [reason, setreason] = useState('')
 
-    console.log(userData, "USERDATA")
+    // console.log(userData, "USERDATA")
 
     useFocusEffect(
         React.useCallback(() => {
@@ -59,8 +61,9 @@ const DashboardScreen = ({ navigation }) => {
     const AuditList = async (index) => {
         try {
             const params = { audit_type: index }
+            console.log("PARAMS",params)
             const response = await apiCall('POST', apiEndPoints.GET_AUDIT_LIST, params)
-            console.log("response", response.data.data)
+            console.log("response", response.data)
             if (response.status = 200) {
                 setauditList(response.data.data);
             }
@@ -93,6 +96,16 @@ const DashboardScreen = ({ navigation }) => {
         setpopup(!popup)
         AuditList(1)
     }
+    const QuestionList=async(id)=>{
+        const params={
+            audit_id:id
+        }
+        const response=await apiCall('POST',apiEndPoints.QUESTION,params)
+        console.log(response.data.data)
+        setquestion({data:response.data.data,audit_id:id})
+        navigation.navigate('AuditWelcomeScreen')
+    }
+    console.log(auditList,"AUDITLIST")
     const renderTodayAudit = ({ item, index }) => {
         return (
             <View style={{ backgroundColor: "#fff" }}>
@@ -147,7 +160,7 @@ const DashboardScreen = ({ navigation }) => {
                                                         <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Cancel Audit</Text>
                                                     </TouchableOpacity>
                                                     <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
-                                                        <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Reschedule</Text>
+                                                        <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }} onPress={()=>QuestionList(audit.audit_id)}>Start Audit</Text>
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
