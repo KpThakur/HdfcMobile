@@ -5,6 +5,7 @@ const AuditWelcomeScreen = ({navigation}) => {
     const handleStartAudit=()=>{
         navigation.navigate("NotifyScreen")
     }
+    
     return (<AuditWelcomeScreenView handleStartAudit={handleStartAudit}/>)
 }
 export default AuditWelcomeScreen;

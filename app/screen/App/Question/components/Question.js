@@ -78,7 +78,7 @@ const Question = (props) => {
             })
     }
     const OpenCamera = () => {
-        ImagePicker.openCamera({ width: 300, height: 400 })
+        ImagePicker.openCamera({mediaType:"any"})
             .then(images => {
                 console.log(images)
             })
@@ -236,7 +236,7 @@ const Question = (props) => {
                                         backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
                                         justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10, marginVertical: 10
                                     }} >
-                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>BM/RMM/AC</Text>
+                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable?"Branch Manager":rmmactionable?"Reasonal Manager":"BM/RMM/AC"}</Text>
                                         {
                                             dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
                                                 <Image source={DOWNARROW} />
@@ -247,13 +247,13 @@ const Question = (props) => {
                                         <View>
                                             {
                                                 question.data.bm_actionable_assignee == "1" &&
-                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable()}>
+                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(1)}>
                                                     <Text style={styles.drop_down_txt}>Branch Manager</Text>
                                                 </TouchableOpacity>
                                             }
                                             {
                                                 question.data.rmm_actionable_assignee == "1" &&
-                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable()}>
+                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(2)}>
                                                     <Text style={styles.drop_down_txt}>RMM</Text>
                                                 </TouchableOpacity>}
                                         </View>

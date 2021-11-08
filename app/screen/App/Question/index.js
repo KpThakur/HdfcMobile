@@ -8,8 +8,8 @@ const Question = ({navigation}) => {
     const [question,setquestion]=useContext(QuestionContext)
     const [remark, setremark] = useState()
     const [rating, setrating] = useState()
-    const [rmmactionable, setrmmactionable] = useState()
-    const [bmActionable, setbmActionable] = useState()
+    const [rmmactionable, setrmmactionable] = useState(0)
+    const [bmActionable, setbmActionable] = useState(0)
     const [questionList, setquestionList] = useState()
     const [yesNo, setyesNo] = useState()
     const [quality, setquality] = useState()
@@ -46,8 +46,19 @@ const Question = ({navigation}) => {
             setquestion({data:response.data.data,audit_id:params.audit_id})
             
         }
-        else
-            navigation.navigate('AuditScore')
+        else{
+            //Complete
+            const params={
+                audit_id:question.audit_id,
+                audit_status:3 
+            }
+            const response=await apiCall('POST',apiEndPoints.CANCEL_AUDIT,params)
+            console.log(response)
+            if(response.status===200)
+                navigation.navigate('AuditScore')
+            else
+                navigator.navigate('DashboardScreen')
+            }
     }
     return (
         <>

@@ -14,5 +14,6 @@ export default {
   CANCEL_AUDIT:"/api/v1/audit/auditStatusUpdate",
   QUESTION:'/api/v1/question/getQuestionList',
   SUBMIT_QUESTION:'/api/v1/question/submitQuestion',
-  AUDIT_SCORE:'/api/v1/question/auditScore'
+  AUDIT_SCORE:'/api/v1/question/auditScore',
+  EDIT_AUDIT:'/api/v1/audit/editaudit',
 }
