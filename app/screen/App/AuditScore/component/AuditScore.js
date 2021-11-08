@@ -12,15 +12,15 @@ export default function AuditScore(props) {
                         <Text style={styles.heroic_txt}>Total Branch</Text>
                         <Text style={styles.heroic_txt}>Merchandising Audit Score</Text>
                         <View style={styles.score_board}>
-                            <Text style={styles.hsn_txt}>{totalScore.score}</Text>
+                            <Text style={styles.hsn_txt}>{totalScore?.score}</Text>
                             <Text style={styles.hs_txt}>Audit Score</Text>
                         </View>
                     </View>
                     {
-                        totalScore.previous&&
+                        totalScore?.previous&&
                     <View style={styles.prev_audit}>
                         <Text style={styles.txt}>Preview Audit Score :</Text>
-                        <FlatList data={totalScore.previous} renderItem={displayScoreAudit}/>
+                        <FlatList data={totalScore?.previous} renderItem={displayScoreAudit}/>
                     </View>
                     }
                     <Button buttonText={"View Actionables"} onPress={()=>handleViewActionable()}/>

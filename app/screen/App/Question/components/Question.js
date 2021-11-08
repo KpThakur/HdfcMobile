@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler, Dimensions, FlatList } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
 import { styles } from "./styles";
@@ -12,13 +12,16 @@ import DropDown from '../../../../component/DropDown'
 import { useNavigation } from "@react-navigation/native";
 import { normalize } from "../../../../component/scaleFontSize";
 const Question = (props) => {
-
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
     const [onInfo, setonInfo] = useState(false)
     const [defaultRating, setdefaultRating] = useState(0)
     const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5])
     const [dropDown, setdropDown] = useState(false)
     const [showIndex, setshowIndex] = useState()
-    const [ssDropDown, setssDropDown] = useState(false)
+    const [ssDropDown, setssDropDown] = useState(false);
+
+
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
             setssDropDown(!ssDropDown)
@@ -71,18 +74,88 @@ const Question = (props) => {
         setshowIndex(index)
         setcheckedAns(question)
     }
+    // const OpenGallery = () => {
+    //     ImagePicker.openPicker({ multiple: true })
+    //         .then(images => {
+    //             console.log(images)
+    //         })
+    // }
     const OpenGallery = () => {
-        ImagePicker.openPicker({ multiple: true })
-            .then(images => {
-                console.log(images)
-            })
+        ImagePicker.openPicker({
+            width: windowWidth,
+            height: windowHeight / 2,
+            cropping: true,
+            multiple: true
+        }).then(image => {
+            props.setCamImg(image)
+            setssDropDown(false)
+        });
     }
+    // const OpenCamera = () => {
+    //     ImagePicker.openCamera({mediaType:"any"})
+    //         .then(images => {
+    //             console.log(images)
+    //         })
+    // }
     const OpenCamera = () => {
-        ImagePicker.openCamera({mediaType:"any"})
-            .then(images => {
-                console.log(images)
-            })
+        ImagePicker.openCamera({
+            width: 300,
+            height: 400,
+            cropping: true,
+        }).then(image => {
+            props.setCamImg(image)
+            setssDropDown(false)
+        });
     }
+    function deleteImage(index) {
+        var imageArray = [...props.camImg]
+        imageArray.splice(index, 1);
+        props.setCamImg(imageArray)
+    }
+    const renderImage = () => {
+        return (
+            <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                data={props.camImg}
+                horizontal={true}
+                renderItem={({ item, index }) => {
+                    return (
+                        <View style={{ width: 100, height: 100 }}>
+                            <TouchableOpacity
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: 20,
+                                    position: "absolute",
+                                    zIndex: 9,
+                                    right: 5
+                                }}
+                                onPress={() => deleteImage(index)}
+                            >
+                                <Image
+                                    source={require('../../../../assets/images/add-alt.png')}
+                                    style={{
+                                        width: "100%", height: "100%", marginTop: 5
+                                    }}
+                                />
+                            </TouchableOpacity>
+                            <View style={{ }}>
+                                <Image
+                                    source={{ uri: item.path }}
+                                    style={{ width: 120, height: 120, marginLeft: 5, marginRight: 5 }}
+                                />
+                            </View>
+                        </View>
+
+                    )
+                }
+
+
+                }
+            />
+        )
+    }
+
     return (
         <View style={styles.container}>
             <Header leftImg={ARROW} headerText={"Audit Question"} onPress={() => navigation.goBack()} />
@@ -116,23 +189,28 @@ const Question = (props) => {
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ flex: 5, }}>
                                 <Text style={styles.branname}>
-                                    {question.data.question_title}
+                                    {question?.data?.question_title}
                                 </Text>
                             </View>
                         </View>
                         <Text style={styles.txt}>
-                            {question.data.audit_question}
+                            {question?.data?.audit_question}
                         </Text>
-                        <View style={{
-                            justifyContent: 'center', alignItems: 'center',
-                            paddingBottom: 5, paddingTop: 5,
-                        }}>
-                            <Image style={{
-                                width: '90%', borderRadius: 10
-                            }} source={require('../../../../assets/images/MaskGroup6.png')} />
-                        </View>
+                        {console.log('question?.data?.question_type: ', question?.data?.question_type)}
+                        {question?.data?.question_type === '1' ?
+                            <View style={{
+                                justifyContent: 'center', alignItems: 'center',
+                                paddingBottom: 5, paddingTop: 5,
+                            }}>
+                                <Image style={{
+                                    width: '90%', borderRadius: 10
+                                }} source={require('../../../../assets/images/MaskGroup6.png')} />
+                            </View>
+                            :
+                            null
+                        }
                         {
-                            question.data.question_type === '1' &&
+                            question?.data?.question_type === '1' &&
                             (
                                 <>
                                     <View style={styles.brnchmannme}>
@@ -158,12 +236,12 @@ const Question = (props) => {
                                             ssDropDown &&
                                             <Modal transparent={true}>
                                                 <View style={{ backgroundColor: "#fff", width: "100%", position: "absolute", bottom: 0, paddingVertical: 40 }}>
-                                                    <View style={{flexDirection:"row",justifyContent:"space-between",marginHorizontal:10}}>
+                                                    <View style={{ flexDirection: "row", justifyContent: "space-between", marginHorizontal: 10 }}>
                                                         <Text style={{ color: "#000", color: "#000", fontFamily: FONT_FAMILY_REGULAR, fontSize: normalize(SMALL_FONT_SIZE) }}>
                                                             Choose from
                                                         </Text>
-                                                        <TouchableOpacity onPress={()=>setssDropDown(!ssDropDown)}>
-                                                            <Image source={CROSS}/>
+                                                        <TouchableOpacity onPress={() => setssDropDown(!ssDropDown)}>
+                                                            <Image source={CROSS} />
                                                         </TouchableOpacity>
                                                     </View>
                                                     <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
@@ -181,30 +259,33 @@ const Question = (props) => {
                                     </View>
                                     <View style={styles.img_sec}>
                                         <View style={styles.d_sec_img}>
-                                            <Image source={require('../../../../assets/images/MaskGroup6.png')} style={styles.sec_img} />
-                                            <TouchableOpacity style={{ position: "absolute", right: 1, backgroundColor: "#fff", borderRadius: 100 }}>
-                                                <Image source={CROSS} style={styles.cross_icon} />
-                                            </TouchableOpacity>
+                                            <Image resizeMode="contain"
+                                                source={{ uri: props.camImg.path }}
+                                                style={styles.cross_icon}
+                                            />
+                                            <View style={{ backgroundColor: 'red', width: '100%', height: '100%', marginBottom: 15, }}>
+                                                {renderImage()}
+                                            </View>
                                         </View>
                                     </View>
                                 </>
                             )
                         }
-                        {question.data.question_type === '2' && (
+                        {question?.data?.question_type === '2' && (
                             <View style={styles.brnchmannme}>
                                 <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('YES')} />
                                 <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('NO')} />
                                 <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('NA')} />
                             </View>
                         )}
-                        {question.data.question_type === '3' && (
+                        {question?.data?.question_type === '3' && (
                             <View style={styles.brnchmannme}>
                                 <TextInput placeholder="Enter the quantity"
                                     value={quality} onChangeText={text => setquality(text)}
                                     style={{ padding: 10, backgroundColor: "#ecececec", width: "100%" }} />
                             </View>
                         )}
-                        {question.data.question_type === '4' && (
+                        {question?.data?.question_type === '4' && (
 
                             <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
                                 <Text style={styles.txt}>Answer the following question</Text>
@@ -227,7 +308,7 @@ const Question = (props) => {
                         }
                         <CustomRatingBar />
                         {
-                            question.data.rmm_actionable_assignee === "1" ?
+                            question?.data?.rmm_actionable_assignee === "1" ?
                                 <View style={{ marginTop: 20 }}>
                                     <Text style={[styles.branname, { marginLeft: 10 }]}>
                                         Actionable
@@ -236,7 +317,7 @@ const Question = (props) => {
                                         backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
                                         justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10, marginVertical: 10
                                     }} >
-                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable?"Branch Manager":rmmactionable?"Reasonal Manager":"BM/RMM/AC"}</Text>
+                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? "Branch Manager" : rmmactionable ? "Reasonal Manager" : "BM/RMM/AC"}</Text>
                                         {
                                             dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
                                                 <Image source={DOWNARROW} />
@@ -261,7 +342,7 @@ const Question = (props) => {
                                 </View> : null
                         }
                         {
-                            question.data.remark === '1' &&
+                            question?.data?.remark === '1' &&
                             <View style={{ marginTop: 10 }}>
                                 <Text style={[styles.branname, { marginLeft: 10 }]}>
                                     Remarks

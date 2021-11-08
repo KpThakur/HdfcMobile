@@ -6,7 +6,7 @@ import DropDown from '../../../../component/DropDown'
 import Button from '../../../../component/Button'
 import { useNavigation } from '@react-navigation/native'
 export default function ReviewAuit(props) {
-    const {handleSubmitReport}=props
+    const {handleSubmitReport,setcitydropDown}=props
     const navigation = useNavigation();
     const OnpressDrawer = () => {
         navigation.openDrawer()
@@ -17,9 +17,9 @@ export default function ReviewAuit(props) {
             <Header headerText={"Audit Actionable Review"} onPress={OnpressDrawer}/>
             <View style={styles.main}>
                 <Text style={styles.h_txt}>Audits Actions By :</Text>
-                <DropDown title={"Branch Manager"} data={data}/>
-                <DropDown title={"Regional Marketing Manager"} data={data}/>
-                <DropDown title={"Admin"} data={data}/>
+                <DropDown setdropDown={setcitydropDown} title={"Branch Manager"} data={data}/>
+                <DropDown setdropDown={setcitydropDown} title={"Regional Marketing Manager"} data={data}/>
+                <DropDown setdropDown={setcitydropDown} title={"Admin"} data={data}/>
             </View>
             <View style={{flex:4,justifyContent:"flex-end",marginBottom:10}}>
                 <Button buttonText={"Submit Report"} onPress={()=>handleSubmitReport()}/>

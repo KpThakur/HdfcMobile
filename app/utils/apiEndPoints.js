@@ -16,4 +16,5 @@ export default {
   SUBMIT_QUESTION:'/api/v1/question/submitQuestion',
   AUDIT_SCORE:'/api/v1/question/auditScore',
   EDIT_AUDIT:'/api/v1/audit/editaudit',
+  GET_ACTIONABLE_DETAIL:"/api/v1/question/getActionableDetail"
 }
