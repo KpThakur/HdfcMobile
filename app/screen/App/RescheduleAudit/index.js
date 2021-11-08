@@ -1,13 +1,13 @@
 import moment from 'moment'
 import React, { useState, useEffect } from 'react'
 import { View, Text, Alert } from 'react-native'
+import { useContext } from 'react/cjs/react.development'
 import apiEndPoints from '../../../utils/apiEndPoints'
+import { EditAuditContext } from '../../../utils/EditAuditContext'
 import { apiCall } from '../../../utils/httpClient'
-import ScheduleNewAudit from './component/ScheduleNewAudit'
-import Loader from '../../../utils/Loader'
+import RescheduleAudit from './component/RescheduleAudit'
+import Loader from '../.../../../../utils/Loader'
 export default function index({ navigation }) {
-    const [date, setdate] = useState()
-    const [time, settime] = useState()
     const [cityBranch, setcityBranch] = useState([])
     const [cityName, setCityName] = useState()
     const [branchDetail, setbranchDetail] = useState([])
@@ -16,22 +16,21 @@ export default function index({ navigation }) {
     const [branchName, setbranchName] = useState()
     const [branchNameDropDown, setbranchNameDropDown] = useState(false)
     const [branchManagerName, setbranchManagerName] = useState()
-    const [auditType, setauditType] = useState(1)
     const [cityId, setcityId] = useState()
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
+    const [editAudit,seteditAudit]=useContext(EditAuditContext)
     useEffect(() => {
         getCityName()
+        getBranchName(editAudit.city_id)
     }, [])
     const getCityName = async () => {
         try {
             setisLaoding(true)
             const response = await apiCall('POST', apiEndPoints.GET_CITY_BRANCH)
-            setisLaoding(false)
-            
             if (response.status === 200) {
                 setcityBranch(response.data.data)
-                
+                setisLaoding(false)
             }
             else
                 console.log("Status Code:", response.status)
@@ -44,14 +43,12 @@ export default function index({ navigation }) {
         navigation.navigate("DashboardScreen")
     }
     const handleSelectCity = (city_name, city_id) => {
-        setCityName(city_name)
-        setcityId(city_id)
+        seteditAudit({...editAudit,city_id,city_name,branch_name:null,branch_id:null,branch_manager:null,branch_manager_id:null})
         setcitydropDown(!citydropDown)
         getBranchName(city_id)
     }
     const handleSelectBranch = (branch_name, branch_id) => {
-        setbranchName(branch_name)
-        setbranchNameId(branch_id)
+        seteditAudit({...editAudit,branch_name,branch_id,branch_manager_id:null,branch_manager:null})
         setbranchNameDropDown(!branchNameDropDown)
         getManagerName(branch_id)
     }
@@ -60,10 +57,10 @@ export default function index({ navigation }) {
             setisLaoding(true)
             const params = { branch_id }
             const response = await apiCall('POST', apiEndPoints.GET_MANAGER_NAME, params)
-            setisLaoding(false)
             if (response.status === 200) {
-                setbranchManagerName(response.data.data[0].branch_manager)
-                setbranchManagerId(response.data.data[0].branch_manager_id)
+                seteditAudit({...editAudit,branch_manager:response.data.data[0].branch_manager,branch_manager_id:response.data.data[0].branch_manager_id,
+                    branch_name:response.data.data[0].branch_name,branch_id:response.data.data[0].branch_id})
+                    setisLaoding(false)
             }
             else
                 console.log("Status Code:", response.status)
@@ -74,11 +71,8 @@ export default function index({ navigation }) {
     }
     const getBranchName = async (city_id) => {
         try {
-            setisLaoding(true)
             const params = { city_id }
-            console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME, params)
-            setisLaoding(false)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
             }
@@ -96,23 +90,15 @@ export default function index({ navigation }) {
         )
     }
     const validation = () => {
-        if (!cityId) {
+        if (!editAudit.city_id) {
             ShowAlert('Select City Name')
             return false
         }
-        if (!branchNameId) {
+        if (!editAudit.branch_id) {
             ShowAlert('Select Branch Name')
             return false
         }
-        if (!time) {
-            ShowAlert('Select Time')
-            return false
-        }
-        if (!date) {
-            ShowAlert('Select Date')
-            return false
-        }
-        if(date<moment(moment()).format('DD-MM-YYYY'))
+        if(editAudit.audit_date<moment(moment()).format('DD-MM-YYYY'))
         {
             ShowAlert("You can't select previous date")
             return false
@@ -123,18 +109,10 @@ export default function index({ navigation }) {
     const handleSumbit = async () => {
         const vaild = validation()
         if (vaild) {
-            const params = {
-                city_id: cityId,
-                branch_id: branchNameId,
-                branch_manager: branchManagerName,
-                audit_date: date,
-                audit_time: time, audit_type: auditType,
-                branch_manager_id: branchManagerId
-            }
             try {
                 setisLaoding(true)
-                const response = await apiCall('POST', apiEndPoints.CREATE_AUDIT, params)
-                // console.log(response.data,"SCHEDULE AUDIT")
+                const response = await apiCall('POST', apiEndPoints.EDIT_AUDIT, editAudit)
+                // console.log(response,"SCHEDULE AUDIT")
                 setisLaoding(false)
                 if(response.status===200)
                 {
@@ -148,15 +126,9 @@ export default function index({ navigation }) {
     }
     return (
         <>
-        {isLaoding&&<Loader/>}
-        <ScheduleNewAudit cityBranch={cityBranch}
-            time={time}
-            settime={settime}
-            date={date}
-            setdate={setdate}
+        {isLaoding&& <Loader/>}
+        <RescheduleAudit cityBranch={cityBranch}
             handleSchedule={handleSchedule}
-            cityName={cityName}
-            setCityName={setCityName}
             isLaoding={isLaoding}
             handleSelectCity={handleSelectCity}
             citydropDown={citydropDown}
@@ -167,9 +139,8 @@ export default function index({ navigation }) {
             handleSelectBranch={handleSelectBranch}
             setbranchNameDropDown={setbranchNameDropDown}
             branchManagerName={branchManagerName}
-            auditType={auditType}
-            setauditType={setauditType}
             handleSumbit={handleSumbit}
+            editAudit={editAudit} seteditAudit={seteditAudit}
         />
         </>
     )

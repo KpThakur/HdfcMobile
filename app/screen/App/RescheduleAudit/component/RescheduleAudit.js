@@ -8,16 +8,16 @@ import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOC
 import Header from '../../../../component/Header'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
-export default function ScheduleNewAudit(props) {
+export default function RescheduleAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
     const [openTime, setopenTime] = useState(false)
-    function _handleSelect(params) {
-        setauditType(params)
-    }
     const { handleSchedule, cityBranch, cityName, isLoading, citydropDown, setcitydropDown,
         handleSelectCity, branchDetail, branchName, setbranchNameDropDown, branchNameDropDown, handleSelectBranch,
-        branchManagerName, auditType, setauditType, date, time, setdate, settime, handleSumbit } = props
+        branchManagerName, handleSumbit,editAudit,seteditAudit } = props
+        function _handleSelect(params) {
+            seteditAudit({...editAudit,audit_type:params})
+        }
     const displayCityDropDown = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => handleSelectCity(item.city_name, item.city_id)} style={styles.drop_down_item}>
@@ -40,18 +40,18 @@ export default function ScheduleNewAudit(props) {
                     (
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                             <View style={styles.contianer}>
-                                <Header headerText={"Schedule New Audit"} leftImg={ARROW} onPress={() => { navigation.goBack() }} />
+                                <Header headerText={"Reschedule Audit"} leftImg={ARROW} onPress={() => { navigation.goBack() }} />
                                 <View style={{
                                     padding: 20, padding: 20,
                                     justifyContent: "space-evenly"
                                 }}>
                                     <View>
                                         <Text style={styles.txt_head}>Bank Details for Audit</Text>
-                                        <DropDown title={cityName ? cityName : "City"} data={cityBranch}
+                                        <DropDown title={editAudit ? editAudit.city_name : "City"} data={cityBranch}
                                             renderItem={displayCityDropDown} dropDown={citydropDown} data_name={'city_name'}
                                             setdropDown={setcitydropDown} />
 
-                                        <DropDown title={branchName ? branchName : "Branch Name / ATM Name"} data={branchDetail}
+                                        <DropDown title={editAudit.branch_name ? editAudit.branch_name : "Branch Name / ATM Name"} data={branchDetail}
                                             renderItem={displaybranchDropDown} dropDown={branchNameDropDown} data_name={'brach_name'}
                                             setdropDown={setbranchNameDropDown} />
 
@@ -60,7 +60,7 @@ export default function ScheduleNewAudit(props) {
                                                 backgroundColor: GREY_TEXT_COLOR, borderRadius: 5,
                                                 paddingVertical: 10, paddingHorizontal: 10, marginVertical: 10
                                             }}
-                                        >{branchManagerName ? branchManagerName : 'Branch Manager Name / ATM Code'}</Text>
+                                        >{editAudit.branch_manager ? editAudit.branch_manager : 'Branch Manager Name / ATM Code'}</Text>
                                         {/* <DropDown title="Branch Name / ATM Name" data={data} />
                                         <DropDown title="Branch Manager Name / ATM Code" data={data} /> */}
                                     </View>
@@ -70,7 +70,9 @@ export default function ScheduleNewAudit(props) {
                                             <View>
                                                 <TouchableOpacity style={styles.date_time} onPress={() => { setopenDate(true) }}>
                                                     <Image source={CALENDAR} style={{ marginRight: 10 }} />
-                                                    {date ? <Text>{date}</Text> : <Text>Date</Text>}
+                                                    {editAudit ?
+                                                    <Text>{editAudit.audit_date}</Text>
+                                                     : <Text>Date</Text>}
                                                 </TouchableOpacity>
                                                 <DatePicker modal open={openDate} mode="date" date={Cdate}
                                                     onConfirm={(date) => {
@@ -79,7 +81,7 @@ export default function ScheduleNewAudit(props) {
                                                         }
                                                         else {
                                                             setopenDate(!openDate)
-                                                            setdate(moment(date).format('DD-MM-YYYY'))
+                                                            seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
                                                         }
 
                                                     }}
@@ -90,19 +92,15 @@ export default function ScheduleNewAudit(props) {
                                             <View>
                                                 <TouchableOpacity style={styles.date_time} onPress={() => { setopenTime(true) }}>
                                                     <Image source={CLOCK} style={{ marginRight: 10 }} />
-                                                    {time ? <Text>{time}</Text> : <Text>Date</Text>}
+                                                    {editAudit ? <Text>{editAudit.audit_time}</Text> : <Text>Date</Text>}
                                                 </TouchableOpacity>
                                                 <DatePicker modal open={openTime} mode="time" date={new Date()}
                                                     minuteInterval={15}
                                                     onConfirm={(date) => {
-                                                        console.log(moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am')
                                                         if (moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am') {
                                                             setopenTime(!openTime)
                                                             // console.log(moment(date).format('h-mm'),"DATE")
-                                                                if(moment(date.getTime()).format('h-mm')===moment(new Date().getTime()).format('h-mm'))
-                                                                    settime(moment(date.getTime()).format("h-00"))
-                                                                else
-                                                                    settime(moment(date).format('h-mm'))
+                                                            seteditAudit({...editAudit,audit_time:moment(date).format('h-mm')})
                                                         } else {
                                                             Alert.alert('Time', 'Please time between 10:00 AM to 6:00 PM')
                                                         }
@@ -115,20 +113,20 @@ export default function ScheduleNewAudit(props) {
                                     </View>
                                     <View style={{ marginTop: 10 }}>
                                         <Text style={styles.txt_head}>Audit Type:</Text>
-                                        <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(2)}>
-                                            <Image source={auditType === 2 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
-                                            <Text style={{
-                                                color: auditType === 2 ? PRIMARY_BLUE_COLOR :
-                                                    "gray"
-                                            }}>On-Site Audit</Text>
-                                        </TouchableOpacity>
-
                                         <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(1)}>
-                                            <Image source={auditType === 1 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
+                                            <Image source={editAudit.audit_type === 1 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
                                             <Text style={{
-                                                color: auditType === 1 ? PRIMARY_BLUE_COLOR :
+                                                color: editAudit.audit_type === 1 ? PRIMARY_BLUE_COLOR :
                                                     "gray"
                                             }}>Online Audit</Text>
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(2)}>
+                                            <Image source={editAudit.audit_type === 2 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
+                                            <Text style={{
+                                                color: editAudit.audit_type === 2 ? PRIMARY_BLUE_COLOR :
+                                                    "gray"
+                                            }}>On-Site Audit</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>

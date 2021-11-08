@@ -9,31 +9,12 @@ const WindowHeight = Dimensions.get('window').height
 export default function index({ data, data_name, title, renderItem, dropDown, setdropDown }) {
     const [search, setsearch] = useState('')
     const [filterData, setfilterData] = useState(null)
-    const navigation = useNavigation()
-    useEffect(() => {
-        BackHandler.addEventListener(
-            'hardwareBackPress',
-            onBackPress
-        );
-        return () => {
-            BackHandler.removeEventListener(
-                'hardwareBackPress',
-                onBackPress
-            );
-        };
-    }, []);
-
-    function onBackPress() {
-        setdropDown(!dropDown)
-        return true;
-    }
-
     const handleDropDown = () => {
-        setdropDown(!dropDown)
-    }
-    const handleSearch = (text) => {
-        setsearch(text)
-        const val = data.filter(city => {
+    setdropDown(!dropDown)
+}
+const handleSearch = (text) => {
+    setsearch(text)
+    const val = data.filter(city => {
             if(data_name==='city_name')
                 return city.city_name.toLowerCase().includes(search.toLowerCase())
             else

@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 300,
         height: WindowWidth / 2.5,
-        width: WindowHeight / 5,
+        width: WindowHeight / 4,
         borderColor: BORDER_COLOR,
         borderWidth: 10,
         marginTop: 20,

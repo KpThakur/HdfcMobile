@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import { apiCall } from '../../../utils/httpClient';
 import LoginScreen from './component/login';
@@ -12,6 +12,7 @@ const Login = ({ navigation }) => {
     const [email, setemail] = useState('john@mailinator.com')
     const [password, setpassword] = useState('123456')
     const [isLoading, setisLoading] = useState(false)
+    const [isChecked, setisChecked] = useState(false)
     const { signIn } = React.useContext(AuthContext);
     const validationFrom = () => {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -39,7 +40,7 @@ const Login = ({ navigation }) => {
                     signIn(response.data.token)
                     setUserData(response.data.data)
                     AsyncStorage.setItem('userData',JSON.stringify(response.data.data))
-                    console.log("response.data",response.data)
+                    // console.log("response.data",response.data)
                     setisLoading(false)
                 }
                 else {
@@ -68,6 +69,7 @@ const Login = ({ navigation }) => {
                 email={email}
                 password={password}
                 isLoading={isLoading}
+                isChecked={isChecked} setisChecked={setisChecked}
                 setpassword={setpassword} setemail={setemail} ShowAlert={ShowAlert}
             />
         </>)

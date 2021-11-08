@@ -22,12 +22,9 @@ import AuditScoreScreen from '../screen/App/AuditScore';
 import ReviewAuditScreen from '../screen/App/ReviewAudit'
 import ActionableScreen from '../screen/App/Actionable';
 import AuditSuccessScreen from '../screen/App/AuditSuccess';
-import Question1Screen from '../screen/App/Question 1'
-import Question2Screen from '../screen/App/Question2'
-import Question3Screen from '../screen/App/Question3'
-import { PRIMARY_BLUE_COLOR } from '../utils/constant';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword';
 import ChangePasswordScreen from '../screen/App/ChangePassword'
+import RescheduleAuditScreen from '../screen/App/RescheduleAudit';
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,11 +71,11 @@ function TabStack(params) {
 // }
 function AppStack() {
     return (
-        <App.Navigator screenOptions={{ headerShown: false }}   >
+        <App.Navigator screenOptions={{ headerShown: false }} >
             <App.Screen name="DashboardScreen" component={TabStack} />
             <App.Screen name="ScheduleNewAuditScreen" component={ScheduleNewAuditScreen} />
             <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
-
+            <App.Screen name="RescheduleAudit" component={RescheduleAuditScreen}/>
             <App.Screen name="QuestionScreen" component={QuestionScreen} />
             <App.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
             <App.Screen name="NotifyScreen" component={NotifyScreen} />
@@ -88,9 +85,7 @@ function AppStack() {
             <App.Screen name="Actionable" component={ActionableScreen} />
             <App.Screen name="AuditSuccess" component={AuditSuccessScreen} />
             <App.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
-            <App.Screen name="Question1Screen" component={Question1Screen} />
-            <App.Screen name="Question2Screen" component={Question2Screen} />
-            <App.Screen name="Question3Screen" component={Question3Screen} />
+            
         </App.Navigator>
     )
 }

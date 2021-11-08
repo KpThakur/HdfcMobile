@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default function index() {
     const [userData, setUserData] = useContext(UserContext)
-    console.log('userData: ', userData);
+    // console.log('userData: ', userData);
     const [isLoading, setIsLoading] = useState(false)
     const [profileData, setProfileData] = useState({
         firstName: "",

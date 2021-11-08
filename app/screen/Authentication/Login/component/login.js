@@ -6,15 +6,15 @@ import { FONT_FAMILY_BOLD, GREY_TEXT_COLOR, STATUS_BAR_COLOR } from "../../../..
 import { BRAND_ICON, HEROIC_ICON, EYE, EYE_CLOSE, CHECKED, UNCHECKED } from '../../../../utils/constant';
 const LoginScreen = (props) => {
     const {handleLogin,email,password,setemail,setpassword
-        ,isLoading,errorMessage,ShowAlert
+        ,isLoading,errorMessage,ShowAlert,isChecked,setisChecked
     }=props
     const [isSecure, setisSecure] = useState(true)
-    const [isChecked, setisChecked] = useState(false)
     const handlePassword = () => {
         setisSecure(!isSecure)
     }
     const handleCheck = () => {
         setisChecked(!isChecked)
+
     }
     return (
         <ScrollView contentContainerStyle={{flexGrow:1}}>
