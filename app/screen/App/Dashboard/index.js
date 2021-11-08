@@ -375,7 +375,7 @@ const DashboardScreen = ({ navigation }) => {
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                                             <Text style={styles.txt}>Indore</Text>
                                                             <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
+                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("ReviewAudit") }}>
                                                                     <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Update</Text>
                                                                 </TouchableOpacity>
                                                             </View>

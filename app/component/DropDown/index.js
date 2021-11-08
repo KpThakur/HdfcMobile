@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, FlatList, TouchableOpacity, Image, Dimensions, ScrollView, Modal, BackHandler, Alert } from 'react-native'
 import { FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, DOWNARROW, PRIMARY_BLUE_COLOR } from '../../utils/constant'
-import { styles } from './styles'
 import Input from '../../component/Input'
 import { ARROW } from '../../utils/constant'
-import { useNavigation } from '@react-navigation/native'
 const WindowHeight = Dimensions.get('window').height
 export default function index({ data, data_name, title, renderItem, dropDown, setdropDown }) {
     const [search, setsearch] = useState('')
