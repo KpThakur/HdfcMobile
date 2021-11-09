@@ -1,16 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler, Dimensions, FlatList } from 'react-native';
+import {
+    Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler, Dimensions, FlatList,
+} from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
 import { styles } from "./styles";
 import ImagePicker from 'react-native-image-crop-picker'
 import {
     STAR, UNSTAR, ARROW, INFO_ICON, CROSS, PRIMARY_BLUE_COLOR, GREY_TEXT_COLOR,
-    CHECKED_FILLED, FONT_FAMILY_REGULAR, DOWNARROW, CAMERA, UNCHECKED_ICON, DARK_BLUE_COLOR, GALLERY, MEDIUM_FONT_SIZE, SMALL_FONT_SIZE
+    CHECKED_FILLED, FONT_FAMILY_REGULAR, DOWNARROW, CAMERA, UNCHECKED_ICON, DARK_BLUE_COLOR, GALLERY, MEDIUM_FONT_SIZE, SMALL_FONT_SIZE, FONT_FAMILY_BOLD
 } from "../../../../utils/constant";
 import DropDown from '../../../../component/DropDown'
 import { useNavigation } from "@react-navigation/native";
 import { normalize } from "../../../../component/scaleFontSize";
+import Slider from '@react-native-community/slider';
+
 const Question = (props) => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
@@ -56,6 +60,10 @@ const Question = (props) => {
             </View>
         )
     }
+    function _handleReivew(val) {
+        console.log('val: ', val);
+        props.setReviewValue(val)
+    }
     const handleDropDown = () => {
         setdropDown(!dropDown)
     }
@@ -77,24 +85,31 @@ const Question = (props) => {
     // const OpenGallery = () => {
     //     ImagePicker.openPicker({ multiple: true })
     //         .then(images => {
-    //             console.log(images)
     //         })
     // }
     const OpenGallery = () => {
         ImagePicker.openPicker({
             width: windowWidth,
             height: windowHeight / 2,
-            cropping: true,
-            multiple: true
+            multiple: true,
+            cropping: true
         }).then(image => {
-            props.setCamImg(image)
+            let combineImg = props.camImg == null ? [] : [...props.camImg];
+            image.map((val) => {
+                console.log('val: ', val);
+                combineImg.push({
+                    path: val.path,
+                    type: 'gallery'
+                })
+            })
+            props.setCamImg(combineImg)
+            console.log('combineImg: ', combineImg);
             setssDropDown(false)
         });
     }
     // const OpenCamera = () => {
     //     ImagePicker.openCamera({mediaType:"any"})
     //         .then(images => {
-    //             console.log(images)
     //         })
     // }
     const OpenCamera = () => {
@@ -103,7 +118,13 @@ const Question = (props) => {
             height: 400,
             cropping: true,
         }).then(image => {
-            props.setCamImg(image)
+            let combineImg = props.camImg == null ? [] : [...props.camImg];
+            combineImg.push({
+                path: image.path,
+                type: 'camera'
+            })
+            props.setCamImg(combineImg)
+            console.log('combineImg: ', combineImg);
             setssDropDown(false)
         });
     }
@@ -112,54 +133,41 @@ const Question = (props) => {
         imageArray.splice(index, 1);
         props.setCamImg(imageArray)
     }
-    const renderImage = () => {
+    const renderImage = (item, index) => {
+        console.log('item: ', item.path);
         return (
-            <FlatList
-                keyExtractor={(item, index) => index.toString()}
-                data={props.camImg}
-                horizontal={true}
-                renderItem={({ item, index }) => {
-                    return (
-                        <View style={{ width: 100, height: 100 }}>
-                            <TouchableOpacity
-                                style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 20,
-                                    position: "absolute",
-                                    zIndex: 9,
-                                    right: 5
-                                }}
-                                onPress={() => deleteImage(index)}
-                            >
-                                <Image
-                                    source={require('../../../../assets/images/add-alt.png')}
-                                    style={{
-                                        width: "100%", height: "100%", marginTop: 5
-                                    }}
-                                />
-                            </TouchableOpacity>
-                            <View style={{ }}>
-                                <Image
-                                    source={{ uri: item.path }}
-                                    style={{ width: 120, height: 120, marginLeft: 5, marginRight: 5 }}
-                                />
-                            </View>
-                        </View>
-
-                    )
-                }
-
-
-                }
-            />
+            <View style={{ width: windowWidth, height: 200, margin: 5, }}>
+                <TouchableOpacity
+                    style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 20,
+                        position: "absolute",
+                        zIndex: 9,
+                        right: 5
+                    }}
+                    onPress={() => deleteImage(index)}>
+                    <Image
+                        source={require('../../../../assets/images/add-alt.png')}
+                        style={{
+                            width: 40, height: 40, marginTop: 5,
+                        }}
+                    />
+                </TouchableOpacity>
+                <View>
+                    <Image
+                        source={{ uri: item.path }}
+                        style={{ width: windowWidth, height: 200, marginLeft: 5, marginRight: 5, }}
+                    />
+                </View>
+            </View>
         )
     }
 
     return (
         <View style={styles.container}>
             <Header leftImg={ARROW} headerText={"Audit Question"} onPress={() => navigation.goBack()} />
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}>
                 <View style={styles.mainvwe}>
                     <TouchableOpacity style={{
                         position: "absolute", right: 1,
@@ -196,8 +204,7 @@ const Question = (props) => {
                         <Text style={styles.txt}>
                             {question?.data?.audit_question}
                         </Text>
-                        {console.log('question?.data?.question_type: ', question?.data?.question_type)}
-                        {question?.data?.question_type === '1' ?
+                        {/* {question?.data?.question_type === '1' ?
                             <View style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 paddingBottom: 5, paddingTop: 5,
@@ -208,7 +215,7 @@ const Question = (props) => {
                             </View>
                             :
                             null
-                        }
+                        } */}
                         {
                             question?.data?.question_type === '1' &&
                             (
@@ -259,12 +266,17 @@ const Question = (props) => {
                                     </View>
                                     <View style={styles.img_sec}>
                                         <View style={styles.d_sec_img}>
-                                            <Image resizeMode="contain"
-                                                source={{ uri: props.camImg.path }}
-                                                style={styles.cross_icon}
-                                            />
-                                            <View style={{ backgroundColor: 'red', width: '100%', height: '100%', marginBottom: 15, }}>
-                                                {renderImage()}
+                                            <View style={{}}>
+                                                {/* {renderImage()} */}
+                                                {console.log('props.camImg: ', props.camImg)}
+                                                <FlatList
+                                                    keyExtractor={(item, index) => index.toString()}
+                                                    data={props.camImg}
+                                                    horizontal={true}
+                                                    pagingEnabled={true}
+                                                    renderItem={({ item, index }) => { return renderImage(item, index) }
+                                                    }
+                                                />
                                             </View>
                                         </View>
                                     </View>
@@ -273,9 +285,9 @@ const Question = (props) => {
                         }
                         {question?.data?.question_type === '2' && (
                             <View style={styles.brnchmannme}>
-                                <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('YES')} />
-                                <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('NO')} />
-                                <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => setyesNo('NA')} />
+                                <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('YES')} />
+                                <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NO')} />
+                                <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} />
                             </View>
                         )}
                         {question?.data?.question_type === '3' && (
@@ -306,7 +318,26 @@ const Question = (props) => {
                             </View>
                         )
                         }
-                        <CustomRatingBar />
+                        {/* <CustomRatingBar /> */}
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{
+                                fontFamily: FONT_FAMILY_BOLD,
+                                fontSize: 20,
+                                marginTop: 15
+                            }}>
+                                {props.reviewValue}
+                            </Text>
+                            <Slider
+                                style={{ width: '80%', height: 40, marginLeft: 15 }}
+                                minimumValue={props.sliderValue.score_range_from}
+                                maximumValue={props.sliderValue.score_range_to}
+                                minimumTrackTintColor={PRIMARY_BLUE_COLOR}
+                                maximumTrackTintColor="#000000"
+                                thumbTintColor={PRIMARY_BLUE_COLOR}
+                                step={1}
+                                onValueChange={(val) => _handleReivew(val)}
+                            />
+                        </View>
                         {
                             question?.data?.rmm_actionable_assignee === "1" ?
                                 <View style={{ marginTop: 20 }}>

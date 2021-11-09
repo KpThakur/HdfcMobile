@@ -49,12 +49,12 @@ export default function ScheduleNewAudit(props) {
                                         <Text style={styles.txt_head}>Bank Details for Audit</Text>
                                         <DropDown title={cityName ? cityName : "City"} data={cityBranch}
                                             renderItem={displayCityDropDown} dropDown={citydropDown} data_name={'city_name'}
-                                            setdropDown={setcitydropDown} />
-
+                                            setdropDown={setcitydropDown}
+                                        />
                                         <DropDown title={branchName ? branchName : "Branch Name / ATM Name"} data={branchDetail}
                                             renderItem={displaybranchDropDown} dropDown={branchNameDropDown} data_name={'brach_name'}
-                                            setdropDown={setbranchNameDropDown} />
-
+                                            setdropDown={setbranchNameDropDown}
+                                        />
                                         <Text
                                             style={{
                                                 backgroundColor: GREY_TEXT_COLOR, borderRadius: 5,
@@ -75,7 +75,7 @@ export default function ScheduleNewAudit(props) {
                                                 <DatePicker modal open={openDate} mode="date" date={Cdate}
                                                     onConfirm={(date) => {
                                                         if (moment(date).format('DD-MM-YYYY') < moment(moment()).format('DD-MM-YYYY')) {
-                                                            Alert.alert('date',"You can't select previous date")
+                                                            Alert.alert('date', "You can't select previous date")
                                                         }
                                                         else {
                                                             setopenDate(!openDate)
@@ -99,10 +99,10 @@ export default function ScheduleNewAudit(props) {
                                                         if (moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am') {
                                                             setopenTime(!openTime)
                                                             // console.log(moment(date).format('h-mm'),"DATE")
-                                                                if(moment(date.getTime()).format('h-mm')===moment(new Date().getTime()).format('h-mm'))
-                                                                    settime(moment(date.getTime()).format("h-00"))
-                                                                else
-                                                                    settime(moment(date).format('h-mm'))
+                                                            if (moment(date.getTime()).format('h-mm') === moment(new Date().getTime()).format('h-mm'))
+                                                                settime(moment(date.getTime()).format("h-00"))
+                                                            else
+                                                                settime(moment(date).format('h-mm'))
                                                         } else {
                                                             Alert.alert('Time', 'Please time between 10:00 AM to 6:00 PM')
                                                         }

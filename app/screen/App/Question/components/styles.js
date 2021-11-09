@@ -92,8 +92,8 @@ export const styles = StyleSheet.create({
         padding: 10
     },
     img_sec: {
-        paddingHorizontal: 10,
-        marginVertical: 10
+        // paddingHorizontal: 10,
+        // marginVertical: 10,
     },
     sec_img: {
         width: 70,

@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
         // marginTop:10
     },
     txt: {
+        // color: 'red',
         color: "#000",
         fontSize: normalize(SMALL_FONT_SIZE),
         fontFamily: FONT_FAMILY_REGULAR,

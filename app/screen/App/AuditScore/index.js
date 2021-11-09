@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, Text } from 'react-native'
 import AuditScore from './component/AuditScore'
 import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from '../../../utils/httpClient'
@@ -35,7 +34,6 @@ export default function index({ navigation }) {
         setisLoading(false)
         navigation.navigate("ReviewAduit")
     }
-    // console.log("TST",totalScore)
     return (
         <>
             {isLoading && <Loader />}
@@ -43,17 +41,3 @@ export default function index({ navigation }) {
         </>
     )
 }
-
-
-/*
-{
-  "status": 200,
-  "message": "success",
-  "score": null,
-  "curent_score_date": "2021-11-08T07:39:50.000Z",
-  "previous": {
-    "previous_score": 18,
-    "previous_score_date": "2021-11-08T05:42:10.000Z"
-  }
-}
-*/
