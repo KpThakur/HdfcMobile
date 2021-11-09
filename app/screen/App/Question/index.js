@@ -14,8 +14,11 @@ const Question = ({ navigation }) => {
     const [yesNo, setyesNo] = useState()
     const [quality, setquality] = useState()
     const [checkedAns, setcheckedAns] = useState()
-
+    console.log('checkedAns: ', checkedAns);
     const [camImg, setCamImg] = useState('')
+    const [sliderValue, setSliderValue] = useState('')
+
+    const [reviewValue, setReviewValue] = useState(0);
 
     const handleSubmit = async () => {
         // const params={
@@ -30,10 +33,10 @@ const Question = ({ navigation }) => {
         //     check_answer:checkedAns
         // }
         let formdata = new FormData();
-        formdata.append('audit_id',question.audit_id);
+        formdata.append('audit_id', question.audit_id);
         formdata.append('question_id', question.data.question_id);
         formdata.append('remark', remark);
-        formdata.append('score_range', rating);
+        formdata.append('score_range', reviewValue);
         formdata.append('rmm_actionable_assignee', rmmactionable);
         formdata.append('bm_actionable_assignee', bmActionable);
         formdata.append('yes_no', yesNo);
@@ -44,6 +47,7 @@ const Question = ({ navigation }) => {
         //     type: camImg?.mime,
         //     name: camImg?.path.substring(camImg?.path.lastIndexOf('/') + 1),
         // })
+        console.log('formdata', formdata)
         camImg?.map((img, index) => {
             return (
                 formdata.append('question_image', {
@@ -53,12 +57,10 @@ const Question = ({ navigation }) => {
                 })
             )
         })
-        console.log("formdata", formdata)
         const response = await apiCall('POST', apiEndPoints.SUBMIT_QUESTION, formdata,
             {
                 'Content-Type': 'multipart/form-data'
             })
-        console.log('SUBMIT_QUESTION',response.data)
     }
 
 
@@ -72,6 +74,7 @@ const Question = ({ navigation }) => {
         if (response.status === 200) {
             if (response.data.data.check_data)
                 setquestionList(response.data.data.check_data.split(','))
+            setSliderValue(response.data.data)
             setquestion({ data: response.data.data, audit_id: params.audit_id })
 
         }
@@ -82,7 +85,6 @@ const Question = ({ navigation }) => {
                 audit_status: 3
             }
             const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-            console.log(response)
             if (response.status === 200)
                 navigation.navigate('AuditScore')
             else
@@ -100,10 +102,15 @@ const Question = ({ navigation }) => {
                 questionList={questionList}
                 yesNo={yesNo} setyesNo={setyesNo}
                 quality={quality} setquality={setquality}
-                checkedAns={checkedAns} setcheckedAns={setcheckedAns}
+                checkedAns={checkedAns}
+                setcheckedAns={setcheckedAns}
 
                 camImg={camImg}
                 setCamImg={setCamImg}
+
+                sliderValue={sliderValue}
+                reviewValue={reviewValue}
+                setReviewValue={setReviewValue}
             />
         </>
     )

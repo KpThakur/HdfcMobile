@@ -28,7 +28,6 @@ export default function index({ navigation }) {
             setisLaoding(true)
             const response = await apiCall('POST', apiEndPoints.GET_CITY_BRANCH)
             setisLaoding(false)
-            
             if (response.status === 200) {
                 setcityBranch(response.data.data)
                 
