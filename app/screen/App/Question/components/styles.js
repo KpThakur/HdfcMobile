@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    mainvwe: { flex: 1, padding: 10 },
+    mainvwe: { flex: 1, padding: 15 },
     centfrstvwe: {
         flex: 2,
         justifyContent: 'center',
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#fff'
     },
-    body: { flex: 4 },
+    body: { flex: 5 ,marginTop:10},
     teamcall: {
         paddingHorizontal: 15,
         paddingVertical: 15
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
     txt: {
         fontSize: normalize(12),
         fontFamily: FONT_FAMILY_REGULAR,
-        color: "#000"
+        color: "#000",
     },
     input: {
         backgroundColor: "#eee",
@@ -136,15 +136,17 @@ export const styles = StyleSheet.create({
     drop_down_item: {
         backgroundColor: "#fff",
         marginVertical: 5,
+        borderBottomWidth:0.5,
+        borderBottomColor:"gray",
         padding: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
-        elevation: 2,
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 1,
+        // },
+        // shadowOpacity: 0.20,
+        // shadowRadius: 1.41,
+        // elevation: 2,
         borderRadius: 5
     },
     drop_down_txt: {

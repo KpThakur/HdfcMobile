@@ -28,6 +28,7 @@ export const styles = StyleSheet.create({
     img:{
         width:"100%",
         height:300,
+        borderRadius:10
     },
     camera_icon:{
         backgroundColor:PRIMARY_BLUE_COLOR,

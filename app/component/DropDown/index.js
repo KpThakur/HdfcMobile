@@ -35,10 +35,9 @@ const handleSearch = (text) => {
             </TouchableOpacity>
             {
                 dropDown &&
-                // <View style={{ position: 'absolute', backgroundColor: '#ffffff', zIndex: 999, left: 0, right: 0, top: WindowHeight/ 7, height: 200 }}>
-                <Modal>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <TouchableOpacity style={{ backgroundColor: PRIMARY_BLUE_COLOR, padding: 10 }} onPress={() => { setdropDown(!dropDown) }}>
+                <Modal >
+                    <View style={{ flexDirection: 'row', alignItems: 'center',width:"100%",backgroundColor:"#fff" }}>
+                        <TouchableOpacity style={{ backgroundColor: PRIMARY_BLUE_COLOR, paddingHorizontal: 10,paddingVertical:18 }} onPress={() => { setdropDown(!dropDown) }}>
                             <Image source={ARROW} style={{ width: 20, height: 20, tintColor: "#fff", resizeMode: 'contain' }} />
                         </TouchableOpacity>
                         <Input
@@ -50,7 +49,7 @@ const handleSearch = (text) => {
                             onChangeText={(text) => handleSearch(text)}
                         />
                     </View>
-                    <FlatList data={filterData !== null ? filterData : data}
+                    <FlatList data={filterData !== null ? filterData : data} style={{backgroundColor:"#fff"}}
                         keyExtractor={(item, index) => index.toString()} renderItem={renderItem}
                     />
                 </Modal>

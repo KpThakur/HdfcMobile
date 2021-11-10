@@ -7,7 +7,6 @@ import { normalize } from '../../../../utils/scaleFontSize'
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 import { GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const DashboardView = (props) => {
-    const [searchvalue, setSearchvalue] = useState();
     
     const [data, setdata] = useState([
         {
@@ -19,7 +18,6 @@ const DashboardView = (props) => {
     const OnpressDrawer = () => {
         navigation.openDrawer()
     }
-    
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <Header headerText={"Merchandising Audit"} onPress={() => OnpressDrawer()} />
@@ -39,7 +37,7 @@ const DashboardView = (props) => {
                                 placeholderTextColor={{ color: "black" }}
                                 value={props.search}
                                 InputHeading={"Search"}
-                                onChangeText={text => props.setsearch(text)}
+                                onChangeText={text => props.HandleSearch(text)}
                             />
                         </View>
                         <FlatList
