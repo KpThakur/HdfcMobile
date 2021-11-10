@@ -4,7 +4,6 @@ import LottieView from 'lottie-react-native';
 const Loader = (props) => {
   return (
     <View style={{
-      backgroundColor: "#000",
       position: "absolute",
       zIndex: 1,
       justifyContent: "center",

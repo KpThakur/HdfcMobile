@@ -61,8 +61,6 @@ export default function ScheduleNewAudit(props) {
                                                 paddingVertical: 10, paddingHorizontal: 10, marginVertical: 10
                                             }}
                                         >{branchManagerName ? branchManagerName : 'Branch Manager Name / ATM Code'}</Text>
-                                        {/* <DropDown title="Branch Name / ATM Name" data={data} />
-                                        <DropDown title="Branch Manager Name / ATM Code" data={data} /> */}
                                     </View>
                                     <View>
                                         <Text style={styles.txt_head}>Schedule on:</Text>
@@ -90,7 +88,7 @@ export default function ScheduleNewAudit(props) {
                                             <View>
                                                 <TouchableOpacity style={styles.date_time} onPress={() => { setopenTime(true) }}>
                                                     <Image source={CLOCK} style={{ marginRight: 10 }} />
-                                                    {time ? <Text>{time}</Text> : <Text>Date</Text>}
+                                                    {time ? <Text>{time}</Text> : <Text>Time</Text>}
                                                 </TouchableOpacity>
                                                 <DatePicker modal open={openTime} mode="time" date={new Date()}
                                                     minuteInterval={15}

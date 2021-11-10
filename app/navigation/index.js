@@ -51,24 +51,6 @@ function TabStack(params) {
         </Tab.Navigator>
     )
 };
-// function DashboardStack() {
-//     return (
-//         <DashboardTab.Navigator screenOptions={{ headerShown: false }}>
-//             <DashboardTab.Screen name="DashboardScreen" component={DashboardScreen} />
-//             <DashboardTab.Screen name="QuestionScreen" component={QuestionScreen} />
-//             <DashboardTab.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
-//             <DashboardTab.Screen name="NotifyScreen" component={NotifyScreen} />
-//             <DashboardTab.Screen name="Profile" component={ProfileScreen} />
-//             <DashboardTab.Screen name="AuditScore" component={AuditScoreScreen} />
-//             <DashboardTab.Screen name="ReviewAduit" component={ReviewAuditScreen} />
-//             <DashboardTab.Screen name="Actionable" component={ActionableScreen} />
-//             <DashboardTab.Screen name="AuditSuccess" component={AuditSuccessScreen} />
-//             <DashboardTab.Screen name="ChangePassword" component={ChangePasswordScreen} />
-//             <DashboardTab.Screen name="Question1Screen" component={Question1Screen} />
-//             <DashboardTab.Screen name="Question2Screen" component={Question2Screen} />
-//             <DashboardTab.Screen name="Question3Screen" component={Question3Screen} />
-//         </DashboardTab.Navigator>)
-// }
 function AppStack() {
     return (
         <App.Navigator screenOptions={{ headerShown: false }} >
@@ -89,20 +71,6 @@ function AppStack() {
         </App.Navigator>
     )
 }
-// function DrawerStack() {
-//     return (
-//         <Drawer.Navigator initialRouteName="DashboardScreen"
-//             screenOptions={{
-//                 headerShown: false, drawerStyle: {
-//                     backgroundColor: PRIMARY_BLUE_COLOR,
-//                     width: "50%"
-//                 }
-//             }} drawerContent={(props) => <DrawerTab {...props} />}
-//         >
-//             <Drawer.Screen name="DashboardScreen" component={TabStack} />
-//         </Drawer.Navigator>
-//     )
-// }
 
 const AuthStack = () => {
 

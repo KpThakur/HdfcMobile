@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import DashboardView from './component/dashboard';
 import { Text, TouchableOpacity, View, Modal, Image, ScrollView, TextInput } from 'react-native'
 import { styles } from './component/style';
-import { CALENDAR, CLOCK, PRIMARY_BLUE_COLOR, DASHBOARD_HEROIC, CANCEL_ICON, CROSS, GREY_TEXT_COLOR, GREEN_COLOR, RED_COLOR, FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, TINY_FONT_SIZE } from '../../../utils/constant'
+import { CALENDAR, CLOCK, PRIMARY_BLUE_COLOR, DASHBOARD_HEROIC, CANCEL_ICON, ADD_ICON, GREY_TEXT_COLOR, GREEN_COLOR, RED_COLOR, FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, TINY_FONT_SIZE } from '../../../utils/constant'
 import Button from '../../../component/Button';
 import Cancel from '../../../component/Cancel'
 import { normalize } from '../../../utils/scaleFontSize';
@@ -19,9 +19,10 @@ const DashboardScreen = ({ navigation }) => {
     const [question, setquestion] = useContext(QuestionContext)
     const [tabBar, setTabBar] = useState(1)
     const [popup, setpopup] = useState(false)
-    const [search, setsearch] = useState()
+    const [search, setsearch] = useState("")
     const [auditList, setauditList] = useState([])
     const [reason, setreason] = useState('')
+    const [searchArrray, setsearchArrray] = useState([])
     const [editAudit, seteditAudit] = useContext(EditAuditContext)
     // console.log(userData, "USERDATA")
     useFocusEffect(
@@ -51,7 +52,11 @@ const DashboardScreen = ({ navigation }) => {
         },
         {
             "id": 4,
-            "name": "Close Audit",
+            "name": "Completed Audit",
+        },
+        {
+            "id": 5,
+            "name": "Cancelled Audit",
         }
     ])
     const onPressSelectedTab = (index) => {
@@ -130,6 +135,20 @@ const DashboardScreen = ({ navigation }) => {
         seteditAudit(item)
         navigation.navigate('RescheduleAudit')
     }
+    const HandleSearch=(text)=>{
+        setsearch(text)
+    //     if(text.length>0){
+    //         setsearchArrray([])
+    //         const val=auditList.filter(item=>{
+    //              return item.city_name.toLowerCase().includes(search.toLowerCase())
+    //         })
+    //     setsearchArrray(val)
+    // }
+    // else{
+    //     AuditList(tabBar)
+    // }
+    }
+    // const data=search.length > 0 ? searchArrray : auditList
     // console.log(auditList,"AUDITLIST")
     const renderTodayAudit = ({ item, index }) => {
         return (
@@ -184,8 +203,8 @@ const DashboardScreen = ({ navigation }) => {
                                                     <TouchableOpacity style={styles.cancel_btn} onPress={() => togglePopUp()}>
                                                         <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Cancel Audit</Text>
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("AuditWelcomeScreen") }}>
-                                                        <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }} onPress={() => HandleStatus(audit.audit_id, audit.audit_type, audit.questions_id)}>{audit.audit_status === 4 ? "Started" : "Start Audit"}</Text>
+                                                    <TouchableOpacity style={styles.prim_btn} onPress={() => HandleStatus(audit.audit_id, audit.audit_type, audit.questions_id)}>
+                                                        <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }} >{audit.audit_status === 4 ? "Started" : "Start Audit"}</Text>
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
@@ -194,9 +213,10 @@ const DashboardScreen = ({ navigation }) => {
                                 </View>
                             </View>
                         ))
+
                         :
                         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                            <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
+                            <View style={{ flex: 5, backgroundColor: "#fff" }}>
                                 <View style={{ alignItems: "center" }}>
                                     <Image
                                         resizeMode={"contain"}
@@ -213,10 +233,10 @@ const DashboardScreen = ({ navigation }) => {
                                         style={{ backgroundColor: "#1b7dec", borderRadius: 30, marginBottom: 10, marginTop: 10 }}
                                         onPress={() => handleAddNewAudit()}
                                     >
-                                        <View style={{ flexDirection: "row", paddingLeft: 30, paddingRight: 30, paddingTop: 10, paddingBottom: 10 }}>
+                                        <View style={{ flexDirection: "row", paddingLeft: 30, paddingRight: 30, paddingTop: 10, paddingBottom: 10, alignItems: "center" }}>
                                             <Image
-                                                style={{ width: 30, height: 30, tintColor: "#fff", marginRight: 5, resizeMode: "contain" }}
-                                                source={CROSS}
+                                                style={{ width: 20, height: 20, tintColor: "#fff", marginRight: 5, resizeMode: "contain" }}
+                                                source={ADD_ICON}
                                             />
                                             <Text style={{ fontWeight: "bold", fontSize: 20, color: "#ffffff", paddingLeft: 5 }}>
                                                 Add  Schedule
@@ -225,9 +245,8 @@ const DashboardScreen = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                        </ScrollView>
-                    :
-                    null}
+                        </ScrollView> : null
+                }
                 {tabBar === 2 ?
                     <View style={{ paddingLeft: 10, marginRight: 10 }}>
                         {
@@ -356,7 +375,7 @@ const DashboardScreen = ({ navigation }) => {
                                                     </View>
                                                     <View style={{ marginVertical: 10 }}>
                                                         <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                                        <Text style={styles.txt}>Vishwas Joshi</Text>
+                                                        <Text style={styles.txt}>{item.branch_manager}</Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
                                                         <View>
@@ -373,9 +392,9 @@ const DashboardScreen = ({ navigation }) => {
                                                     <View style={{ marginVertical: 10 }}>
                                                         <Text style={styles.s_txt}>City</Text>
                                                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <Text style={styles.txt}>Indore</Text>
+                                                            <Text style={styles.txt}>{item.city_name}</Text>
                                                             <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("ReviewAudit") }}>
+                                                                <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("ReviewAduit", { audit_id: item.audit_id }) }}>
                                                                     <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Update</Text>
                                                                 </TouchableOpacity>
                                                             </View>
@@ -486,6 +505,89 @@ const DashboardScreen = ({ navigation }) => {
                     :
                     null
                 }
+
+                {tabBar === 5 ?
+                    <View style={{ paddingLeft: 10, marginRight: 10 }}>
+                        {auditList ? auditList.map((audit) => (
+                            audit?.items && audit?.items.map((item) => (
+                                <View style={styles.display_audit}>
+                                    <View style={{ paddingTop: 10 }}>
+                                        <Text style={styles.txt}>
+                                            {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.box}>
+                                        <View style={styles.box_header}>
+                                            <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                            <Text style={styles.header_txt}>Bank</Text>
+                                        </View>
+                                        <View style={styles.box_body}>
+                                            <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Image source={CALENDAR} style={styles.img} />
+                                                    <Text style={styles.txt}>Date : </Text>
+                                                    <Text style={styles.p_txt}>
+                                                        {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                    </Text>
+                                                </View>
+
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Image source={CLOCK} style={styles.img} />
+                                                    <Text style={styles.txt}>Time : </Text>
+                                                    <Text style={styles.p_txt}>
+                                                        {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ marginVertical: 10 }}>
+                                                <Text style={styles.s_txt}>Branch Manager Name</Text>
+                                                <Text style={styles.txt}>{item.branch_manager}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
+                                                <View>
+                                                    <Text style={styles.s_txt}>Actionable No.</Text>
+                                                    <Text style={styles.txt}>02 Members</Text>
+                                                </View>
+                                                <View>
+                                                    <Text style={styles.s_txt}>Audit Status</Text>
+                                                    <Text style={styles.txt}>
+                                                        {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{ marginVertical: 10 }}>
+                                                <Text style={styles.s_txt}>City</Text>
+                                                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                    <Text style={styles.txt}>{item.city_name}</Text>
+                                                    <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+                                                        <Text style={{ color: item.audit_status === 3 ? GREEN_COLOR : RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>
+                                                            {item.audit_status === 3 ? 'Completed' : 'Cancelled'}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                            ))
+                        )) :
+                            <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
+                                <View style={{ alignItems: "center" }}>
+                                    <Image
+                                        resizeMode={"contain"}
+                                        style={{ width: 250, height: 350 }}
+                                        source={DASHBOARD_HEROIC}
+                                    />
+                                    <View style={{ padding: 10 }}>
+                                        <Text style={{ color: "#5382b5", fontSize: 20, fontWeight: "bold" }}>No Close Audit Found</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        }
+                    </View>
+                    :
+                    null
+                }
             </View >
         )
     }
@@ -497,7 +599,9 @@ const DashboardScreen = ({ navigation }) => {
             tabBar={tabBar}
             onPressSelectedTab={onPressSelectedTab}
             renderTodayAudit={renderTodayAudit}
+            auditList={auditList} setauditList={setauditList}
             search={search} setsearch={setsearch}
+            HandleSearch={HandleSearch}
         />
     )
 }
