@@ -22,7 +22,8 @@ function MyTabBar({ state, descriptors, navigation }) {
             backgroundColor: '#FFFFFF',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingHorizontal: 10
+            paddingHorizontal: 10,
+            zIndex:999
         }}>
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];

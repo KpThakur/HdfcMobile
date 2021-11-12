@@ -15,7 +15,6 @@ const Question = ({ navigation }) => {
     const [yesNo, setyesNo] = useState("NO")
     const [quality, setquality] = useState(0)
     const [checkedAns, setcheckedAns] = useState("")
-    console.log('checkedAns: ', checkedAns);
     const [camImg, setCamImg] = useState('')
     const [sliderValue, setSliderValue] = useState('')
     const [reviewValue, setReviewValue] = useState(0);
@@ -138,7 +137,6 @@ const Question = ({ navigation }) => {
                 handleSubmit={handleSubmit}
                 camImg={camImg}
                 setCamImg={setCamImg}
-
                 sliderValue={sliderValue}
                 reviewValue={reviewValue}
                 setReviewValue={setReviewValue}

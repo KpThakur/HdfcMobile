@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Share } from 'react-native';
+import { QuestionContext } from "../../../utils/QuestionContext";
 import NotifyView from './components/Notify';
-const Notify = ({navigation}) => {
+const Notify = ({navigation}) =>{
+    const [question, setquestion] = useContext(QuestionContext)
+    const [engine, setengine] = useState()
     const onShare = async () => {
         try {
             const result = await Share.share({
@@ -27,6 +30,7 @@ const Notify = ({navigation}) => {
     return (
         <NotifyView
             onShare={onShare} handleStartCall={handleStartCall}
+            question={question}
         />
     )
 }

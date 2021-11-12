@@ -9,7 +9,7 @@ export default function index({navigation,route}) {
     const [BM, setBM] = useState()
     const [baseURL, setbaseURL] = useState()
     const [RM, setRM] = useState()
-    console.log(params.audit_id)
+    console.log(params)
 
     const Details=async()=>{
         const param={
@@ -34,6 +34,7 @@ export default function index({navigation,route}) {
         BM={BM} RM={RM}
         bmDropDown={bmDropDown} setbmDropDown={setbmDropDown}
         baseURL={baseURL}
+        params={params}
         rmDropDown={rmDropDown} setrmDropDown={setrmDropDown}
         />
     )
