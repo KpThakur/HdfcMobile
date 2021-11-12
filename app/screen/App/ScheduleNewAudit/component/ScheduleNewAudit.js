@@ -4,15 +4,18 @@ import { styles } from './styles'
 import DropDown from '../../../../component/DropDown'
 import DatePicker from 'react-native-date-picker'
 import Button from '../../../../component/Button'
-import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOCK, GREY_TEXT_COLOR } from '../../../../utils/constant'
+import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOCK, GREY_TEXT_COLOR, FONT_FAMILY_REGULAR, DOWNARROW } from '../../../../utils/constant'
 import Header from '../../../../component/Header'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
+import { FlatList } from 'react-native-gesture-handler'
 let ACDATE
+let timeData = []
 export default function ScheduleNewAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
     const [openTime, setopenTime] = useState(false)
+    const [dropDown, setdropDown] = useState(false)
     function _handleSelect(params) {
         setauditType(params)
     }
@@ -33,6 +36,19 @@ export default function ScheduleNewAudit(props) {
             </TouchableOpacity>
         )
     }
+    const handleDropDown = () => {
+        setdropDown(!dropDown)
+    }
+    for (var i = 10; i <= 18; i++) {
+        for (var j = 0; j <= 55; j += 15) {
+            if(j==0)
+                timeData.push(i + "-0" + j)
+            else
+                timeData.push(i + "-" + j)
+        }
+    }
+    timeData.push("19-00")
+    console.log(timeData)
     const navigation = useNavigation()
     return (
         <>
@@ -78,7 +94,7 @@ export default function ScheduleNewAudit(props) {
                                                         }
                                                         else {
                                                             setopenDate(!openDate)
-                                                            ACDATE=moment(date).format('DD-MM-YYYY')
+                                                            ACDATE = moment(date).format('DD-MM-YYYY')
                                                             setdate(moment(date).format('DD-MM-YYYY'))
                                                         }
 
@@ -87,12 +103,36 @@ export default function ScheduleNewAudit(props) {
                                                         setopenDate(false)
                                                     }} />
                                             </View>
-                                            <View>
-                                                <TouchableOpacity style={styles.date_time} onPress={() => { setopenTime(true) }}>
-                                                    <Image source={CLOCK} style={{ marginRight: 10 }} />
-                                                    {time ? <Text>{time}</Text> : <Text>Time</Text>}
+
+                                            <View style={{ position: "absolute", right: 1 ,zIndex:999}}>
+                                                <TouchableOpacity onPress={() => handleDropDown()} style={{
+                                                    backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
+                                                    justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
+                                                }} >
+                                                    <Image source={CLOCK}/>
+                                                    <Text style={{marginHorizontal:10}}>{time ? time : "Time"}</Text>
+                                                    {
+                                                        dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
+                                                            <Image source={DOWNARROW} />
+                                                    }
                                                 </TouchableOpacity>
-                                                <DatePicker modal open={openTime} mode="time" date={new Date()}
+                                                {
+                                                    dropDown &&
+                                                    <View style={{ backgroundColor: GREY_TEXT_COLOR, height: 200 }}>
+                                                        <FlatList
+                                                            data={timeData}
+                                                            renderItem={({ item }) => {
+                                                                return (
+                                                                    <TouchableOpacity style={styles.drop_down_item} onPress={()=>{
+                                                                        settime(item)
+                                                                        setdropDown(false)}}>
+                                                                        <Text style={styles.drop_down_txt}>{item}</Text>
+                                                                    </TouchableOpacity>
+                                                                )
+                                                            }} />
+                                                    </View>
+                                                }
+                                                {/* <DatePicker modal open={openTime} mode="time" date={new Date()}
                                                     minuteInterval={15}
                                                     onConfirm={(date) => {
                                                         // console.log(moment(date,'H:mm'),"DATE")
@@ -128,7 +168,7 @@ export default function ScheduleNewAudit(props) {
                                                     }}
                                                     onCancel={() => {
                                                         setopenTime(false)
-                                                    }} />
+                                                    }} /> */}
                                             </View>
                                         </View>
                                     </View>

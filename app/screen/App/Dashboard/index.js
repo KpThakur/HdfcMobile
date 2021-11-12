@@ -14,6 +14,7 @@ import { Alert } from 'react-native';
 import { UserContext } from '../../../utils/UserContext';
 import { QuestionContext } from '../../../utils/QuestionContext';
 import { EditAuditContext } from '../../../utils/EditAuditContext';
+import _ from "lodash";
 const DashboardScreen = ({ navigation }) => {
     const [userData, setUserData] = useContext(UserContext)
     const [question, setquestion] = useContext(QuestionContext)
@@ -61,7 +62,7 @@ const DashboardScreen = ({ navigation }) => {
     ])
     const onPressSelectedTab = (index) => {
         setTabBar(index)
-        AuditList(index)
+        // AuditList(index)
     }
     const handleAddNewAudit = () => {
         navigation.navigate("ScheduleNewAuditScreen")
@@ -71,7 +72,7 @@ const DashboardScreen = ({ navigation }) => {
             const params = { audit_type: index }
             console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.GET_AUDIT_LIST, params)
-            console.log("response", response.data)
+            console.log("response", response.data.data)
             if (response.status = 200) {
                 setauditArray(response.data.data);
                 setauditList(response.data.data);
@@ -116,9 +117,9 @@ const DashboardScreen = ({ navigation }) => {
                 audit_id: id,
                 question_id: questions_id
             }
-            console.log("PARAMS", params)
+            // console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-            console.log(response.data.data)
+            // console.log(response.data.data)
             setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager })
             navigation.navigate('QuestionScreen')
         }
@@ -161,32 +162,43 @@ const DashboardScreen = ({ navigation }) => {
             else {
                 setauditList(auditArray)
             }
-        } else {
-            // console.log("seracc ", auditList[0].items)
+        } 
+        else {
+            // console.log("seracc ",auditList)
+            var a=[]
             if (text.length > 0) {
-                var val = []
-                val = auditArray[0].items.filter(item => {
-                    return item.city_name.toLowerCase().includes(search.toLowerCase())
+                var a4 = _.filter(auditArray, (row) => {
+                    var d = _.filter(row?.items, (items) => {
+                        console.log("AAAAAAAAAA",items.branch_name.toLowerCase())
+                        return items?.branch_name.toLowerCase().match(search.toLowerCase())
+                    })
+                    if (d.length > 0)
+                        return d;
                 })
-                const val1 = auditArray[0].items.filter(item => {
-                    return item.branch_manager.toLowerCase().includes(search.toLowerCase())
+                var a5 = _.filter(auditArray, (row) => {
+                    var d = _.filter(row?.items, (items) => {items?.city_name.toLowerCase().match(search.toLowerCase())})
+                    if (d.length > 0)
+                        return d;
                 })
-                const val2 = auditArray[0].items.filter(item => {
-                    return item.branch_name.toLowerCase().includes(search.toLowerCase())
+                var a6 = _.filter(auditArray, (row) => {
+                    var d = _.filter(row?.items, (items) => {items?.branch_manager.toLowerCase().match(search.toLowerCase())})
+                    if (d.length > 0)
+                        return d;
                 })
-                val = [...val, ...val1, ...val2]
+                a = [...a4, ...a5, ...a6];
+            
                 function onlyUnique(value, index, self) {
                     return self.indexOf(value) === index;
                 }
 
-                // setauditList({item:val.filter(onlyUnique)})
+                setauditList(a.filter(onlyUnique))
             }
             else {
                 setauditList(auditArray)
             }
         }
     }
-    console.log("AUDITLIST: ", auditList)
+    // console.log("AUDITLIST: ", auditList)
     // console.log("AUDITARRAY: ", auditArray)
     const renderTodayAudit = ({ item, index }) => {
         return (
@@ -254,8 +266,6 @@ const DashboardScreen = ({ navigation }) => {
                                 </View>
                             )
                         }}
-                    // keyExtractor={(item) => item.id}
-                    // extraData={selectedId}
                     />
                     :
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>

@@ -158,7 +158,7 @@ const Question = (props) => {
     }
     return (
         <View style={styles.container}>
-            <Header leftImg={ARROW} headerText={"Audit Question"} onPress={() => navigation.goBack()} />
+            <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} />
             <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}>
                 <View style={styles.mainvwe}>
                     <TouchableOpacity style={{
@@ -193,7 +193,6 @@ const Question = (props) => {
                             </View>
                         </View>
                         <Text style={[styles.txt,{marginTop:10,fontWeight:"600",fontSize:normalize(SMALL_FONT_SIZE)}]}>
-                        <Text style={{fontWeight:"800",fontSize:normalize(SMALL_FONT_SIZE)}}>({question?.data?.question_id}) </Text> 
                         {question?.data?.audit_question}
                         </Text>
                     <View style={styles.body}>

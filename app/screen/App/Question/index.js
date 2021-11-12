@@ -12,7 +12,7 @@ const Question = ({ navigation }) => {
     const [rmmactionable, setrmmactionable] = useState(0)
     const [bmActionable, setbmActionable] = useState(0)
     const [questionList, setquestionList] = useState()
-    const [yesNo, setyesNo] = useState("NO")
+    const [yesNo, setyesNo] = useState()
     const [quality, setquality] = useState(0)
     const [checkedAns, setcheckedAns] = useState("")
     const [camImg, setCamImg] = useState('')
@@ -67,7 +67,7 @@ const Question = ({ navigation }) => {
                 SubmitAPI(formdata)
             }
             else {
-                alert("Please Select Image")
+                alert("Please Capture The Image")
             }
         }
         else {
@@ -96,7 +96,7 @@ const Question = ({ navigation }) => {
                 setrmmactionable(0)
                 setrmmactionable(0)
                 setCamImg()
-                setyesNo("NO")
+                setyesNo()
                 setquality(0)
                 setReviewValue(0)
                 setcheckedAns("")
@@ -106,7 +106,7 @@ const Question = ({ navigation }) => {
                 //Complete
                 const params = {
                     audit_id: question.audit_id,
-                    audit_status: 3
+                    audit_status: 5
                 }
                 const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
                 if (response.status === 200)
