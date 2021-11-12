@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ReviewAuit from './component/ReviewAuit'
 import {apiCall} from '../../../utils/httpClient'
 import apiEndPoints from "../../../utils/apiEndPoints";
@@ -16,9 +16,7 @@ export default function index({navigation,route}) {
             audit_id:params.audit_id,
             type:2
         }
-        console.log(param)
         const response=await apiCall('POST',apiEndPoints.GET_ACTIONABLE_DETAIL,param)
-        console.log("REP",response.data);
         setbaseURL(response.data.base_url)
         setBM(response.data.BM)
         setRM(response.data.RMM)
@@ -26,8 +24,17 @@ export default function index({navigation,route}) {
     useEffect(() => {
         Details()
     }, [])
-    const handleSubmitReport=()=>{
-        navigation.navigate("AuditSuccess")
+    const handleSubmitReport=async()=>{
+        // console.log("PARMAS",param)
+        const param = {
+            audit_id: params.audit_id,
+            audit_status: 3
+        }
+        console.log("PARMAS",param)
+        const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, param)
+        console.log("RES REVIEQW",response)
+        if (response.status === 200)
+            navigation.navigate("AuditSuccess")
     }
     return (
         <ReviewAuit handleSubmitReport={handleSubmitReport}
