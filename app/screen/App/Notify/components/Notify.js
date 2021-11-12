@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, TouchableOpacity,Share } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
 import { styles } from "./styles";
+import { UserContext } from "../../../../utils/UserContext";
 
 const BranchName = (props) => {
-    const {handleStartCall}=props
+    const {handleStartCall,question}=props
+    const [userData, setUserData] = useContext(UserContext)
     return (
         <View style={styles.container}>
             <Header leftImg={''} headerText={"Start Audit"} />
@@ -21,7 +23,7 @@ const BranchName = (props) => {
                     </View>
                     <View style={styles.brnchmannme}>
                         <View style={styles.brnachnme}>
-                            <Text style={styles.branname}>Branch Manager Name</Text>
+                            <Text style={styles.branname}>{question.branch_manager}</Text>
                         </View>
                         <View style={styles.offlinevwe}>
                             <Text style={styles.offiletxt}>Offline</Text>
@@ -32,7 +34,7 @@ const BranchName = (props) => {
                     </View>
                     <View style={styles.brnchmannme}>
                         <View style={styles.brnachnme}>
-                            <Text style={styles.branname}>RMM</Text>
+                            <Text style={styles.branname}>{userData.name}</Text>
                         </View>
                         <View style={styles.offlinevwe}>
                             <Text style={styles.offiletxt}>Offline</Text>

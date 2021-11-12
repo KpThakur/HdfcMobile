@@ -10,12 +10,18 @@ export const styles = StyleSheet.create({
         padding:20,
     },
     head:{
+        backgroundColor:GREY_TEXT_COLOR,
+        width:"100%",
+        height:300,
+        borderRadius:10,
+        alignItems:"center",
+        justifyContent:"center"
     },
     body:{
         paddingTop:20
     },
     txt:{
-        color:GREY_TEXT_COLOR,
+        color:"gray",
         fontFamily:FONT_FAMILY_REGULAR,
         letterSpacing:1
     },

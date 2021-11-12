@@ -8,6 +8,7 @@ import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOC
 import Header from '../../../../component/Header'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
+let ACDATE
 export default function ScheduleNewAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
@@ -77,6 +78,7 @@ export default function ScheduleNewAudit(props) {
                                                         }
                                                         else {
                                                             setopenDate(!openDate)
+                                                            ACDATE=moment(date).format('DD-MM-YYYY')
                                                             setdate(moment(date).format('DD-MM-YYYY'))
                                                         }
 
@@ -93,16 +95,35 @@ export default function ScheduleNewAudit(props) {
                                                 <DatePicker modal open={openTime} mode="time" date={new Date()}
                                                     minuteInterval={15}
                                                     onConfirm={(date) => {
-                                                        console.log(moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am')
-                                                        if (moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am') {
+                                                        // console.log(moment(date,'H:mm'),"DATE")
+                                                        // console.log(moment(date).format('H:mm') <= '19:00' && moment(date).format('H:mm') >= '09:00')
+                                                        // console.log((moment(date).format('H:mm')>=moment(new Date()).format('H:mm')))
+                                                        console.log(ACDATE);
+                                                        console.log(moment(new Date()).format('DD-MM-YYYY'));
+                                                        console.log(ACDATE !== moment(new Date()).format('DD-MM-YYYY'))
+                                                        if (moment(date).format('H:mm') <= '19:00' && moment(date).format('H:mm') >= '09:00') {
                                                             setopenTime(!openTime)
-                                                            // console.log(moment(date).format('h-mm'),"DATE")
-                                                            if (moment(date.getTime()).format('h-mm') === moment(new Date().getTime()).format('h-mm'))
-                                                                settime(moment(date.getTime()).format("h-00"))
-                                                            else
-                                                                settime(moment(date).format('h-mm'))
+                                                            
+                                                            if (ACDATE !== moment(new Date()).format('DD-MM-YYYY')) {
+                                                                if (moment(date.getTime()).format('H-mm') === moment(new Date().getTime()).format('H-mm'))
+                                                                    settime(moment(date.getTime()).format("H-00"))
+                                                                else
+                                                                    settime(moment(date).format('H-mm'))
+                                                            } else {
+                                                                if ((moment(date).format('H:mm') >= moment(new Date()).format('H:mm'))) {
+                                                                    if (moment(date.getTime()).format('H-mm') === moment(new Date().getTime()).format('H-mm'))
+                                                                        settime(moment(date.getTime()).format("H-00"))
+                                                                    else
+                                                                        settime(moment(date).format('H-mm'))
+                                                                }
+                                                                else {
+                                                                    Alert.alert('Time', 'Please Select Proper Time')
+                                                                }
+                                                            }
+
                                                         } else {
-                                                            Alert.alert('Time', 'Please time between 10:00 AM to 6:00 PM')
+                                                            setopenTime(!openTime)
+                                                            Alert.alert('Time', 'Please Select Time Between 9:00 AM to 7:00 PM')
                                                         }
                                                     }}
                                                     onCancel={() => {

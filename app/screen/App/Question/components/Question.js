@@ -14,6 +14,8 @@ import DropDown from '../../../../component/DropDown'
 import { useNavigation } from "@react-navigation/native";
 import { normalize } from "../../../../component/scaleFontSize";
 import Slider from '@react-native-community/slider';
+import AsyncStorage from "@react-native-community/async-storage";
+import { UserContext } from "../../../../utils/UserContext";
 
 const Question = (props) => {
     const windowWidth = Dimensions.get('window').width;
@@ -24,7 +26,7 @@ const Question = (props) => {
     const [dropDown, setdropDown] = useState(false)
     const [showIndex, setshowIndex] = useState()
     const [ssDropDown, setssDropDown] = useState(false);
-
+    const [userData, setUserData] = useContext(UserContext)
 
     useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => {
@@ -121,7 +123,7 @@ const Question = (props) => {
         imageArray.splice(index, 1);
         props.setCamImg(imageArray)
     }
-    console.log("CAMIMG: ",props.camImg)
+    // console.log("CAMIMG: ",props.camImg)
     const renderImage = (item, index) => {
         // console.log('item: ', item.path);
         return (
@@ -342,7 +344,7 @@ const Question = (props) => {
                                         backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
                                         justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
                                     }} >
-                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? "Branch Manager" : rmmactionable ? "Reasonal Manager" : "Select Actionable"}</Text>
+                                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? question.branch_manager : rmmactionable ? userData.name : "Select Actionable"}</Text>
                                         {
                                             dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
                                                 <Image source={DOWNARROW} />
@@ -354,13 +356,13 @@ const Question = (props) => {
                                             {
                                                 question.data.bm_actionable_assignee == "1" &&
                                                 <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(1)}>
-                                                    <Text style={styles.drop_down_txt}>Branch Manager</Text>
+                                                    <Text style={styles.drop_down_txt}>{question.branch_manager}</Text>
                                                 </TouchableOpacity>
                                             }
                                             {
                                                 question.data.rmm_actionable_assignee == "1" &&
                                                 <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(2)}>
-                                                    <Text style={styles.drop_down_txt}>RMM</Text>
+                                                    <Text style={styles.drop_down_txt}>{userData.name}</Text>
                                                 </TouchableOpacity>}
                                         </View>
                                     }
