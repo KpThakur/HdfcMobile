@@ -22,9 +22,9 @@ import AuditScoreScreen from '../screen/App/AuditScore';
 import ReviewAuditScreen from '../screen/App/ReviewAudit'
 import ActionableScreen from '../screen/App/Actionable';
 import AuditSuccessScreen from '../screen/App/AuditSuccess';
-import ForgetPasswordScreen from '../screen/App/ForgetPassword';
 import ChangePasswordScreen from '../screen/App/ChangePassword'
 import RescheduleAuditScreen from '../screen/App/RescheduleAudit';
+import ForgetPasswordScreen from '../screen/App/ForgetPassword'
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,7 +53,7 @@ function TabStack(params) {
 };
 function AppStack() {
     return (
-        <App.Navigator screenOptions={{ headerShown: false }} >
+        <App.Navigator screenOptions={{ headerShown: false }}>
             <App.Screen name="DashboardScreen" component={TabStack} />
             <App.Screen name="ScheduleNewAuditScreen" component={ScheduleNewAuditScreen} />
             <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
@@ -66,7 +66,6 @@ function AppStack() {
             <App.Screen name="ReviewAduit" component={ReviewAuditScreen} />
             <App.Screen name="Actionable" component={ActionableScreen} />
             <App.Screen name="AuditSuccess" component={AuditSuccessScreen} />
-            <App.Screen name="ForgetPassword" component={ForgetPasswordScreen} />
             
         </App.Navigator>
     )
@@ -77,6 +76,7 @@ const AuthStack = () => {
     return (
         <Auth.Navigator screenOptions={{ headerShown: false }} >
             <Auth.Screen name="Login" component={LoginScreen} />
+            <Auth.Screen name="ForgetPassword" component={ForgetPasswordScreen}/>
         </Auth.Navigator>)
 
 }

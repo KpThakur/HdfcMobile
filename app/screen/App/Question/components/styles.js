@@ -134,7 +134,7 @@ export const styles = StyleSheet.create({
         fontSize: normalize(12)
     },
     drop_down_item: {
-        backgroundColor: "#fff",
+        backgroundColor: GREY_TEXT_COLOR,
         marginVertical: 5,
         borderBottomWidth:0.5,
         borderBottomColor:"gray",

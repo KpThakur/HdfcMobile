@@ -22,7 +22,8 @@ export const BORDER_COLOR="#d1e5fb"
 
 
 //Images
-export const BRAND_ICON=require('../assets/images/HDFC_Bank_Logo.svg.png')
+// export const BRAND_ICON=require('../assets/images/HDFC_Bank_Logo.svg.png')
+export const BRAND_ICON=require('../assets/images/auditor.png')
 export const HEROIC_ICON=require('../assets/images/Audit.png')
 export const EYE_CLOSE=require('../assets/images/Group_7.png')
 export const EYE=require('../assets/images/eye.png')

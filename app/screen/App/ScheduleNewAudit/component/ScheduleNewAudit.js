@@ -41,14 +41,14 @@ export default function ScheduleNewAudit(props) {
     }
     for (var i = 10; i <= 18; i++) {
         for (var j = 0; j <= 55; j += 15) {
-            if(j==0)
+            if (j == 0)
                 timeData.push(i + "-0" + j)
             else
                 timeData.push(i + "-" + j)
         }
     }
     timeData.push("19-00")
-    console.log(timeData)
+    // console.log(timeData)
     const navigation = useNavigation()
     return (
         <>
@@ -104,13 +104,13 @@ export default function ScheduleNewAudit(props) {
                                                     }} />
                                             </View>
 
-                                            <View style={{ position: "absolute", right: 1 ,zIndex:999}}>
+                                            <View style={{ position: "absolute", right: 1, zIndex: 999 }}>
                                                 <TouchableOpacity onPress={() => handleDropDown()} style={{
                                                     backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
                                                     justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
                                                 }} >
-                                                    <Image source={CLOCK}/>
-                                                    <Text style={{marginHorizontal:10}}>{time ? time : "Time"}</Text>
+                                                    <Image source={CLOCK} />
+                                                    <Text style={{ marginHorizontal: 10 }}>{time ? time : "Time"}</Text>
                                                     {
                                                         dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
                                                             <Image source={DOWNARROW} />
@@ -123,9 +123,22 @@ export default function ScheduleNewAudit(props) {
                                                             data={timeData}
                                                             renderItem={({ item }) => {
                                                                 return (
-                                                                    <TouchableOpacity style={styles.drop_down_item} onPress={()=>{
-                                                                        settime(item)
-                                                                        setdropDown(false)}}>
+                                                                    <TouchableOpacity style={styles.drop_down_item} onPress={() => {
+                                                                        if (ACDATE == moment(new Date()).format("DD-MM-YYYY")) {
+                                                                            if (item < moment(new Date()).format("H-mm")) {
+                                                                                setdropDown(false)
+                                                                                alert("Please Select Proper Time")
+                                                                            }
+                                                                            else {
+                                                                                settime(item)
+                                                                                setdropDown(false)
+                                                                            }
+                                                                        } else {
+                                                                            settime(item)
+                                                                            setdropDown(false)
+                                                                        }
+
+                                                                    }}>
                                                                         <Text style={styles.drop_down_txt}>{item}</Text>
                                                                     </TouchableOpacity>
                                                                 )

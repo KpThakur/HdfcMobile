@@ -1,8 +1,10 @@
-import React, { useContext } from "react";
+import { useNavigation } from "@react-navigation/core";
+import React, { useContext, useState } from "react";
 import { Share } from 'react-native';
 import { QuestionContext } from "../../../utils/QuestionContext";
 import NotifyView from './components/Notify';
-const Notify = ({navigation}) =>{
+const Notify = ({managerJoin,joined,setstartAudit}) =>{
+    const navigation=useNavigation()
     const [question, setquestion] = useContext(QuestionContext)
     const [engine, setengine] = useState()
     const onShare = async () => {
@@ -25,12 +27,13 @@ const Notify = ({navigation}) =>{
         }
     };
     const handleStartCall=()=>{
+        setstartAudit(true)
         navigation.navigate("QuestionScreen")
     }
     return (
         <NotifyView
             onShare={onShare} handleStartCall={handleStartCall}
-            question={question}
+            question={question} managerJoin={managerJoin} joined={joined} setstartAudit={setstartAudit}
         />
     )
 }

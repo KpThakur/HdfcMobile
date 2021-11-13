@@ -6,7 +6,7 @@ import { FONT_FAMILY_BOLD, GREY_TEXT_COLOR, STATUS_BAR_COLOR } from "../../../..
 import { BRAND_ICON, HEROIC_ICON, EYE, EYE_CLOSE, CHECKED, UNCHECKED } from '../../../../utils/constant';
 const LoginScreen = (props) => {
     const {handleLogin,email,password,setemail,setpassword
-        ,isLoading,errorMessage,ShowAlert,isChecked,setisChecked
+        ,isLoading,errorMessage,ShowAlert,isChecked,setisChecked,handleForgetPassword
     }=props
     const [isSecure, setisSecure] = useState(true)
     const handlePassword = () => {
@@ -48,7 +48,7 @@ const LoginScreen = (props) => {
                                 }
                                 <Text style={styles.txt}>Keep Me Sign in</Text>
                             </TouchableOpacity>
-                        <TouchableOpacity><Text style={styles.p_txt}>Forget Password ?</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>handleForgetPassword()}><Text style={styles.p_txt}>Forget Password ?</Text></TouchableOpacity>
                     </View>
                     <View style={styles.btn_view}>
                         <Button buttonText="Log in" onPress={handleLogin}/>

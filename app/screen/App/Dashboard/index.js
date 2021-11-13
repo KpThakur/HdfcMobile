@@ -120,7 +120,7 @@ const DashboardScreen = ({ navigation }) => {
             // console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
             // console.log(response.data.data)
-            setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager })
+            setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager,audit_type:0 })
             navigation.navigate('QuestionScreen')
         }
     }
@@ -131,7 +131,7 @@ const DashboardScreen = ({ navigation }) => {
         }
         const response = await apiCall('POST', apiEndPoints.QUESTION, params)
         console.log(response.data.data)
-        setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager })
+        setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager ,audit_type:1})
         navigation.navigate('AuditWelcomeScreen')
     }
     const EditAudit = (item) => {

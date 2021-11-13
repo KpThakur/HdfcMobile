@@ -5,6 +5,7 @@ import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from "../../../utils/httpClient";
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from '../../../utils/Loader'
+import Notify from "../Notify";
 const Question = ({ navigation }) => {
     const [question, setquestion] = useContext(QuestionContext)
     const [remark, setremark] = useState("")
@@ -19,6 +20,15 @@ const Question = ({ navigation }) => {
     const [sliderValue, setSliderValue] = useState('')
     const [reviewValue, setReviewValue] = useState(0);
     const [isLoading, setisLoading] = useState(false)
+    const [startAudit, setstartAudit] = useState()
+    const [joined, setjoined] = useState(true)
+ const [managerJoin, setmanagerJoin] = useState(true)
+    useEffect(() => {
+       setstartAudit(question.audit_type==0?true:false)
+    //    setjoined(question.audit_type==1?true:false)
+    //    setmanagerJoin(question.audit_type==1?true:false)
+    }, [])
+    console.log(startAudit)
     const SubmitAPI = async (formdata) => {
         try {
             setisLoading(true)
@@ -83,7 +93,8 @@ const Question = ({ navigation }) => {
             setisLoading(true)
             const params = {
                 question_id: question.data.question_id,
-                audit_id: question.audit_id
+                audit_id: question.audit_id,
+                audit_type:question.audit_type
             }
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
             setisLoading(false)
@@ -91,10 +102,10 @@ const Question = ({ navigation }) => {
                 if (response.data.data.check_data)
                     setquestionList(response.data.data.check_data.split(','))
                 // setSliderValue(response.data.data)
-                setquestion({ data: response.data.data, audit_id: params.audit_id })
+                setquestion({ data: response.data.data, audit_id: params.audit_id,audit_type:params.audit_type })
                 setremark("")
                 setrmmactionable(0)
-                setrmmactionable(0)
+                setbmActionable(0)
                 setCamImg()
                 setyesNo()
                 setquality(0)
@@ -122,6 +133,7 @@ const Question = ({ navigation }) => {
     return (
         <>
             {isLoading && <Loader />}
+        
             <QuestionView
                 question={question}
                 setquestion={setquestion}
@@ -140,7 +152,11 @@ const Question = ({ navigation }) => {
                 sliderValue={sliderValue}
                 reviewValue={reviewValue}
                 setReviewValue={setReviewValue}
+                startAudit={startAudit} setstartAudit={setstartAudit}
+                joined={joined} setjoined={setjoined}
+                managerJoin={managerJoin} setmanagerJoin={setmanagerJoin}
             />
+           
         </>
     )
 }
