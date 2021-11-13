@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import { apiCall } from '../../../utils/httpClient';
@@ -7,7 +6,7 @@ import LoginScreen from './component/login';
 import { AuthContext,UserContext } from '../../../utils/UserContext';
 import { Alert } from 'react-native';
 import Loader from '../../../utils/Loader';
-const Login = ({ navigation }) => {
+const Login = ({navigation}) => {
     const [userData, setUserData]=useContext(UserContext)
     const [email, setemail] = useState('john@mailinator.com')
     const [password, setpassword] = useState('123456')
@@ -61,6 +60,9 @@ const Login = ({ navigation }) => {
             message,
         )
     }
+    const handleForgetPassword=()=>{
+        navigation.navigate("ForgetPassword")
+    }
     return (
         <>
         {isLoading&& <Loader/>}
@@ -71,6 +73,7 @@ const Login = ({ navigation }) => {
                 isLoading={isLoading}
                 isChecked={isChecked} setisChecked={setisChecked}
                 setpassword={setpassword} setemail={setemail} ShowAlert={ShowAlert}
+                handleForgetPassword={handleForgetPassword}
             />
         </>)
 }

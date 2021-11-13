@@ -3,7 +3,7 @@ import AuditWelcomeScreenView from './component/AuditWelcomeScreen';
 
 const AuditWelcomeScreen = ({navigation}) => {
     const handleStartAudit=()=>{
-        navigation.navigate("NotifyScreen")
+        navigation.navigate("QuestionScreen")
     }
     
     return (<AuditWelcomeScreenView handleStartAudit={handleStartAudit}/>)

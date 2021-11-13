@@ -20,7 +20,7 @@ export default function index({ navigation }) {
     useEffect(() => {
         fetchScore()
     }, [])
-
+    console.log("Total Score",totalScore)
     const handleViewActionable = async () => {
         setisLoading(true)
         const params = {
