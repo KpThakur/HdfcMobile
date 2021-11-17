@@ -5,8 +5,7 @@ import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from "../../../utils/httpClient";
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from '../../../utils/Loader'
-import Notify from "../Notify";
-const Question = ({ navigation }) => {
+const Question = ({ navigation,route }) => {
     const [question, setquestion] = useContext(QuestionContext)
     const [remark, setremark] = useState("")
     const [rating, setrating] = useState(0)
@@ -22,13 +21,13 @@ const Question = ({ navigation }) => {
     const [isLoading, setisLoading] = useState(false)
     const [startAudit, setstartAudit] = useState()
     const [joined, setjoined] = useState(true)
- const [managerJoin, setmanagerJoin] = useState(true)
+    const [managerJoin, setmanagerJoin] = useState(false)
+    console.log("ROUTE:",route.params)
     useEffect(() => {
-       setstartAudit(question.audit_type==0?true:false)
-    //    setjoined(question.audit_type==1?true:false)
-    //    setmanagerJoin(question.audit_type==1?true:false)
+        setstartAudit(question.audit_type == 0 ? true : false)
     }, [])
-    console.log(startAudit)
+    
+
     const SubmitAPI = async (formdata) => {
         try {
             setisLoading(true)
@@ -83,9 +82,8 @@ const Question = ({ navigation }) => {
         else {
             SubmitAPI(formdata)
         }
-        console.log('formdata', formdata)
-    }
 
+    }
 
     const handleNext = async () => {
         try {
@@ -94,7 +92,7 @@ const Question = ({ navigation }) => {
             const params = {
                 question_id: question.data.question_id,
                 audit_id: question.audit_id,
-                audit_type:question.audit_type
+                audit_type: question.audit_type
             }
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
             setisLoading(false)
@@ -102,7 +100,7 @@ const Question = ({ navigation }) => {
                 if (response.data.data.check_data)
                     setquestionList(response.data.data.check_data.split(','))
                 // setSliderValue(response.data.data)
-                setquestion({ data: response.data.data, audit_id: params.audit_id,audit_type:params.audit_type })
+                setquestion({ data: response.data.data, audit_id: params.audit_id, audit_type: params.audit_type })
                 setremark("")
                 setrmmactionable(0)
                 setbmActionable(0)
@@ -129,11 +127,58 @@ const Question = ({ navigation }) => {
             console.log("ERROR: ", error)
         }
     }
-    console.log("QUES", question)
+
+
+    const onCapture = async () => {
+        try {
+            const params = {
+                audit_id: question.audit_id,
+                question_id: question.data.question_id
+            }
+            const response = await apiCall("POST", apiEndPoints.CAPTURE_IMG, params)
+            console.log(response)
+            if (response.status === 200) {
+                // setTimeout(getIMG(),1000)
+                getIMG()
+            }
+        } catch (error) {
+            console.log("ERROR", error)
+        }
+
+    }
+    const getIMG = async () => {
+        try {
+            const params = {
+                audit_id: question.audit_id,
+                question_id: question.data.question_id
+            }
+            const response = await apiCall("POST", apiEndPoints.IMG_DATA, params)
+            if (response.status === 200) {
+                console.log("RES IMG:L ", response.data.image)
+                let combineImg = camImg == null ? [] : [...camImg];
+                combineImg.push({
+                    path: response.data.image,
+                    type: 'camera'
+                })
+                setCamImg(combineImg)
+            }
+        } catch (error) {
+            console.log("ERROR ", error)
+        }
+    }
+
+    const handleManagerJoin = (data) => {
+        console.log("MANAGER: ", data)
+        setmanagerJoin(data)
+    }
+
+    console.log("CAMIMG: ", camImg)
+    
+    // console.log("QUES", question)
     return (
         <>
             {isLoading && <Loader />}
-        
+
             <QuestionView
                 question={question}
                 setquestion={setquestion}
@@ -155,8 +200,13 @@ const Question = ({ navigation }) => {
                 startAudit={startAudit} setstartAudit={setstartAudit}
                 joined={joined} setjoined={setjoined}
                 managerJoin={managerJoin} setmanagerJoin={setmanagerJoin}
+                onCapture={onCapture}
+                getIMG={getIMG}
+                handleManagerJoin={handleManagerJoin}
+                channelId={route.params.channelId}
+                token={route.params.token}
             />
-           
+
         </>
     )
 }

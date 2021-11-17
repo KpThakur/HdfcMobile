@@ -164,7 +164,6 @@ const DashboardScreen = ({ navigation }) => {
             }
         } 
         else {
-            // console.log("seracc ",auditList)
             var a=[]
             if (text.length > 0) {
                 var a4 = _.filter(auditArray, (row) => {

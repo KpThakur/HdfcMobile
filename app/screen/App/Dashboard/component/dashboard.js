@@ -4,7 +4,7 @@ import Header from '../../../../component/Header';
 import Input from '../../../../component/Input';
 import { styles } from './style';
 import { normalize } from '../../../../utils/scaleFontSize'
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const DashboardView = (props) => {
     
