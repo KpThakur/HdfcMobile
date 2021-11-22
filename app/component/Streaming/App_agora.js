@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import ViewShot,{captureRef} from "react-native-view-shot";
+import ViewShot, { captureScreen } from "react-native-view-shot";
 import {
-  Button,
+  Image,
   PermissionsAndroid,
   Platform,
   ScrollView,
@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   View,
   Dimensions,
-  Text
+  Text,
+  Button
 } from 'react-native';
 
 import RtcEngine, {
@@ -21,6 +22,9 @@ import RtcEngine, {
   RtcRemoteView,
 } from 'react-native-agora';
 import SplashScreen from 'react-native-splash-screen';
+import {MICOFF,MICON, PRIMARY_BLUE_COLOR} from '../../utils/constant'
+import { apiCall } from '../../utils/httpClient';
+import apiEndPoints from '../../utils/apiEndPoints';
 const WindowWidth = Dimensions.get('window').width
 const WindowHeight = Dimensions.get('window').height
 const config = require('./agora.config.json');
@@ -31,6 +35,8 @@ interface State {
   remoteUid: number[];
   switchCamera: boolean;
   switchRender: boolean;
+  audio:boolean;
+  token:String;
 }
 
 export default class JoinChannelVideo extends Component<{}, State, any> {
@@ -39,51 +45,41 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      channelId: config.channelId,
+      channelId: this.props.channelId,
       isJoined: false,
       remoteUid: [],
       switchCamera: false,
       switchRender: true,
-
+      audio:true,
+      token:this.props.token,
     };
-    this.ref="ViewShot"
-  }
-  _onCapture = () => {
-    // console.log("do something with ", uri);
-    captureRef(this.ref.viewRef, {
-      format: "jpg",
-      quality: 0.8
-    }).then(
-      uri => console.log("Image saved to", uri),
-      error => console.error("Oops, snapshot failed", error)
-    );
+    this.ref = "ViewShot"
   }
 
   UNSAFE_componentWillMount() {
     setTimeout(() => { SplashScreen.hide() }, 3000)
     this._initEngine();
     this._joinChannel();
+    
   }
 
   componentWillUnmount() {
     this._engine?.destroy();
+    this.props.handleJoin(false)
   }
 
   _initEngine = async () => {
     this._engine = await RtcEngine.createWithContext(
       new RtcEngineContext(config.appId)
-      );
-      this._addListeners();
-      
-      await this._engine.enableVideo();
-      await this._engine.startPreview();
-      await this._engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
-      await this._engine.setClientRole(ClientRole.Broadcaster);
-      console.log("HHA",this.props);
-    };
-    
-    //   key：3f6bd6b1a459437cb48897f4c67a8805
-    // secret：141814c494fe44baac62f09664e6b8e5
+    );
+    this._addListeners();
+
+    await this._engine.enableVideo();
+    await this._engine.startPreview();
+    await this._engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await this._engine.setClientRole(ClientRole.Broadcaster);
+  };
+
   _addListeners = () => {
     this._engine?.addListener('Warning', (warningCode) => {
       console.info('Warning', warningCode);
@@ -94,9 +90,11 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     this._engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
       console.info('JoinChannelSuccess', channel, uid, elapsed);
       this.setState({ isJoined: true });
+      this.props.handleJoin(true)
     });
     this._engine?.addListener('UserJoined', (uid, elapsed) => {
       console.info('UserJoined', uid, elapsed);
+      this.props.handleManagerJoin(true)
       this.setState({ remoteUid: [...this.state.remoteUid, uid] });
     });
     this._engine?.addListener('UserOffline', (uid, reason) => {
@@ -104,23 +102,25 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
       this.setState({
         remoteUid: this.state.remoteUid.filter((value) => value !== uid),
       });
-      this.props.setmanagerJoin(false)
+      // this.props.setmanagerJoin(false)
     });
     this._engine?.addListener('LeaveChannel', (stats) => {
       console.info('LeaveChannel', stats);
       this.setState({ isJoined: false, remoteUid: [] });
+      this.props.handleJoin(false)
     });
   };
 
   _joinChannel = async () => {
+    console.log("AGORA:",this.state.channelId," ",this.state.token)
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        PermissionsAndroid.PERMISSIONS.CAMERA,
+        // PermissionsAndroid.PERMISSIONS.CAMERA,
       ]);
     }
     await this._engine?.joinChannel(
-      config.token,
+      this.state.token,
       this.state.channelId,
       null,
       config.uid
@@ -150,7 +150,13 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
       remoteUid: remoteUid.reverse(),
     });
   };
-
+  _toggleMic=()=>{
+    const {audio}=this.state
+    // console.log("AUDIO:",audio)
+    this.setState({audio:!audio})
+    this._engine.muteLocalAudioStream(this.state.audio)
+    // console.log("SETAUDIO:",audio)
+  }
   render() {
     const { channelId, isJoined, switchCamera } = this.state;
     return (
@@ -169,12 +175,19 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
         </View>
         {this._renderVideo()}
         <View style={styles.float}>
+          <TouchableOpacity onPress={()=>this._toggleMic()} style={{backgroundColor:PRIMARY_BLUE_COLOR,padding:10,borderRadius:100}}>
+            {
+              this.state.audio?
+                <Image source={MICON} style={{width:20,height:20,tintColor:"#fff"}}/>:
+                <Image source={MICOFF} style={{width:20,height:20,tintColor:"#fff"}}/>
+            }
+          </TouchableOpacity>
+          
           {/* <Button
             onPress={this._switchCamera}
             title={`Camera ${switchCamera ? 'front' : 'rear'}`}
           /> */}
         </View>
-        {/* <TouchableOpacity onPress={()=>this._onCapture()} style={{padding:10,backgroundColor:"blue"}}><Text>Capture Image</Text></TouchableOpacity> */}
       </View>
     );
   }
@@ -182,31 +195,31 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
   _renderVideo = () => {
     const { remoteUid } = this.state;
     return (
-      
+
       <View style={styles.container} collapsable={false}>
         <RtcLocalView.SurfaceView style={styles.local} />
         {remoteUid !== undefined && (
           <ScrollView horizontal={true} style={styles.remoteContainer}>
-            {/* <ViewShot ref={"ViewShot"} captureMode="mount"> */}
-              <View collapsable={false}>
-            {remoteUid.map((value, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.remote}
-                onPress={this._switchRender}
-              >
-                <RtcRemoteView.SurfaceView
-                  style={styles.container}
-                  uid={value}
-                  zOrderMediaOverlay={true}
-                />
-              </TouchableOpacity>
-            ))}
+            <ViewShot ref={"ViewShot"}>
+            <View collapsable={false}>
+              {remoteUid.map((value, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.remote}
+                  onPress={this._switchRender}
+                >
+                  <RtcRemoteView.SurfaceView
+                    style={styles.container}
+                    uid={value}
+                    zOrderMediaOverlay={true}
+                  />
+                </TouchableOpacity>
+              ))}
             </View>
-            {/* </ViewShot> */}
-            </ScrollView>
+            </ViewShot>
+          </ScrollView>
         )}
-        
+
       </View>
     );
   };
@@ -217,9 +230,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   float: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
+    position:"absolute",
+    bottom:0,
+    right:1
   },
   top: {
     width: '100%',
@@ -232,7 +245,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   remoteContainer: {
-    
+
   },
   remote: {
     width: WindowWidth,

@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Share } from 'react-native';
+import { Platform, Share } from 'react-native';
 import QuestionView from './components/Question';
 import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from "../../../utils/httpClient";
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from '../../../utils/Loader'
-import Notify from "../Notify";
-const Question = ({ navigation }) => {
+import { socket } from "../../../utils/Client";
+import { UserContext } from "../../../utils/UserContext";
+import NetInfo from "@react-native-community/netinfo";
+const Question = ({ navigation, route }) => {
     const [question, setquestion] = useContext(QuestionContext)
     const [remark, setremark] = useState("")
     const [rating, setrating] = useState(0)
@@ -22,13 +24,21 @@ const Question = ({ navigation }) => {
     const [isLoading, setisLoading] = useState(false)
     const [startAudit, setstartAudit] = useState()
     const [joined, setjoined] = useState(true)
- const [managerJoin, setmanagerJoin] = useState(true)
+    const [managerJoin, setmanagerJoin] = useState(true)
+    const [userData, setuserData] = useContext(UserContext)
+    
     useEffect(() => {
-       setstartAudit(question.audit_type==0?true:false)
-    //    setjoined(question.audit_type==1?true:false)
-    //    setmanagerJoin(question.audit_type==1?true:false)
+        setstartAudit(question.audit_type == 0 ? true : false)
+        unsubscribe
     }, [])
-    console.log(startAudit)
+    useEffect(() => {
+    }, [question])
+
+    const unsubscribe = NetInfo.fetch().then(state=>{
+        console.log("ME:",state.isConnected)
+        setjoined(state.isConnected)    
+    })
+
     const SubmitAPI = async (formdata) => {
         try {
             setisLoading(true)
@@ -37,7 +47,7 @@ const Question = ({ navigation }) => {
                     'Content-Type': 'multipart/form-data'
                 })
             setisLoading(false)
-            // console.log("SNBMIT:",response.data)
+            console.log("SNBMIT:", response.data)
             if (response.data.status === 200) {
                 handleNext()
             }
@@ -61,19 +71,22 @@ const Question = ({ navigation }) => {
         formdata.append('yes_no', yesNo);
         formdata.append('quality', quality);
         formdata.append('check_answer', checkedAns);
-        console.log("HH", question.data.question_type === "3")
-
         if (question.data.question_type === "3" || question.data.image_capture === "1") {
             if (camImg) {
-                camImg?.map((img, index) => {
-                    return (
-                        formdata.append('question_image', {
-                            uri: img.path,
-                            type: img.mime === undefined ? "image/jpeg" : img.mime,
-                            name: img.path.substring(img.path.lastIndexOf('/') + 1),
-                        })
-                    )
-                })
+                if (question.audit_type !== 1) {
+                    camImg?.map((img, index) => {
+                        return (
+                            formdata.append('question_image', {
+                                uri: img.path,
+                                type: img.mime === undefined ? "image/jpeg" : img.mime,
+                                name: img.path.substring(img.path.lastIndexOf('/') + 1),
+                            })
+                        )
+                    })
+                }
+                else {
+                    
+                }
                 SubmitAPI(formdata)
             }
             else {
@@ -83,57 +96,166 @@ const Question = ({ navigation }) => {
         else {
             SubmitAPI(formdata)
         }
-        console.log('formdata', formdata)
-    }
 
+    }
 
     const handleNext = async () => {
         try {
 
-            setisLoading(true)
+            // setisLoading(true)
             const params = {
                 question_id: question.data.question_id,
                 audit_id: question.audit_id,
-                audit_type:question.audit_type
+                audit_type: question.audit_type,
+                employee_id: userData.emp_id,
+                branch_manager:question.branch_manager
             }
-            const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-            setisLoading(false)
-            if (response.status === 200) {
-                if (response.data.data.check_data)
-                    setquestionList(response.data.data.check_data.split(','))
-                // setSliderValue(response.data.data)
-                setquestion({ data: response.data.data, audit_id: params.audit_id,audit_type:params.audit_type })
-                setremark("")
-                setrmmactionable(0)
-                setbmActionable(0)
-                setCamImg()
-                setyesNo()
-                setquality(0)
-                setReviewValue(0)
-                setcheckedAns("")
+            socket.emit("getQuestionList", params,async (data) => {
+                console.log("sock data ", data)
+              await  GetSocketData(data,params)
 
-            }
-            else {
-                //Complete
-                const params = {
-                    audit_id: question.audit_id,
-                    audit_status: 5
-                }
-                const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-                if (response.status === 200)
-                    navigation.navigate('AuditScore')
-                else
-                    navigator.navigate('DashboardScreen')
-            }
+            // let response = data
+            // // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
+            // setisLoading(false)
+            // if (response.status === 200) {
+            //     if (response.data.data.check_data)
+            //         setquestionList(response.data.data.check_data.split(','))
+                
+            //     setquestion({ data: response.data.data, audit_id: params.audit_id, audit_type: params.audit_type ,branch_manager:params.branch_manager})
+            //     setremark("")
+            //     setrmmactionable(0)
+            //     setbmActionable(0)
+            //     setCamImg()
+            //     setyesNo()
+            //     setquality(0)
+            //     setReviewValue(0)
+            //     setcheckedAns("")
+
+            // }
+            // else {
+            //     //Complete
+            //     const params = {
+            //         audit_id: question.audit_id,
+            //         audit_status: 5
+            //     }
+            //     const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
+            //     if (response.status === 200)
+            //         navigation.navigate('AuditScore')
+            //     else
+            //         navigator.navigate('DashboardScreen')
+            // }
+        })
         } catch (error) {
             console.log("ERROR: ", error)
         }
     }
+    const GetSocketData = async (data,params) => {
+        console.log("STATUS:",data.status)
+        if (data.status === 200) {
+            if (data.data.check_data)
+                setquestionList(data.data.check_data.split(','))
+            // setSliderValue(response.data.data)
+            console.log("DATA:",data)
+            setquestion({ data: data.data, audit_id: params.audit_id, audit_type: params.audit_type,branch_manager:params.branch_manager })
+            setremark("")
+            setrmmactionable(0)
+            setbmActionable(0)
+            setCamImg()
+            setyesNo()
+            setquality(0)
+            setReviewValue(0)
+            setcheckedAns("")
+           await socket.emit("checker", data)
+        }
+        else {
+            //Complete
+            const params = {
+                audit_id: question.audit_id,
+                audit_status: 5
+            }
+            const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
+            if (response.status === 200)
+                navigation.navigate('AuditScore')
+            else
+                navigator.navigate('DashboardScreen')
+        }
+    }
+
+    const onCapture = async () => {
+        try {
+            const params = {
+                audit_id: question.audit_id,
+                question_id: question.data.question_id
+            }
+            // socket.emit("captureImageRequest", params, (data) => {
+            //     console.log("socket capIMGReq", data)
+            //     if (data.status === 200) {
+            //         // setTimeout(getIMG(),4000)
+            //         getIMG()
+            //     }
+            // })
+            const response = await apiCall("POST", apiEndPoints.CAPTURE_IMG, params)
+            console.log(response)
+            if (response.status === 200) {
+                // setTimeout(getIMG(),4000)
+                getIMG()
+            }
+        } catch (error) {
+            console.log("ERROR", error)
+        }
+
+    }
+    const getIMG = async () => {
+        try {
+            const params = {
+                audit_id: question.audit_id,
+                question_id: question.data.question_id,
+            }
+            // socket.emit("getImagedata", params, (data) => {
+            //     console.log("IMG:", data)
+            //     getIMGSOCKET(data)
+            // })
+
+            const response = await apiCall("POST", apiEndPoints.IMG_DATA, params)
+            if (response.status === 200) {
+                console.log("RES IMG:L ", response.data.data)
+                
+                let combineImg = camImg == null ? [] : [...camImg];
+                combineImg.push({
+                    path: response.data.image,
+                    type: 'camera'
+                })
+                setCamImg(combineImg)
+            }
+        } catch (error) {
+            console.log("ERROR ", error)
+        }
+    }
+    const getIMGSOCKET = (data) => {
+        if (data.status === 200) {
+            console.log("RES IMG:L ", data.image)
+            let combineImg = camImg == null ? [] : [...camImg];
+            combineImg.push({
+                path: data.image,
+                type: 'camera'
+            })
+            setCamImg(combineImg)
+        }
+    }
+    const handleManagerJoin = (data) => {
+        console.log("MANAGER: ", data)
+        setmanagerJoin(data)
+    }
+
+    const handleJoin=(data)=>{
+        // console.log("ME:",data)
+    }
+    // console.log("CAMIMG: ", camImg)
     console.log("QUES", question)
     return (
         <>
             {isLoading && <Loader />}
-        
+
             <QuestionView
                 question={question}
                 setquestion={setquestion}
@@ -155,8 +277,14 @@ const Question = ({ navigation }) => {
                 startAudit={startAudit} setstartAudit={setstartAudit}
                 joined={joined} setjoined={setjoined}
                 managerJoin={managerJoin} setmanagerJoin={setmanagerJoin}
+                onCapture={onCapture}
+                getIMG={getIMG}
+                handleManagerJoin={handleManagerJoin}
+                token={route.params ? route.params.token : ""}
+                channelId={route.params ? route.params.channelId : ""}
+                handleJoin={handleJoin}
             />
-           
+
         </>
     )
 }

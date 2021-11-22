@@ -58,6 +58,14 @@ export const styles = StyleSheet.create({
         borderTopStartRadius: 10,
         borderTopEndRadius: 10,
     },
+    box_header_new: {
+        backgroundColor: PRIMARY_BLUE_COLOR,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+        borderTopStartRadius: 10,
+        borderTopEndRadius: 10,
+    },
     header_txt: {
         color: "#fff",
         fontFamily: FONT_FAMILY_SEMI_BOLD,

@@ -95,7 +95,7 @@ export default function ReviewAuit(props) {
                     }
                 </View>
             </ScrollView>
-            <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 10 }}>
+            <View style={{  marginBottom: 10,position:"absolute",bottom:0 ,alignSelf:"center",width:"100%"}}>
                 <Button buttonText={"Submit Report"} onPress={() => handleSubmitReport()} />
             </View>
         </View>

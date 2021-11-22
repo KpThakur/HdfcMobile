@@ -11,11 +11,6 @@ const Header = (props) => {
         RightImage, showRightLabel, leftImg, leftNav, mncontainer, showleftimage,onPress,
         statusbarcolor, barStyle, showAppIcon, headerText, headerTextShouldMiddle
     } = props;
-    // const navigation = useNavigation();
-    // const OnpressDrawer=()=>{
-    //     navigation.dispatch(DrawerActions.toggleDrawer());
-
-    // }
     return (
         <>
             <View style={[container, mncontainer]}>

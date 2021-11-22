@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler, Dimensions, FlatList,
 } from 'react-native';
@@ -17,9 +17,9 @@ import Slider from '@react-native-community/slider';
 import AsyncStorage from "@react-native-community/async-storage";
 import { UserContext } from "../../../../utils/UserContext";
 import JoinChannelVideo from "../../../../component/Streaming/App_agora";
-import ViewShot, { captureScreen } from "react-native-view-shot";
 import Notify from "../../Notify";
-
+import apiEndPoints from "../../../../utils/apiEndPoints";
+import { apiCall } from "../../../../utils/httpClient";
 const Question = (props) => {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
@@ -30,26 +30,21 @@ const Question = (props) => {
     const [showIndex, setshowIndex] = useState()
     const [ssDropDown, setssDropDown] = useState(false);
     const [userData, setUserData] = useContext(UserContext)
-
-    const viewShot = useRef()
-    // const handleJoin = (data) => {
-    //     alert(data)
-    //     // setjoined(data)
-    // }
+    const [maxIMG, setmaxIMG] = useState(false)
+    const [showModalIMG, setshowModalIMG] = useState()
     useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", () => {
-            setssDropDown(!ssDropDown)
-        })
-        return BackHandler.removeEventListener("hardwareBackPress", () => {
-            setssDropDown(!ssDropDown)
-        })
-    }, [ssDropDown])
+        console.log("LASTEST: ", props.camImg)
+
+    }, [props.camImg])
+    // console.log("marger", props.managerJoin)
     const handleInfo = () => {
         setonInfo(!onInfo)
     }
     const navigation = useNavigation()
     const { handleSubmit, question, managerJoin, joined, setquestion, remark, setremark, rating, setrating, rmmactionable, setrmmactionable,
-        bmActionable, setbmActionable, questionList, setyesNo, quality, setquality, checkedAns, setcheckedAns, yesNo, startAudit, setstartAudit } = props
+        bmActionable, setbmActionable, questionList, setyesNo, quality, setquality, checkedAns, setcheckedAns, yesNo, startAudit, setstartAudit,
+        getIMG, onCapture
+    } = props
     const handleRating = async (item) => {
         await setdefaultRating(item)
         await setrating(item)
@@ -71,7 +66,6 @@ const Question = (props) => {
         )
     }
     function _handleReivew(val) {
-        console.log('val: ', val);
         props.setReviewValue(val)
     }
     const handleDropDown = () => {
@@ -115,7 +109,7 @@ const Question = (props) => {
         ImagePicker.openCamera({
             width: 300,
             height: 400,
-            cropping: true,
+            cropping: false,
         }).then(image => {
             let combineImg = props.camImg == null ? [] : [...props.camImg];
             combineImg.push({
@@ -131,11 +125,11 @@ const Question = (props) => {
         imageArray.splice(index, 1);
         props.setCamImg(imageArray)
     }
-    // console.log("CAMIMG: ",props.camImg)
+// console.log("question update:  ",question)
     const renderImage = (item, index) => {
         // console.log('item: ', item.path);
         return (
-            <View style={{ width: 60, height: 65, marginHorizontal: 5 }}>
+            <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
                 <TouchableOpacity
                     style={{
                         width: 20,
@@ -161,27 +155,15 @@ const Question = (props) => {
                         style={{ width: "100%", height: "100%", borderRadius: 10 }}
                     />
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
-    const onCapture = () => {
-        captureScreen({
-            format: "jpg",
-            quality: 0.8
-        }).then(
-            uri => {
-                console.log("Image saved to", uri)
-                let combineImg = props.camImg == null ? [] : [...props.camImg];
-                combineImg.push({
-                    path: uri,
-                    type: 'ScreenShot'
-                })
-                props.setCamImg(combineImg)
-            },
-            error => console.error("Oops, snapshot failed", error)
-        );
-
+    const showMaxIMG = (index) => {
+        console.log("IMGSHOW:", props.camImg[index])
+        setshowModalIMG(props.camImg[index])
+        setmaxIMG(!maxIMG)
     }
+
     return (
         <View style={styles.container}>
             {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -228,34 +210,66 @@ const Question = (props) => {
                         </>
                         : null
                 }
-                {console.log("AUDIT_TYPE: ", question.audit_type)}
 
-                {/* <Text>{joined?"YES":"NO"}</Text> */}
+                {
+                    managerJoin && maxIMG ?
+                        <Modal>
+                            <View style={{ flex: 1, backgroundColor: "#171717" }}>
+                                <TouchableOpacity
+                                    style={{
+                                        padding: 20,
+                                        borderRadius: 100,
+                                        position: "absolute",
+                                        zIndex: 9,
+                                        backgroundColor: "#fff",
+                                        right: 0,
+                                        top: 0
+                                    }}
+                                    onPress={() => showMaxIMG()}>
+                                    <Image
+                                        source={require('../../../../assets/images/add-alt.png')}
+                                        style={{
+                                            width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR
+                                        }}
+                                    /></TouchableOpacity>
+                                <View style={{ alignItems: "center", marginTop: 150, padding: 10 }}>
+                                    <Image source={{ uri: showModalIMG.path }} style={{ width: "100%", height: 300, resizeMode: "contain" }} />
+                                </View>
+                            </View>
+                        </Modal>
+                        : null
+                }
+
                 {
                     question.audit_type == 0 ? null :
-                        <ViewShot ref={viewShot} captureMode="mount" >
                             <View style={{ height: 250 }}>
                                 {
-                                    joined ?
+                                    props.managerJoin ?
                                         <>
-                                            <JoinChannelVideo handleJoin={(data) => handleJoin(data)} />
+                                            <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                                token={props.token}
+                                                channelId={props.channelId}
+                                                handleJoin={(data) => props.handleJoin(data)}
+                                            />
                                         </>
                                         :
-                                        <TouchableOpacity style={styles.bluestreaming}>
-                                            <Text style={styles.textstraming}>No Live Streaming</Text>
-                                        </TouchableOpacity>
+                                        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                            <TouchableOpacity style={styles.bluestreaming}>
+                                                <Text style={styles.textstraming}>No Live Streaming</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                 }
                             </View>
-                        </ViewShot>}
+                        }
                 {
                     startAudit ?
-                        <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}>
+                        <ScrollView keyboardShouldPersistTaps={"always"} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                             <View style={styles.body}>
                                 {
                                     question?.data?.image_capture === "1" &&
                                     (
                                         <>
-                                            {props?.camImg ?
+                                            {props?.camImg && !props.managerJoin ?
                                                 <View style={{ alignItems: "center", marginTop: 10 }}>
                                                     {
                                                         props?.camImg && props.camImg.length > 0 ? <Image source={{ uri: props.camImg[props.camImg.length - 1].path }} style={{ width: "100%", height: 300, borderRadius: 10, resizeMode: "contain" }} /> : null
@@ -334,6 +348,7 @@ const Question = (props) => {
                                     <View style={styles.brnchmannme}>
                                         <TextInput placeholder="Enter the quantity"
                                             value={quality} onChangeText={text => setquality(text)}
+                                            keyboardType={"numeric"}
                                             style={{ padding: 10, backgroundColor: "#ecececec", width: "100%" }} />
                                     </View>
                                 )}
@@ -358,7 +373,6 @@ const Question = (props) => {
                                     </View>
                                 )
                                 }
-                                {/* <CustomRatingBar /> */}
                                 {
                                     question.data.score_range_to > 1 ?
                                         <View style={{}}>

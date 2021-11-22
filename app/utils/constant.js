@@ -56,6 +56,8 @@ export const UNCHECKED_ICON=require('../assets/images/Ellipse435.png')
 export const DOWNARROW=require('../assets/images/arrow-ios-downward-outline.png')
 export const CHECKED_FILLED=require('../assets/images/check.png')
 export const GALLERY=require('../assets/images/image-gallery.png')
+export const MICON=require('../assets/images/voice-recording.png')
+export const MICOFF=require('../assets/images/mute.png')
 // FontSize
 export const TINY_FONT_SIZE = 10;
 export const SMALL_FONT_SIZE = 15;
@@ -67,7 +69,7 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
-export const BASEURL = 'http://itinformatix.org:3020';
+export const BASEURL = 'https://audits.kreate.co.in:3000';
 
 
 

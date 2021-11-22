@@ -1,5 +1,5 @@
 {
-  "name": "HDFC",
+  "name": "AUDIT",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/netinfo": "^7.1.2",
     "@react-native-community/slider": "^4.1.11",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/drawer": "^6.1.8",
@@ -29,7 +30,8 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.8.0",
     "react-native-splash-screen": "^3.2.0",
-    "react-native-view-shot": "^3.1.2"
+    "react-native-view-shot": "^3.1.2",
+    "socket.io-client": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",

@@ -78,9 +78,9 @@ const BranchName = (props) => {
                                     <View style={styles.offlinevwe}>
                                         <Text style={styles.offiletxt}>{"Offline"}</Text>
                                     </View>
-                                    <TouchableOpacity style={styles.notifyvwe}>
+                                    {/* <TouchableOpacity style={styles.notifyvwe}>
                                         <Text style={styles.notifylble}>Notify</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                 </>
                             )
                         }
