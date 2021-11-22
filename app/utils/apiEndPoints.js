@@ -21,5 +21,6 @@ export default {
   GET_ACTIONABLE_DETAIL:"/api/v1/question/getActionableDetail",
   CAPTURE_IMG:'/api/v1/question/captureImageRequest',
   IMG_DATA:'/api/v1/question/getImagedata',
-  AGORA_TOKEN:'/api/v1/audit/getAgoraToken'
+  AGORA_TOKEN:'/api/v1/audit/getAgoraToken',
+  PREV_QUESTION:'/api/v1/question/previousQuestion'
 }

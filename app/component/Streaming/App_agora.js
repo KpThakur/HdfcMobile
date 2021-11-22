@@ -102,7 +102,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
       this.setState({
         remoteUid: this.state.remoteUid.filter((value) => value !== uid),
       });
-      // this.props.setmanagerJoin(false)
+      this.props.setmanagerJoin(false)
     });
     this._engine?.addListener('LeaveChannel', (stats) => {
       console.info('LeaveChannel', stats);

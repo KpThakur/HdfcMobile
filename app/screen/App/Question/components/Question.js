@@ -120,12 +120,7 @@ const Question = (props) => {
             setssDropDown(false)
         });
     }
-    function deleteImage(index) {
-        var imageArray = [...props.camImg]
-        imageArray.splice(index, 1);
-        props.setCamImg(imageArray)
-    }
-// console.log("question update:  ",question)
+    // console.log("question update:  ",question)
     const renderImage = (item, index) => {
         // console.log('item: ', item.path);
         return (
@@ -141,7 +136,7 @@ const Question = (props) => {
                         right: 0,
                         top: 0
                     }}
-                    onPress={() => deleteImage(index)}>
+                    onPress={() => props.confirmDelete(index)}>
                     <Image
                         source={require('../../../../assets/images/add-alt.png')}
                         style={{
@@ -163,7 +158,6 @@ const Question = (props) => {
         setshowModalIMG(props.camImg[index])
         setmaxIMG(!maxIMG)
     }
-
     return (
         <View style={styles.container}>
             {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -198,6 +192,7 @@ const Question = (props) => {
                                 )
                             }
                             <View style={{ flexDirection: 'row' }}>
+
                                 <View style={{ flex: 5, alignItems: "center", justifyContent: "center" }}>
                                     <Text style={[styles.branname], { fontFamily: FONT_FAMILY_BOLD, color: "#000" }}>
                                         {question?.data?.question_title}
@@ -242,25 +237,25 @@ const Question = (props) => {
 
                 {
                     question.audit_type == 0 ? null :
-                            <View style={{ height: 250 }}>
-                                {
-                                    props.managerJoin ?
-                                        <>
-                                            <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                                                token={props.token}
-                                                channelId={props.channelId}
-                                                handleJoin={(data) => props.handleJoin(data)}
-                                            />
-                                        </>
-                                        :
-                                        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                                            <TouchableOpacity style={styles.bluestreaming}>
-                                                <Text style={styles.textstraming}>No Live Streaming</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                }
-                            </View>
-                        }
+                        <View style={{ height: 250 }}>
+                            {
+                                props.managerJoin ?
+                                    <>
+                                        <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                            token={props.token}
+                                            channelId={props.channelId}
+                                            handleJoin={(data) => props.handleJoin(data)}
+                                        />
+                                    </>
+                                    :
+                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                                        <TouchableOpacity style={styles.bluestreaming}>
+                                            <Text style={styles.textstraming}>No Live Streaming</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                            }
+                        </View>
+                }
                 {
                     startAudit ?
                         <ScrollView keyboardShouldPersistTaps={"always"} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
@@ -447,7 +442,10 @@ const Question = (props) => {
                                 }
 
                                 <View style={{ marginVertical: 20, flex: 1, justifyContent: "flex-end" }}>
-                                    <Button buttonText={"Next"} onPress={() => handleSubmit()} />
+                                    <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"100%"}}>
+                                        <Button buttonText={"Previous"} onPress={()=>props.prevQuestion()}/>
+                                        <Button buttonText={"Next"} onPress={() => handleSubmit()}/>
+                                    </View>
                                 </View>
                             </View>
                         </ScrollView> :
