@@ -20,6 +20,7 @@ const handleSearch = (text) => {
         })
         setfilterData(val)
     }
+    
     return (
         <>
             <TouchableOpacity onPress={() => handleDropDown()} style={{

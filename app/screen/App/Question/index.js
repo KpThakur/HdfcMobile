@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Platform, Share } from 'react-native';
+import { Alert, Platform, Share } from 'react-native';
 import QuestionView from './components/Question';
 import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from "../../../utils/httpClient";
@@ -18,7 +18,7 @@ const Question = ({ navigation, route }) => {
     const [yesNo, setyesNo] = useState()
     const [quality, setquality] = useState(0)
     const [checkedAns, setcheckedAns] = useState("")
-    const [camImg, setCamImg] = useState('')
+    const [camImg, setCamImg] = useState([])
     const [sliderValue, setSliderValue] = useState('')
     const [reviewValue, setReviewValue] = useState(0);
     const [isLoading, setisLoading] = useState(false)
@@ -26,17 +26,22 @@ const Question = ({ navigation, route }) => {
     const [joined, setjoined] = useState(true)
     const [managerJoin, setmanagerJoin] = useState(true)
     const [userData, setuserData] = useContext(UserContext)
-    
+
     useEffect(() => {
         setstartAudit(question.audit_type == 0 ? true : false)
         unsubscribe
     }, [])
     useEffect(() => {
     }, [question])
+    useEffect(() => {
+        socket.on("image-sent", (data) => {
+            getIMG()
+        })
+    }, [])
 
-    const unsubscribe = NetInfo.fetch().then(state=>{
-        console.log("ME:",state.isConnected)
-        setjoined(state.isConnected)    
+    const unsubscribe = NetInfo.fetch().then(state => {
+        // console.log("ME:",state.isConnected)
+        setjoined(state.isConnected)
     })
 
     const SubmitAPI = async (formdata) => {
@@ -85,7 +90,7 @@ const Question = ({ navigation, route }) => {
                     })
                 }
                 else {
-                    
+
                 }
                 SubmitAPI(formdata)
             }
@@ -108,55 +113,55 @@ const Question = ({ navigation, route }) => {
                 audit_id: question.audit_id,
                 audit_type: question.audit_type,
                 employee_id: userData.emp_id,
-                branch_manager:question.branch_manager
+                branch_manager: question.branch_manager
             }
-            socket.emit("getQuestionList", params,async (data) => {
+            socket.emit("getQuestionList", params, async (data) => {
                 console.log("sock data ", data)
-              await  GetSocketData(data,params)
+                await GetSocketData(data, params)
 
-            // let response = data
-            // // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-            // setisLoading(false)
-            // if (response.status === 200) {
-            //     if (response.data.data.check_data)
-            //         setquestionList(response.data.data.check_data.split(','))
-                
-            //     setquestion({ data: response.data.data, audit_id: params.audit_id, audit_type: params.audit_type ,branch_manager:params.branch_manager})
-            //     setremark("")
-            //     setrmmactionable(0)
-            //     setbmActionable(0)
-            //     setCamImg()
-            //     setyesNo()
-            //     setquality(0)
-            //     setReviewValue(0)
-            //     setcheckedAns("")
+                // let response = data
+                // // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
+                // setisLoading(false)
+                // if (response.status === 200) {
+                //     if (response.data.data.check_data)
+                //         setquestionList(response.data.data.check_data.split(','))
 
-            // }
-            // else {
-            //     //Complete
-            //     const params = {
-            //         audit_id: question.audit_id,
-            //         audit_status: 5
-            //     }
-            //     const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-            //     if (response.status === 200)
-            //         navigation.navigate('AuditScore')
-            //     else
-            //         navigator.navigate('DashboardScreen')
-            // }
-        })
+                //     setquestion({ data: response.data.data, audit_id: params.audit_id, audit_type: params.audit_type ,branch_manager:params.branch_manager})
+                //     setremark("")
+                //     setrmmactionable(0)
+                //     setbmActionable(0)
+                //     setCamImg()
+                //     setyesNo()
+                //     setquality(0)
+                //     setReviewValue(0)
+                //     setcheckedAns("")
+
+                // }
+                // else {
+                //     //Complete
+                //     const params = {
+                //         audit_id: question.audit_id,
+                //         audit_status: 5
+                //     }
+                //     const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
+                //     if (response.status === 200)
+                //         navigation.navigate('AuditScore')
+                //     else
+                //         navigator.navigate('DashboardScreen')
+                // }
+            })
         } catch (error) {
             console.log("ERROR: ", error)
         }
     }
-    const GetSocketData = async (data,params) => {
-        console.log("STATUS:",data.status)
+    const GetSocketData = async (data, params) => {
+        console.log("STATUS:", data.status)
         if (data.status === 200) {
             if (data.data.check_data)
                 setquestionList(data.data.check_data.split(','))
             // setSliderValue(response.data.data)
-            console.log("DATA:",data)
-            setquestion({ data: data.data, audit_id: params.audit_id, audit_type: params.audit_type,branch_manager:params.branch_manager })
+            console.log("DATA:", data)
+            setquestion({ data: data.data, audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
             setremark("")
             setrmmactionable(0)
             setbmActionable(0)
@@ -165,7 +170,7 @@ const Question = ({ navigation, route }) => {
             setquality(0)
             setReviewValue(0)
             setcheckedAns("")
-           await socket.emit("checker", data)
+            await socket.emit("checker", data)
         }
         else {
             //Complete
@@ -187,19 +192,19 @@ const Question = ({ navigation, route }) => {
                 audit_id: question.audit_id,
                 question_id: question.data.question_id
             }
-            // socket.emit("captureImageRequest", params, (data) => {
-            //     console.log("socket capIMGReq", data)
-            //     if (data.status === 200) {
-            //         // setTimeout(getIMG(),4000)
-            //         getIMG()
-            //     }
-            // })
-            const response = await apiCall("POST", apiEndPoints.CAPTURE_IMG, params)
-            console.log(response)
-            if (response.status === 200) {
-                // setTimeout(getIMG(),4000)
-                getIMG()
-            }
+            socket.emit("captureImageRequest", params, (data) => {
+                console.log("socket capIMGReq", data)
+                if (data.status === 200) {
+                    // setTimeout(getIMG(),4000)
+                    // getIMG()
+                }
+            })
+            // const response = await apiCall("POST", apiEndPoints.CAPTURE_IMG, params)
+            // console.log(response)
+            // if (response.status === 200) {
+            //     // setTimeout(getIMG(),4000)
+            //     getIMG()
+            // }
         } catch (error) {
             console.log("ERROR", error)
         }
@@ -211,35 +216,37 @@ const Question = ({ navigation, route }) => {
                 audit_id: question.audit_id,
                 question_id: question.data.question_id,
             }
-            // socket.emit("getImagedata", params, (data) => {
-            //     console.log("IMG:", data)
-            //     getIMGSOCKET(data)
-            // })
+            socket.emit("getImagedata", params, (data) => {
+                console.log("IMG:", data)
+                getIMGSOCKET(data)
+            })
 
-            const response = await apiCall("POST", apiEndPoints.IMG_DATA, params)
-            if (response.status === 200) {
-                console.log("RES IMG:L ", response.data.data)
-                
-                let combineImg = camImg == null ? [] : [...camImg];
-                combineImg.push({
-                    path: response.data.image,
-                    type: 'camera'
-                })
-                setCamImg(combineImg)
-            }
+            // const response = await apiCall("POST", apiEndPoints.IMG_DATA, params)
+            // if (response.status === 200) {
+            //     console.log("RES IMG:L ", response.data.data)
+
+            //     let combineImg = camImg == null ? [] : [...camImg];
+            //     combineImg.push({
+            //         path: response.data.image,
+            //         type: 'camera'
+            //     })
+            //     setCamImg(combineImg)
+            // }
         } catch (error) {
             console.log("ERROR ", error)
         }
     }
-    const getIMGSOCKET = (data) => {
+    const getIMGSOCKET = async (data) => {
+        // console.log("socket img",data)
         if (data.status === 200) {
-            console.log("RES IMG:L ", data.image)
-            let combineImg = camImg == null ? [] : [...camImg];
-            combineImg.push({
+            console.log("RES IMG:L ", data)
+            let combineImg = await camImg == null ? [] : [...camImg];
+            camImg.push({
                 path: data.image,
-                type: 'camera'
+                type: 'camera',
+                image_name: data.image_name
             })
-            setCamImg(combineImg)
+            setCamImg([...camImg])
         }
     }
     const handleManagerJoin = (data) => {
@@ -247,11 +254,91 @@ const Question = ({ navigation, route }) => {
         setmanagerJoin(data)
     }
 
-    const handleJoin=(data)=>{
+    const handleJoin = (data) => {
         // console.log("ME:",data)
     }
+    const prevQuestion = async () => {
+        try {
+            setisLoading(true)
+            const params = {
+                question_id: question.data.question_id,
+                audit_id: question.audit_id,
+                audit_type: question.audit_type,
+                employee_id: userData.emp_id,
+                branch_manager: question.branch_manager
+            }
+            const response = await apiCall('POST', apiEndPoints.PREV_QUESTION, params)
+            console.log("PREv;", response.data)
+            console.log("PREv; ans", response.data.answer)
+            setisLoading(false)
+            if (response.status === 200) {
+                if (response.data.data.check_data)
+                    setquestionList(response.data.data[0].check_data.split(','))
+                const imgs=response.data.answer.image_capture.split(',')
+                const finalData=[]
+                for(var i=0;i<imgs.length;i++)
+                {
+                    finalData.push({
+                        path: response.data.base_url+imgs[i],
+                        type: 'camera',
+                        image_name: imgs[i]
+                    })
+                }
+                setCamImg([...finalData])
+                // console.log('prev data:',{ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
+                setquestion({ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
+                setremark(response.data.answer.remark)
+                setrmmactionable(response.data.answer.rmm_actionable_assignee)
+                setbmActionable(response.data.answer.bm_actionable_assignee)
+                // setCamImg()
+                setyesNo(response.data.answer.yes_no)
+                setquality(response.data.answer.quality)
+                setReviewValue(Number(response.data.answer.score_range))
+                setcheckedAns(response.data.answer.check_answer)
+
+            }
+            else {
+                alert(response.data.message)
+            }
+            
+        } catch (error) {
+            console.log("Error", error)
+        }
+    }
+    function deleteImage(index) {
+        // console.log("IMG delete",props.camImg[index].image_name)
+        handleDeleteIMG(camImg[index].image_name)
+        var imageArray = [...camImg]
+        imageArray.splice(index, 1);
+        setCamImg(imageArray)
+
+    }
+    const handleDeleteIMG = (name) => {
+        const params = {
+            image_name: name,
+            question_id: question.data.question_id,
+            audit_id: question.audit_id,
+        }
+        socket.emit("deleteCaptureImg", params,(data)=>{
+            console.log("socket delete",data)
+        })
+    }
+    const confirmDelete=(index)=>{
+        Alert.alert(
+            "Delete Image",
+            "Confirm to delete image.",
+            [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+              },
+              { text: "OK", onPress: () => deleteImage(index) }
+            ]
+          );
+    }
     // console.log("CAMIMG: ", camImg)
-    console.log("QUES", question)
+    // console.log("QUES", question)
     return (
         <>
             {isLoading && <Loader />}
@@ -283,6 +370,10 @@ const Question = ({ navigation, route }) => {
                 token={route.params ? route.params.token : ""}
                 channelId={route.params ? route.params.channelId : ""}
                 handleJoin={handleJoin}
+                prevQuestion={prevQuestion}
+                handleDeleteIMG={handleDeleteIMG}
+                deleteImage={deleteImage}
+                confirmDelete={confirmDelete}
             />
 
         </>

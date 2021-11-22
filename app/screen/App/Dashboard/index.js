@@ -110,6 +110,7 @@ const DashboardScreen = ({ navigation }) => {
         console.log(response)
     }
     const HandleStatus = async (id, status, questions_id, branch_manager) => {
+        console.log("question_id",questions_id)
         //Online Audit
         if (status == 1)
             QuestionList(id, branch_manager, questions_id)
