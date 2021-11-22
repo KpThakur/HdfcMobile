@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     main:{
         paddingHorizontal:15,
         paddingVertical:10,
+        
     },
     h_txt:{
         fontSize:normalize(MEDIUM_FONT_SIZE),

@@ -65,6 +65,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
 
   componentWillUnmount() {
     this._engine?.destroy();
+    this.props.handleJoin(false)
   }
 
   _initEngine = async () => {
@@ -89,6 +90,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     this._engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
       console.info('JoinChannelSuccess', channel, uid, elapsed);
       this.setState({ isJoined: true });
+      this.props.handleJoin(true)
     });
     this._engine?.addListener('UserJoined', (uid, elapsed) => {
       console.info('UserJoined', uid, elapsed);
@@ -105,6 +107,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     this._engine?.addListener('LeaveChannel', (stats) => {
       console.info('LeaveChannel', stats);
       this.setState({ isJoined: false, remoteUid: [] });
+      this.props.handleJoin(false)
     });
   };
 

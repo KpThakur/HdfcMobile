@@ -32,7 +32,7 @@ export default function index({ navigation }) {
         console.log('GET_ACTIONABLE_DETAIL: ', response);
         settotalScore(response.data)
         setisLoading(false)
-        navigation.navigate("ReviewAduit",{audit_id: question.audit_id})
+        navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
     }
     return (
         <>

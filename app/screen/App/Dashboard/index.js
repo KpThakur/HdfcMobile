@@ -14,6 +14,7 @@ import { Alert } from 'react-native';
 import { UserContext } from '../../../utils/UserContext';
 import { QuestionContext } from '../../../utils/QuestionContext';
 import { EditAuditContext } from '../../../utils/EditAuditContext';
+import { socket } from '../../../utils/Client'
 import _ from "lodash";
 const DashboardScreen = ({ navigation }) => {
     const [userData, setUserData] = useContext(UserContext)
@@ -109,30 +110,43 @@ const DashboardScreen = ({ navigation }) => {
         console.log(response)
     }
     const HandleStatus = async (id, status, questions_id, branch_manager) => {
+        //Online Audit
         if (status == 1)
-            QuestionList(id, branch_manager)
+            QuestionList(id, branch_manager, questions_id)
+        //Offline Audit
         else {
             StartAudit(id)
             const params = {
                 audit_id: id,
+                employee_id: userData.emp_id,
                 question_id: questions_id
             }
+            // socket.emit("getQuestionList",params,(data)=>{
+            //     console.log("sock data ",data)
+            // })
             // console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
             // console.log(response.data.data)
-            setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager,audit_type:0 })
+            setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager, audit_type: 0 })
             navigation.navigate('QuestionScreen')
         }
     }
 
-    const QuestionList = async (id, branch_manager) => {
+    const QuestionList = async (id, branch_manager, questions_id) => {
         const params = {
-            audit_id: id
+            audit_id: id,
+            questions_id: questions_id,
+            employee_id: userData.emp_id
         }
-        const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-        console.log(response.data.data)
-        setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager ,audit_type:1})
-        navigation.navigate('AuditWelcomeScreen')
+
+        socket.emit("getQuestionList", params, (data) => {
+            console.log("sock data ", data)
+            setquestion({ data: data.data, audit_id: id, branch_manager: branch_manager, audit_type: 1 })
+        })
+        // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
+        // console.log(response.data.data)
+        // setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager ,audit_type:1})
+        navigation.navigate('AuditWelcomeScreen', { audit_id: id })
     }
     const EditAudit = (item) => {
         seteditAudit(item)
@@ -162,30 +176,31 @@ const DashboardScreen = ({ navigation }) => {
             else {
                 setauditList(auditArray)
             }
-        } 
+        }
         else {
-            var a=[]
-            if (text.length > 0) {
+            var a = []
+            if (search.length > 0) {
                 var a4 = _.filter(auditArray, (row) => {
                     var d = _.filter(row?.items, (items) => {
-                        console.log("AAAAAAAAAA",items.branch_name.toLowerCase())
                         return items?.branch_name.toLowerCase().match(search.toLowerCase())
                     })
-                    if (d.length > 0)
-                        return d;
+                    return d;
                 })
                 var a5 = _.filter(auditArray, (row) => {
-                    var d = _.filter(row?.items, (items) => {items?.city_name.toLowerCase().match(search.toLowerCase())})
-                    if (d.length > 0)
-                        return d;
+                    var d = _.filter(row?.items, (items) => {
+                        return items?.city_name.toLowerCase().match(search.toLowerCase())
+                    })
+                    return d;
                 })
                 var a6 = _.filter(auditArray, (row) => {
-                    var d = _.filter(row?.items, (items) => {items?.branch_manager.toLowerCase().match(search.toLowerCase())})
-                    if (d.length > 0)
-                        return d;
+                    var d = _.filter(row?.items, (items) => { return items?.branch_manager.toLowerCase().match(search.toLowerCase()) })
+                    return d;
                 })
+                // console.log("branch:", a4)
+                // console.log("city:", a5)
+                // console.log("manager:", a6)
                 a = [...a4, ...a5, ...a6];
-            
+
                 function onlyUnique(value, index, self) {
                     return self.indexOf(value) === index;
                 }
@@ -197,8 +212,8 @@ const DashboardScreen = ({ navigation }) => {
             }
         }
     }
-    // console.log("AUDITLIST: ", auditList)
-    // console.log("AUDITARRAY: ", auditArray)
+    console.log("AUDITLIST: ", auditList)
+    console.log("AUDITARRAY: ", auditArray)
     const renderTodayAudit = ({ item, index }) => {
         return (
             <View style={{ backgroundColor: "#fff" }}>
@@ -212,7 +227,7 @@ const DashboardScreen = ({ navigation }) => {
                                         reason={reason} setreason={setreason}
                                         onPress={() => handleCancelAudit(audit.audit_id)} />
                                     <View style={styles.box}>
-                                        <View style={styles.box_header}>
+                                        <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
                                             <Text style={styles.header_txt}>{audit.branch_name}</Text>
                                             <Text style={styles.header_txt}>Bank</Text>
                                         </View>
@@ -309,7 +324,7 @@ const DashboardScreen = ({ navigation }) => {
                                     renderItem={({ item: audit }) => {
                                         return (
                                             <View style={styles.display_audit}>
-                                                {console.log("RENDER"   ,audit.items)}
+                                                {console.log("RENDER", audit.items)}
                                                 {
                                                     audit.date ?
                                                         <View style={{ paddingTop: 10 }}>
@@ -325,7 +340,7 @@ const DashboardScreen = ({ navigation }) => {
                                                             <Cancel popup={popup} togglePopUp={togglePopUp}
                                                                 reason={reason} setreason={setreason}
                                                                 onPress={() => handleCancelAudit(item.audit_id)} />
-                                                            <View style={styles.box_header}>
+                                                            <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
                                                                 <Text style={styles.header_txt}>{item.branch_name}</Text>
                                                                 <Text style={styles.header_txt}>Bank</Text>
                                                             </View>
@@ -421,7 +436,7 @@ const DashboardScreen = ({ navigation }) => {
                                                 {
                                                     audit?.items && audit?.items.map(item => (
                                                         <View style={styles.box}>
-                                                            <View style={styles.box_header}>
+                                                            <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
                                                                 <Text style={styles.header_txt}>{item.branch_name}</Text>
                                                                 <Text style={styles.header_txt}>Bank</Text>
                                                             </View>
@@ -511,7 +526,7 @@ const DashboardScreen = ({ navigation }) => {
                                                     </Text>
                                                 </View>
                                                 <View style={styles.box}>
-                                                    <View style={styles.box_header}>
+                                                    <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
                                                         <Text style={styles.header_txt}>{item.branch_name}</Text>
                                                         <Text style={styles.header_txt}>Bank</Text>
                                                     </View>
@@ -599,7 +614,7 @@ const DashboardScreen = ({ navigation }) => {
                                                     </Text>
                                                 </View>
                                                 <View style={styles.box}>
-                                                    <View style={styles.box_header}>
+                                                    <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
                                                         <Text style={styles.header_txt}>{item.branch_name}</Text>
                                                         <Text style={styles.header_txt}>Bank</Text>
                                                     </View>

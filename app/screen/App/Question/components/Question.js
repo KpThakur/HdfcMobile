@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     Text, View, ScrollView, Image, TouchableOpacity, TextInput, Modal, BackHandler, Dimensions, FlatList,
 } from 'react-native';
@@ -17,7 +17,6 @@ import Slider from '@react-native-community/slider';
 import AsyncStorage from "@react-native-community/async-storage";
 import { UserContext } from "../../../../utils/UserContext";
 import JoinChannelVideo from "../../../../component/Streaming/App_agora";
-import ViewShot, { captureScreen } from "react-native-view-shot";
 import Notify from "../../Notify";
 import apiEndPoints from "../../../../utils/apiEndPoints";
 import { apiCall } from "../../../../utils/httpClient";
@@ -33,12 +32,11 @@ const Question = (props) => {
     const [userData, setUserData] = useContext(UserContext)
     const [maxIMG, setmaxIMG] = useState(false)
     const [showModalIMG, setshowModalIMG] = useState()
-    const viewShot = useRef()
     useEffect(() => {
         console.log("LASTEST: ", props.camImg)
 
     }, [props.camImg])
-    console.log("marger", props.managerJoin)
+    // console.log("marger", props.managerJoin)
     const handleInfo = () => {
         setonInfo(!onInfo)
     }
@@ -127,11 +125,11 @@ const Question = (props) => {
         imageArray.splice(index, 1);
         props.setCamImg(imageArray)
     }
-
+// console.log("question update:  ",question)
     const renderImage = (item, index) => {
         // console.log('item: ', item.path);
         return (
-            <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={()=>showMaxIMG(index)}>
+            <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
                 <TouchableOpacity
                     style={{
                         width: 20,
@@ -166,7 +164,6 @@ const Question = (props) => {
         setmaxIMG(!maxIMG)
     }
 
-    console.log("props: ",showModalIMG);
     return (
         <View style={styles.container}>
             {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -217,7 +214,7 @@ const Question = (props) => {
                 {
                     managerJoin && maxIMG ?
                         <Modal>
-                            <View style={{flex:1,backgroundColor:"#171717"}}> 
+                            <View style={{ flex: 1, backgroundColor: "#171717" }}>
                                 <TouchableOpacity
                                     style={{
                                         padding: 20,
@@ -235,8 +232,8 @@ const Question = (props) => {
                                             width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR
                                         }}
                                     /></TouchableOpacity>
-                                    <View style={{alignItems:"center",marginTop:150,padding:10}}>
-                                    <Image source={{ uri: showModalIMG.path }} style={{ width: "100%",height:300,resizeMode:"contain"}} />
+                                <View style={{ alignItems: "center", marginTop: 150, padding: 10 }}>
+                                    <Image source={{ uri: showModalIMG.path }} style={{ width: "100%", height: 300, resizeMode: "contain" }} />
                                 </View>
                             </View>
                         </Modal>
@@ -245,32 +242,34 @@ const Question = (props) => {
 
                 {
                     question.audit_type == 0 ? null :
-                        <ViewShot ref={viewShot} captureMode="mount" >
                             <View style={{ height: 250 }}>
                                 {
-                                    joined ?
+                                    props.managerJoin ?
                                         <>
-                                            <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)} 
-                                            token={props.token}
-                                            channelId={props.channelId}
+                                            <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                                token={props.token}
+                                                channelId={props.channelId}
+                                                handleJoin={(data) => props.handleJoin(data)}
                                             />
                                         </>
                                         :
-                                        <TouchableOpacity style={styles.bluestreaming}>
-                                            <Text style={styles.textstraming}>No Live Streaming</Text>
-                                        </TouchableOpacity>
+                                        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                                            <TouchableOpacity style={styles.bluestreaming}>
+                                                <Text style={styles.textstraming}>No Live Streaming</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                 }
                             </View>
-                        </ViewShot>}
+                        }
                 {
                     startAudit ?
-                        <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}>
+                        <ScrollView keyboardShouldPersistTaps={"always"} showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, }}>
                             <View style={styles.body}>
                                 {
                                     question?.data?.image_capture === "1" &&
                                     (
                                         <>
-                                            {props?.camImg&&!props.managerJoin ?
+                                            {props?.camImg && !props.managerJoin ?
                                                 <View style={{ alignItems: "center", marginTop: 10 }}>
                                                     {
                                                         props?.camImg && props.camImg.length > 0 ? <Image source={{ uri: props.camImg[props.camImg.length - 1].path }} style={{ width: "100%", height: 300, borderRadius: 10, resizeMode: "contain" }} /> : null
@@ -349,6 +348,7 @@ const Question = (props) => {
                                     <View style={styles.brnchmannme}>
                                         <TextInput placeholder="Enter the quantity"
                                             value={quality} onChangeText={text => setquality(text)}
+                                            keyboardType={"numeric"}
                                             style={{ padding: 10, backgroundColor: "#ecececec", width: "100%" }} />
                                     </View>
                                 )}
