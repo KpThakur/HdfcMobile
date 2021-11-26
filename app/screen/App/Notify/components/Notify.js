@@ -6,7 +6,7 @@ import { styles } from "./styles";
 import { UserContext } from "../../../../utils/UserContext";
 import JoinChannelVideo from '../../../../component/Streaming/App_agora'
 const BranchName = (props) => {
-    const { handleStartCall, question,managerJoin,joined,setstartAudit } = props
+    const { handleStartCall, question, managerJoin, joined, setstartAudit } = props
     const [userData, setUserData] = useContext(UserContext)
     // const [joined, setjoined] = useState(true)
     // const [managerJoin, setmanagerJoin] = useState(true)
@@ -34,11 +34,11 @@ const BranchName = (props) => {
                 </View>
                 <View style={styles.body}>
                     <View style={styles.teamcall}>
-                        <Text style={styles.calltxt}>HDFC Team ready for the call : </Text>
+                        <Text style={styles.calltxt}>Team ready for the call : </Text>
                     </View>
                     <View style={styles.brnchmannme}>
                         <View style={styles.brnachnme}>
-                            <Text style={styles.branname}>{question.branch_manager}</Text>
+                            <Text style={styles.branname}>{question?.branch_manager}</Text>
                         </View>
                         {
                             managerJoin ?
@@ -54,9 +54,10 @@ const BranchName = (props) => {
                                     <View style={styles.offlinevwe}>
                                         <Text style={styles.offiletxt}>Offline</Text>
                                     </View>
-                                    <TouchableOpacity style={styles.notifyvwe}>
+                                    {/* <TouchableOpacity style={styles.notifyvwe}>
                                         <Text style={styles.notifylble}>Notify</Text>
-                                    </TouchableOpacity></>
+                                    </TouchableOpacity> */}
+                                    </>
                         }
                     </View>
 
@@ -98,30 +99,31 @@ const BranchName = (props) => {
                         }}>Joined</Text>
                     </View>
                 </View> */}
-                    {/* <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15 }}>
-                    <TouchableOpacity
-                        onPress={() => props.onShare()}
-                        style={{
-                            backgroundColor: '#1b7dec',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '33%',
-                            height: 42,
-                            borderRadius: 20,
-                            marginTop: 10
-                        }} >
-                        <Text style={{
-                            fontSize: 16, fontWeight: '800', color: "#ffffff"
-                        }}>Invite</Text>
-                    </TouchableOpacity>
-                </View> */}
+                    <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15 }}>
+                        <TouchableOpacity
+                            onPress={() => props.onShare()}
+                            style={{
+                                backgroundColor: '#1b7dec',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                width: '33%',
+                                height: 42,
+                                borderRadius: 20,
+                                marginTop: 10
+                            }} >
+                            <Text style={{
+                                fontSize: 16, fontWeight: '800', color: "#ffffff"
+                            }}>Invite</Text>
+                        </TouchableOpacity>
+                    </View>
                     <View style={{ flex: 1, justifyContent: "flex-end" }}>
 
+                       {managerJoin ?
                         <Button
                             style={{ marginBottom: 10 }}
                             buttonText={"Start Call"}
                             onPress={() => handleStartCall()}
-                        />
+                        />:null}
                     </View>
                 </View>
             </View>

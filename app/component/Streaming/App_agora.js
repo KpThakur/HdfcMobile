@@ -63,6 +63,13 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     
   }
 
+  UNSAFE_componentDidMount() {
+    setTimeout(() => { SplashScreen.hide() }, 3000)
+    this._initEngine();
+    this._joinChannel();
+    
+  }
+
   componentWillUnmount() {
     this._engine?.destroy();
     this.props.handleJoin(false)
@@ -82,32 +89,33 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
 
   _addListeners = () => {
     this._engine?.addListener('Warning', (warningCode) => {
-      console.info('Warning', warningCode);
+      console.log('Warning', warningCode);
     });
     this._engine?.addListener('Error', (errorCode) => {
-      console.info('Error', errorCode);
+      console.log('Error', errorCode);
     });
     this._engine?.addListener('JoinChannelSuccess', (channel, uid, elapsed) => {
-      console.info('JoinChannelSuccess', channel, uid, elapsed);
+      console.log('JoinChannelSuccess', channel, uid, elapsed);
       this.setState({ isJoined: true });
       this.props.handleJoin(true)
     });
     this._engine?.addListener('UserJoined', (uid, elapsed) => {
-      console.info('UserJoined', uid, elapsed);
+      console.log('UserJoined', uid, elapsed);
       this.props.handleManagerJoin(true)
       this.setState({ remoteUid: [...this.state.remoteUid, uid] });
     });
     this._engine?.addListener('UserOffline', (uid, reason) => {
-      console.info('UserOffline', uid, reason);
+      console.log('UserOffline', uid, reason);
+      this.props.handleManagerJoin(false)
       this.setState({
         remoteUid: this.state.remoteUid.filter((value) => value !== uid),
       });
-      this.props.setmanagerJoin(false)
     });
     this._engine?.addListener('LeaveChannel', (stats) => {
-      console.info('LeaveChannel', stats);
+      console.log('LeaveChannel', stats);
       this.setState({ isJoined: false, remoteUid: [] });
       this.props.handleJoin(false)
+      this.props.handleManagerJoin(false)
     });
   };
 
@@ -116,7 +124,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-        // PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.CAMERA,
       ]);
     }
     await this._engine?.joinChannel(
@@ -197,7 +205,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     return (
 
       <View style={styles.container} collapsable={false}>
-        <RtcLocalView.SurfaceView style={styles.local} />
+        {/*<RtcLocalView.SurfaceView style={styles.local} /> */}
         {remoteUid !== undefined && (
           <ScrollView horizontal={true} style={styles.remoteContainer}>
             <ViewShot ref={"ViewShot"}>

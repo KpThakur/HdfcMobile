@@ -11,6 +11,7 @@ const AuditWelcomeScreen = ({navigation,route}) => {
     useEffect(() => {
         _agoraToken()
     }, [])
+    console.log("question welcome audit",question)
     const handleStartAudit=()=>{
         navigation.navigate("QuestionScreen",{token:token,channelId:channelId})
     }

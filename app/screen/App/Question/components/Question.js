@@ -36,7 +36,7 @@ const Question = (props) => {
         console.log("LASTEST: ", props.camImg)
 
     }, [props.camImg])
-    // console.log("marger", props.managerJoin)
+    console.log("marger", props.managerJoin)
     const handleInfo = () => {
         setonInfo(!onInfo)
     }
@@ -66,7 +66,13 @@ const Question = (props) => {
         )
     }
     function _handleReivew(val) {
+
         props.setReviewValue(val)
+        props.emitRating(val);
+    }
+    const handleRemark = (val)=>{
+        setremark(val);
+        props.emitRemark(val)
     }
     const handleDropDown = () => {
         setdropDown(!dropDown)
@@ -122,7 +128,7 @@ const Question = (props) => {
     }
     // console.log("question update:  ",question)
     const renderImage = (item, index) => {
-        // console.log('item: ', item.path);
+        console.log('item: ', item);
         return (
             <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
                 <TouchableOpacity
@@ -146,7 +152,7 @@ const Question = (props) => {
                 </TouchableOpacity>
                 <View>
                     <Image
-                        source={{ uri: item.path }}
+                        source={{ uri:props.baseUrl+ item.image_data }}
                         style={{ width: "100%", height: "100%", borderRadius: 10 }}
                     />
                 </View>
@@ -236,14 +242,23 @@ const Question = (props) => {
                 }
 
                 {
-                    question.audit_type == 0 ? null :
+                    question?.audit_type == 0 ? null :
                         <View style={{ height: 250 }}>
                             {
-                                props.managerJoin ?
-                                    <>
-                                        <JoinChannelVideo handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                <JoinChannelVideo 
+                                            handleManagerJoin={(data) => props.handleManagerJoin(data)}
                                             token={props.token}
                                             channelId={props.channelId}
+                                            setmanagerJoin={()=>{}}
+                                            handleJoin={(data) => props.handleJoin(data)}
+                                        />
+                               /* props.managerJoin ?
+                                    <>
+                                        <JoinChannelVideo 
+                                            handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                            token={props.token}
+                                            channelId={props.channelId}
+                                            setmanagerJoin={()=>{}}
                                             handleJoin={(data) => props.handleJoin(data)}
                                         />
                                     </>
@@ -253,6 +268,7 @@ const Question = (props) => {
                                             <Text style={styles.textstraming}>No Live Streaming</Text>
                                         </TouchableOpacity>
                                     </View>
+                                    */
                             }
                         </View>
                 }
@@ -277,7 +293,7 @@ const Question = (props) => {
                                             <Text style={styles.txt}>Capture The image</Text>
                                         </View> */}
                                                 <TouchableOpacity
-                                                    onPress={() => { question.audit_type == 0 ? OpenCamera() : onCapture() }}
+                                                    onPress={() => { question?.audit_type == 0 ? OpenCamera() : onCapture() }}
                                                     style={{
                                                         backgroundColor: '#1b7dec',
                                                         justifyContent: 'center',
@@ -350,7 +366,7 @@ const Question = (props) => {
                                 {question?.data?.question_type === '4' && (
 
                                     <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
-                                        <Text style={styles.txt}>Answer the following question</Text>
+                                        {/* <Text style={styles.txt}>Answer the following question</Text> */}
                                         {
                                             questionList && questionList.map((question, index) => {
                                                 return (
@@ -369,7 +385,7 @@ const Question = (props) => {
                                 )
                                 }
                                 {
-                                    question.data.score_range_to > 1 ?
+                                    question?.data.score_range_to > 1 ?
                                         <View style={{}}>
                                             <Text style={styles.branname}>Rating</Text>
                                             <View style={{ alignItems: "center" }}>
@@ -377,12 +393,12 @@ const Question = (props) => {
                                             </View>
                                             <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                                                 <View style={{ flex: 0.5, justifyContent: "center", alignItems: "flex-end" }}>
-                                                    <Text style={{ color: PRIMARY_BLUE_COLOR, fontFamily: FONT_FAMILY_SEMI_BOLD }}> {question.data.score_range_from}</Text>
+                                                    <Text style={{ color: PRIMARY_BLUE_COLOR, fontFamily: FONT_FAMILY_SEMI_BOLD }}> {question?.data.score_range_from}</Text>
                                                 </View>
                                                 <Slider
                                                     style={{ height: 40, flex: 5 }}
-                                                    minimumValue={question.data.score_range_from}
-                                                    maximumValue={question.data.score_range_to}
+                                                    minimumValue={question?.data.score_range_from}
+                                                    maximumValue={question?.data.score_range_to}
                                                     minimumTrackTintColor={PRIMARY_BLUE_COLOR}
                                                     maximumTrackTintColor="#000000"
                                                     value={props.reviewValue}
@@ -391,7 +407,7 @@ const Question = (props) => {
                                                     onValueChange={(val) => _handleReivew(val)}
                                                 />
                                                 <View style={{ flex: 0.5 }}>
-                                                    <Text style={{ color: PRIMARY_BLUE_COLOR, fontFamily: FONT_FAMILY_SEMI_BOLD }}>{question.data.score_range_to}</Text>
+                                                    <Text style={{ color: PRIMARY_BLUE_COLOR, fontFamily: FONT_FAMILY_SEMI_BOLD }}>{question?.data.score_range_to}</Text>
                                                 </View>
                                             </View>
                                         </View> : null
@@ -406,7 +422,7 @@ const Question = (props) => {
                                                 backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
                                                 justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
                                             }} >
-                                                <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? question.branch_manager : rmmactionable ? userData.name : "Select Actionable"}</Text>
+                                                <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? question?.branch_manager : rmmactionable ? userData.name : "Select Actionable"}</Text>
                                                 {
                                                     dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
                                                         <Image source={DOWNARROW} />
@@ -416,13 +432,13 @@ const Question = (props) => {
                                                 dropDown &&
                                                 <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
                                                     {
-                                                        question.data.bm_actionable_assignee == "1" ?
+                                                        question?.data.bm_actionable_assignee == "1" ?
                                                             <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(1)}>
-                                                                <Text style={styles.drop_down_txt}>{question.branch_manager}</Text>
+                                                                <Text style={styles.drop_down_txt}>{question?.branch_manager}</Text>
                                                             </TouchableOpacity> : null
                                                     }
                                                     {
-                                                        question.data.rmm_actionable_assignee == "1" ?
+                                                        question?.data.rmm_actionable_assignee == "1" ?
                                                             <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(2)}>
                                                                 <Text style={styles.drop_down_txt}>{userData.name}</Text>
                                                             </TouchableOpacity> : null
@@ -437,7 +453,7 @@ const Question = (props) => {
                                         <Text style={styles.branname}>
                                             Remarks
                                         </Text>
-                                        <TextInput placeholder="Remarks" style={styles.input} value={remark} onChangeText={text => setremark(text)} />
+                                        <TextInput placeholder="Remarks" style={styles.input} value={remark} onChangeText={text => handleRemark(text)} />
                                     </View>
                                 }
 
@@ -449,7 +465,7 @@ const Question = (props) => {
                                 </View>
                             </View>
                         </ScrollView> :
-                        <Notify managerJoin={managerJoin} joined={joined} setstartAudit={setstartAudit} />
+                        <Notify managerJoin={managerJoin} joined={joined} setstartAudit={setstartAudit} bmJoined={props.bmJoined} />
                 }
             </View>
             {/* </ScrollView> */}
