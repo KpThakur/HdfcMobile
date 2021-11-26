@@ -120,7 +120,8 @@ const DashboardScreen = ({ navigation }) => {
             const params = {
                 audit_id: id,
                 employee_id: userData.emp_id,
-                question_id: questions_id
+                question_id: questions_id,
+                type:1,
             }
             // socket.emit("getQuestionList",params,(data)=>{
             //     console.log("sock data ",data)
@@ -139,10 +140,9 @@ const DashboardScreen = ({ navigation }) => {
             questions_id: questions_id,
             employee_id: userData.emp_id
         }
-
         socket.emit("getQuestionList", params, (data) => {
             console.log("sock data ", data)
-            setquestion({ data: data.data, audit_id: id, branch_manager: branch_manager, audit_type: 1 })
+            setquestion({ data: data.data, audit_id: id, branch_manager: branch_manager, audit_type: 1 ,answer:data.answer})
         })
         // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
         // console.log(response.data.data)

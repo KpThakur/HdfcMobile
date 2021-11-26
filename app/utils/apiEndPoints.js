@@ -22,5 +22,7 @@ export default {
   CAPTURE_IMG:'/api/v1/question/captureImageRequest',
   IMG_DATA:'/api/v1/question/getImagedata',
   AGORA_TOKEN:'/api/v1/audit/getAgoraToken',
-  PREV_QUESTION:'/api/v1/question/previousQuestion'
+  PREV_QUESTION:'/api/v1/question/previousQuestion',
+  GETAAUDITSHAREINFO:"/api/v1/audit/getaAuditshareinfo"
+
 }

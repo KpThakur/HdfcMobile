@@ -9,7 +9,7 @@ const Loader = (props) => {
       justifyContent: "center",
       width: '100%',
       opacity: 3,
-      height: "100%"
+      height: "100%",
     }}>
       <LottieView
         visible={true}
