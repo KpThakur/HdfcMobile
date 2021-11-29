@@ -7,6 +7,7 @@ import { EditAuditContext } from '../../../utils/EditAuditContext'
 import { apiCall } from '../../../utils/httpClient'
 import RescheduleAudit from './component/RescheduleAudit'
 import Loader from '../.../../../../utils/Loader'
+
 export default function index({ navigation }) {
     const [cityBranch, setcityBranch] = useState([])
     const [cityName, setCityName] = useState()
@@ -57,6 +58,7 @@ export default function index({ navigation }) {
             setisLaoding(true)
             const params = { branch_id }
             const response = await apiCall('POST', apiEndPoints.GET_MANAGER_NAME, params)
+            // console.log("manager:",response)
             if (response.status === 200) {
                 seteditAudit({...editAudit,branch_manager:response.data.data[0].branch_manager,branch_manager_id:response.data.data[0].branch_manager_id,
                     branch_name:response.data.data[0].branch_name,branch_id:response.data.data[0].branch_id})
@@ -124,6 +126,7 @@ export default function index({ navigation }) {
 
         }
     }
+    
     return (
         <>
         {isLaoding&& <Loader/>}

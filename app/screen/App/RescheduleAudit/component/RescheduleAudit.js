@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert,FlatList } from 'react-native'
 import { styles } from './styles'
 import DropDown from '../../../../component/DropDown'
 import DatePicker from 'react-native-date-picker'
 import Button from '../../../../component/Button'
-import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOCK, GREY_TEXT_COLOR } from '../../../../utils/constant'
+import { PRIMARY_BLUE_COLOR, CHECKED_ICON, UNCHECKED_ICON, ARROW, CALENDAR, CLOCK, GREY_TEXT_COLOR,DOWNARROW } from '../../../../utils/constant'
 import Header from '../../../../component/Header'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
+let ACDATE
+let timeData = []
 export default function RescheduleAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
     const [openTime, setopenTime] = useState(false)
+    const [dropDown, setdropDown] = useState(false)
     const { handleSchedule, cityBranch, cityName, isLoading, citydropDown, setcitydropDown,
         handleSelectCity, branchDetail, branchName, setbranchNameDropDown, branchNameDropDown, handleSelectBranch,
         branchManagerName, handleSumbit,editAudit,seteditAudit } = props
@@ -32,6 +35,18 @@ export default function RescheduleAudit(props) {
             </TouchableOpacity>
         )
     }
+    const handleDropDown = () => {
+        setdropDown(!dropDown)
+    }
+    for (var i = 10; i <= 18; i++) {
+        for (var j = 0; j <= 55; j += 15) {
+            if (j == 0)
+                timeData.push(i + "-0" + j)
+            else
+                timeData.push(i + "-" + j)
+        }
+    }
+    timeData.push("19-00")
     const navigation = useNavigation()
     return (
         <>
@@ -80,8 +95,24 @@ export default function RescheduleAudit(props) {
                                                             Alert.alert('date',"You can't select previous date")
                                                         }
                                                         else {
-                                                            setopenDate(!openDate)
-                                                            seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
+                                                            if (moment(date).format('DD-MM-YYYY') == moment(moment()).format('DD-MM-YYYY')) {
+                                                                if (editAudit.audit_time < moment(new Date()).format("H-mm")) {
+                                                                    setopenDate(!openDate)
+                                                                    alert("Please select vaild time.")
+                                                                }
+                                                                else {
+                                                                    setopenDate(!openDate)
+                                                                    ACDATE = moment(date).format('DD-MM-YYYY')
+                                                                    seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
+                                                                }
+                                                            } else {
+                                                                setopenDate(!openDate)
+                                                                ACDATE = moment(date).format('DD-MM-YYYY')
+                                                                seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
+                                                            }
+
+                                                            // setopenDate(!openDate)
+                                                            // seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
                                                         }
 
                                                     }}
@@ -89,7 +120,51 @@ export default function RescheduleAudit(props) {
                                                         setopenDate(false)
                                                     }} />
                                             </View>
-                                            <View>
+
+                                            <View style={{ position: "absolute", right: 1, zIndex: 999 }}>
+                                                <TouchableOpacity onPress={() => handleDropDown()} style={{
+                                                    backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
+                                                    justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
+                                                }} >
+                                                    <Image source={CLOCK} />
+                                                    <Text style={{ marginHorizontal: 10 }}>{editAudit.audit_time ? editAudit.audit_time : "Time"}</Text>
+                                                    {
+                                                        dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
+                                                            <Image source={DOWNARROW} />
+                                                    }
+                                                </TouchableOpacity>
+                                                {
+                                                    dropDown &&
+                                                    <View style={{ backgroundColor: GREY_TEXT_COLOR, height: 200 }}>
+                                                        <FlatList
+                                                            data={timeData}
+                                                            renderItem={({ item }) => {
+                                                                return (
+                                                                    <TouchableOpacity style={styles.drop_down_item} onPress={() => {
+                                                                        if (ACDATE == moment(new Date()).format("DD-MM-YYYY")) {
+                                                                            if (item < moment(new Date()).format("H-mm")) {
+                                                                                setdropDown(false)
+                                                                                alert("Please Select Proper Time")
+                                                                            }
+                                                                            else {
+                                                                                seteditAudit({...editAudit,audit_time:item})
+                                                                                setdropDown(false)
+                                                                            }
+                                                                        } else {
+                                                                            seteditAudit({...editAudit,audit_time:item})
+                                                                            setdropDown(false)
+                                                                        }
+
+                                                                    }}>
+                                                                        <Text style={styles.drop_down_txt}>{item}</Text>
+                                                                    </TouchableOpacity>
+                                                                )
+                                                            }} />
+                                                    </View>
+                                                }
+                                            </View>
+
+                                            {/* <View>
                                                 <TouchableOpacity style={styles.date_time} onPress={() => { setopenTime(true) }}>
                                                     <Image source={CLOCK} style={{ marginRight: 10 }} />
                                                     {editAudit ? <Text>{editAudit.audit_time}</Text> : <Text>Date</Text>}
@@ -108,7 +183,7 @@ export default function RescheduleAudit(props) {
                                                     onCancel={() => {
                                                         setopenTime(false)
                                                     }} />
-                                            </View>
+                                            </View> */}
                                         </View>
                                     </View>
                                     <View style={{ marginTop: 10 }}>
