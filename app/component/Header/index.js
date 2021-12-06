@@ -1,14 +1,14 @@
 import React from 'react';
-import { Text, StyleSheet, Image, View, TouchableOpacity, StatusBar } from 'react-native';
+import { Text, StyleSheet, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 //import { FONT_FAMILY_BOLD, THEME_BACKGROUND_SECONDRY_COLOR, MEDIUM_FONT_SIZE, THEME_NORMAL_SECONDRY_TEXT_COLOR } from '../../utils/constant';
-import {STATUS_BAR_COLOR} from '../../utils/constant';
+import { FONT_FAMILY_REGULAR, STATUS_BAR_COLOR } from '../../utils/constant';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
 const Header = (props) => {
     const {
         HeaderView, HeaderRightView, container
     } = styles;
     const {
-        RightImage, showRightLabel, leftImg, leftNav, mncontainer, showleftimage,onPress,
+        RightImage, showRightLabel, leftImg, leftNav, mncontainer, showleftimage, onPress,
         statusbarcolor, barStyle, showAppIcon, headerText, headerTextShouldMiddle
     } = props;
     return (
@@ -22,7 +22,7 @@ const Header = (props) => {
                 <View style={[HeaderView, { flex: headerTextShouldMiddle ? 3 : 4 }]}>
                     {showleftimage && <TouchableOpacity style={{ height: 60, width: 50, justifyContent: 'center', }}
                         onPress={onPress}
-                         >
+                    >
                         <Image
                             source={leftImg}
                         />
@@ -32,16 +32,16 @@ const Header = (props) => {
                     } */}
                 </View>
                 {/* {headerTextShouldMiddle && */}
-                    <View style={[HeaderRightView, { flex: headerTextShouldMiddle ? 5 : 0 }]}>
-                        <Text style={{ fontSize: 16,color:"white"}}>{headerText}</Text>
-                    </View>
+                <View style={[HeaderRightView, { flex: headerTextShouldMiddle ? 5 : 0 }]}>
+                    <Text style={{ fontSize: 16, color: "white", fontFamily: FONT_FAMILY_REGULAR }}>{headerText}</Text>
+                </View>
                 {/* } */}
                 <View
                     style={[HeaderRightView, { flex: headerTextShouldMiddle ? 3 : 4 }]}>
                     {showRightLabel &&
                         <Text style={{ color: "#1b7dec", paddingRight: 10, }}></Text>
                     }
-                   
+
                 </View>
             </View>
         </>
@@ -69,14 +69,16 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingTop: 10,
         paddingBottom: 10,
-        height: 60
+        justifyContent: 'center',
+        height: Platform.OS == "ios" ? 90 : 60,
+        paddingTop: Platform.OS == "ios" ? 30 : 0
     },
     HeaderView: {
         flex: 2,
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexDirection: 'row',
-      
+
     },
     HeaderRightView: {
         flex: 2,

@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native"
+import { Platform, StyleSheet } from "react-native"
 import { DARK_BLUE_COLOR, FONT_FAMILY_BOLD, FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, FONT_FAMILY_THIN, PRIMARY_BLUE_COLOR, SMALL_FONT_SIZE, TINY_FONT_SIZE } from '../../../../utils/constant'
 import { normalize } from "../../../../utils/scaleFontSize"
 export const styles = StyleSheet.create({
@@ -11,7 +11,8 @@ export const styles = StyleSheet.create({
     },
     nav: {
         marginHorizontal: 10,
-        backgroundColor:"#fff",
+        marginVertical: Platform.OS == "ios" ? 15 : 0,
+        backgroundColor: "#fff",
         paddingVertical: 10,
         borderRadius: 5,
         shadowColor: "#000",
@@ -22,7 +23,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.18,
         shadowRadius: 1.00,
         elevation: 1,
-        marginTop:5
+        marginTop: Platform.OS == "ios" ? 15 : 5
     },
     display_audit: {
         paddingHorizontal: 10,
@@ -48,7 +49,6 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 3,
         elevation: 1,
-        
     },
     box_header: {
         backgroundColor: DARK_BLUE_COLOR,
@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     header_txt: {
         color: "#fff",
         fontFamily: FONT_FAMILY_SEMI_BOLD,
-        fontSize:normalize(SMALL_FONT_SIZE)
+        fontSize: normalize(SMALL_FONT_SIZE)
     },
     box_body: {
         padding: 10,
@@ -78,12 +78,12 @@ export const styles = StyleSheet.create({
     txt: {
         fontSize: normalize(SMALL_FONT_SIZE),
         color: "#000",
-        fontFamily:FONT_FAMILY_REGULAR
+        fontFamily: FONT_FAMILY_REGULAR
     },
     p_txt: {
         color: PRIMARY_BLUE_COLOR,
         fontSize: normalize(SMALL_FONT_SIZE),
-        fontFamily:FONT_FAMILY_REGULAR
+        fontFamily: FONT_FAMILY_REGULAR
     },
     img: {
         width: 15,
@@ -92,22 +92,22 @@ export const styles = StyleSheet.create({
         marginRight: 5
     },
     s_txt: {
-        fontSize:normalize(TINY_FONT_SIZE)
+        fontSize: normalize(TINY_FONT_SIZE)
     },
     cancel_btn: {
         backgroundColor: "gray",
         paddingVertical: 5,
         borderRadius: 20,
-        alignItems:"center",
-        paddingHorizontal:15,
-        marginRight:5
+        alignItems: "center",
+        paddingHorizontal: 15,
+        marginRight: 5
     },
     prim_btn: {
         backgroundColor: PRIMARY_BLUE_COLOR,
         paddingVertical: 5,
         borderRadius: 20,
-        paddingHorizontal:15,
-        alignItems:"center",
+        paddingHorizontal: 15,
+        alignItems: "center",
     }
 })
 

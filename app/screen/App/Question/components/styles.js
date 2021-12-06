@@ -1,11 +1,12 @@
-import { Dimensions, StyleSheet } from "react-native"
+import { Dimensions, Platform, StyleSheet } from "react-native"
 import { DARK_BLUE_COLOR, FONT_FAMILY_REGULAR, FONT_FAMILY_THIN, GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR, SMALL_FONT_SIZE, TINY_FONT_SIZE } from '../../../../utils/constant'
 import { normalize } from '../../../../utils/scaleFontSize'
 const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
 export const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        paddingTop: Platform.OS == "ios" ? 30 : 0
     },
     mainvwe: { flex: 1, padding: 15 },
     centfrstvwe: {
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
         fontWeight: '700',
         color: '#fff'
     },
-    body: { flex: 5 ,marginTop:10},
+    body: { flex: 5, marginTop: 10 },
     teamcall: {
         paddingHorizontal: 15,
         paddingVertical: 15
@@ -103,7 +104,7 @@ export const styles = StyleSheet.create({
     d_sec_img: {
         // width: 70,
         // height: 70,
-        flexDirection:'row',
+        flexDirection: 'row',
     },
     cross_icon: {
         // tintColor:PRIMARY_BLUE_COLOR,
@@ -136,8 +137,8 @@ export const styles = StyleSheet.create({
     drop_down_item: {
         backgroundColor: GREY_TEXT_COLOR,
         marginVertical: 5,
-        borderBottomWidth:0.5,
-        borderBottomColor:"gray",
+        borderBottomWidth: 0.5,
+        borderBottomColor: "gray",
         padding: 10,
         // shadowColor: "#000",
         // shadowOffset: {

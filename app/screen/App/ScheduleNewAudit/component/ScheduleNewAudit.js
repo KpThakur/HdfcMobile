@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert, Platform } from 'react-native'
 import { styles } from './styles'
 import DropDown from '../../../../component/DropDown'
 import DatePicker from 'react-native-date-picker'
@@ -14,6 +14,7 @@ let timeData = []
 export default function ScheduleNewAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
+    console.log('openDate: ', openDate);
     const [openTime, setopenTime] = useState(false)
     const [dropDown, setdropDown] = useState(false)
     function _handleSelect(params) {
@@ -37,6 +38,7 @@ export default function ScheduleNewAudit(props) {
         )
     }
     const handleDropDown = () => {
+        setopenDate(false)
         setdropDown(!dropDown)
     }
     for (var i = 10; i <= 18; i++) {
@@ -59,13 +61,15 @@ export default function ScheduleNewAudit(props) {
                             <View style={styles.contianer}>
                                 <Header headerText={"Schedule New Audit"} leftImg={ARROW} onPress={() => { navigation.goBack() }} />
                                 <View style={{
-                                    padding: 20, padding: 20,
+                                    padding: 20,
                                     justifyContent: "space-evenly"
                                 }}>
                                     <View>
                                         <Text style={styles.txt_head}>Bank Details for Audit</Text>
                                         <DropDown title={cityName ? cityName : "City"} data={cityBranch}
-                                            renderItem={displayCityDropDown} dropDown={citydropDown} data_name={'city_name'}
+                                            renderItem={displayCityDropDown} 
+                                            dropDown={citydropDown}
+                                             data_name={'city_name'}
                                             setdropDown={setcitydropDown}
                                         />
                                         <DropDown title={branchName ? branchName : "Branch Name / ATM Name"} data={branchDetail}
@@ -82,13 +86,14 @@ export default function ScheduleNewAudit(props) {
                                     <View>
                                         <Text style={styles.txt_head}>Schedule on:</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <View>
+                                            <View style={{}}>
                                                 <TouchableOpacity style={styles.date_time} onPress={() => { setopenDate(true) }}>
                                                     <Image source={CALENDAR} style={{ marginRight: 10 }} />
                                                     {date ? <Text>{date}</Text> : <Text>Date</Text>}
                                                 </TouchableOpacity>
                                                 <DatePicker modal open={openDate} mode="date" date={Cdate}
                                                     onConfirm={(date) => {
+                                                        setopenDate(false)
                                                         if (moment(date).format('DD-MM-YYYY') < moment(moment()).format('DD-MM-YYYY')) {
                                                             Alert.alert('date', "You can't select previous date")
                                                         }
@@ -98,12 +103,12 @@ export default function ScheduleNewAudit(props) {
                                                                     alert("Please select vaild time.")
                                                                 }
                                                                 else {
-                                                                    setopenDate(!openDate)
+                                                                    setopenDate(false)
                                                                     ACDATE = moment(date).format('DD-MM-YYYY')
                                                                     setdate(moment(date).format('DD-MM-YYYY'))
                                                                 }
                                                             } else {
-                                                                setopenDate(!openDate)
+                                                                setopenDate(false)
                                                                 ACDATE = moment(date).format('DD-MM-YYYY')
                                                                 setdate(moment(date).format('DD-MM-YYYY'))
                                                             }
@@ -115,10 +120,12 @@ export default function ScheduleNewAudit(props) {
                                                     }} />
                                             </View>
 
-                                            <View style={{ position: "absolute", right: 1, zIndex: 999 }}>
+                                            <View style={{}}>
                                                 <TouchableOpacity onPress={() => handleDropDown()} style={{
-                                                    backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
-                                                    justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
+                                                    backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row',
+                                                    alignItems: 'center', borderRadius: 5,
+                                                    justifyContent: "space-between", paddingVertical: 10,
+                                                    paddingHorizontal: 10
                                                 }} >
                                                     <Image source={CLOCK} />
                                                     <Text style={{ marginHorizontal: 10 }}>{time ? time : "Time"}</Text>
@@ -129,12 +136,19 @@ export default function ScheduleNewAudit(props) {
                                                 </TouchableOpacity>
                                                 {
                                                     dropDown &&
-                                                    <View style={{ backgroundColor: GREY_TEXT_COLOR, height: 200 }}>
-                                                        <FlatList
-                                                            data={timeData}
-                                                            renderItem={({ item }) => {
-                                                                return (
-                                                                    <TouchableOpacity style={styles.drop_down_item} onPress={() => {
+                                                    <ScrollView style={{
+                                                        position: "absolute",
+                                                        right: 0,
+                                                        top: 35,
+                                                        width: '100%',
+                                                        backgroundColor: GREY_TEXT_COLOR,
+                                                        height: Platform.OS == "ios" ? 150 : 200,
+                                                        zIndex: 1
+                                                    }}>
+                                                        {timeData && timeData.map((item) => {
+                                                            return (
+                                                                <TouchableOpacity style={[styles.drop_down_item, { zIndex: 1 }]}
+                                                                    onPress={() => {
                                                                         if (ACDATE == moment(new Date()).format("DD-MM-YYYY")) {
                                                                             if (item < moment(new Date()).format("H-mm")) {
                                                                                 setdropDown(false)
@@ -148,35 +162,37 @@ export default function ScheduleNewAudit(props) {
                                                                             settime(item)
                                                                             setdropDown(false)
                                                                         }
-
-                                                                    }}>
-                                                                        <Text style={styles.drop_down_txt}>{item}</Text>
-                                                                    </TouchableOpacity>
-                                                                )
-                                                            }} />
-                                                    </View>
+                                                                    }}
+                                                                    >
+                                                                    <Text style={styles.drop_down_txt}>{item}</Text>
+                                                                </TouchableOpacity>
+                                                            )
+                                                        })
+                                                        }
+                                                    </ScrollView>
                                                 }
                                             </View>
                                         </View>
-                                    </View>
-                                    <View style={{ marginTop: 10 }}>
-                                        <Text style={styles.txt_head}>Audit Type:</Text>
-                                        <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(2)}>
-                                            <Image source={auditType === 2 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
-                                            <Text style={{
-                                                color: auditType === 2 ? PRIMARY_BLUE_COLOR :
-                                                    "gray"
-                                            }}>On-Site Audit</Text>
-                                        </TouchableOpacity>
+                                        <View style={{ marginTop: 10, zIndex: -1 }}>
+                                            <Text style={styles.txt_head}>Audit Type:</Text>
+                                            <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(2)}>
+                                                <Image source={auditType === 2 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
+                                                <Text style={{
+                                                    color: auditType === 2 ? PRIMARY_BLUE_COLOR :
+                                                        "gray"
+                                                }}>On-Site Audit</Text>
+                                            </TouchableOpacity>
 
-                                        <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(1)}>
-                                            <Image source={auditType === 1 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
-                                            <Text style={{
-                                                color: auditType === 1 ? PRIMARY_BLUE_COLOR :
-                                                    "gray"
-                                            }}>Online Audit</Text>
-                                        </TouchableOpacity>
+                                            <TouchableOpacity style={{ marginVertical: 10, flexDirection: "row", alignItems: 'center' }} onPress={() => _handleSelect(1)}>
+                                                <Image source={auditType === 1 ? CHECKED_ICON : UNCHECKED_ICON} style={{ marginRight: 5 }} />
+                                                <Text style={{
+                                                    color: auditType === 1 ? PRIMARY_BLUE_COLOR :
+                                                        "gray"
+                                                }}>Online Audit</Text>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
+
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 10 }}>
                                     <Button title="Schedule" onPress={() => handleSumbit()} />

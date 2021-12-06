@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react';
-import { View, TextInput, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import {TEXT_INPUT_PLACEHOLDER_COLOR} from '../../utils/constant'
+import { View, TextInput, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { TEXT_INPUT_PLACEHOLDER_COLOR } from '../../utils/constant'
 const Input = React.forwardRef((props, i) => {
     const [eye, setEye] = useState(false);
     const {
         autoCapitalize, autoFocus, keyboardType, multiline,
         placeholder, returnKeyType, value,
-        onChangeText, textInputStyle,onPressOut,
+        onChangeText, textInputStyle, onPressOut,
         containerStyle, blurOnSubmit, editable,
         numberOfLines, maxLength, minLength, onSubmitEditing, InputHeading
     } = props;
@@ -19,7 +19,7 @@ const Input = React.forwardRef((props, i) => {
     return (
         <Fragment>
             <View style={[container, containerStyle]}>
-            {
+                {
                     (InputHeading === "Search") &&
                     <TouchableOpacity
                         style={{
@@ -30,8 +30,8 @@ const Input = React.forwardRef((props, i) => {
                         onPress={() => onPressEye()}>
                         <Image
                             source={
-                                 require('../../assets/images/search.png')}
-                             />
+                                require('../../assets/images/search.png')}
+                        />
                     </TouchableOpacity>
                 }
                 <TextInput
@@ -45,8 +45,8 @@ const Input = React.forwardRef((props, i) => {
                     keyboardType={keyboardType}
                     multiline={multiline}
                     secureTextEntry={eye}
-                   // ref={ref => ref && ref.setNativeProps({ style: { fontFamily: FONT_FAMILY_REGULAR } })}
-                  //  ref={ref => ref && ref.setNativeProps()}
+                    // ref={ref => ref && ref.setNativeProps({ style: { fontFamily: FONT_FAMILY_REGULAR } })}
+                    //  ref={ref => ref && ref.setNativeProps()}
                     placeholder={placeholder}
                     returnKeyType={returnKeyType}
                     value={value}
@@ -85,7 +85,7 @@ Input.defaultProps = {
 };
 const style = StyleSheet.create({
     container: {
-        height: 55,
+        height: Platform.OS == "ios" ? 45 : 55,
         borderRadius: 6,
         backgroundColor: "blue",
         justifyContent: 'space-between',
@@ -95,9 +95,9 @@ const style = StyleSheet.create({
     },
     textInput: {
         fontSize: 15,
-       // fontFamily: FONT_FAMILY_REGULAR,
+        // fontFamily: FONT_FAMILY_REGULAR,
         paddingLeft: 10,
-       // color: TEXT_INPUT_COLOR,
+        // color: TEXT_INPUT_COLOR,
         color: "black",
         width: '90%'
     }

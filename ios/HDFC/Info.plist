@@ -51,6 +51,12 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Your usage description here</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your usage description here</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Your usage description here</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Black.ttf</string>

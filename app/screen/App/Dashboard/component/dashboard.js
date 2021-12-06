@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Image, Text, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, Text, FlatList, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import Header from '../../../../component/Header';
 import Input from '../../../../component/Input';
 import { styles } from './style';
@@ -7,7 +7,7 @@ import { normalize } from '../../../../utils/scaleFontSize'
 import { useNavigation } from '@react-navigation/native';
 import { GREY_TEXT_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const DashboardView = (props) => {
-    
+
     const [data, setdata] = useState([
         {
             "id": 1,
@@ -25,7 +25,7 @@ const DashboardView = (props) => {
                 <View style={{ flex: 1 }}>
                     <View style={{
                         flex: 1,
-                        shadowColor: "#000",
+                        shadowColor: Platform.OS == "ios" ? "#fff" : "#000",
                         shadowOpacity: 0.58,
                         shadowRadius: 16.00,
                         elevation: 24,
@@ -53,6 +53,7 @@ const DashboardView = (props) => {
                                                 return (
                                                     <TouchableOpacity
                                                         style={{
+
                                                         }}
                                                         onPress={() => props.onPressSelectedTab(item.id)}
                                                     >
@@ -75,6 +76,7 @@ const DashboardView = (props) => {
                             renderItem={(item, index) => props.renderTodayAudit(item, index)}
                         />
                     </View>
+
                 </View>
             </View>
         </View>
