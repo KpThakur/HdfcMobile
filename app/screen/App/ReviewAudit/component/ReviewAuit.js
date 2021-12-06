@@ -25,12 +25,12 @@ export default function ReviewAuit(props) {
     }
     const HandleBM = (actionable) => {
         if(actionable.length>0)
-            navigation.navigate("Actionable", { actionable: actionable, baseURL: baseURL })
+            navigation.navigate("Actionable", { actionable: actionable, baseURL: baseURL,name:params.branch_manager })
         else
             alert("Branch Manager have not taken action!")
     }
     const HandleRMM = (actionable) => {
-        navigation.navigate("Actionable", { actionable: actionable, baseURL: baseURL })
+        navigation.navigate("Actionable", { RM: RM, baseURL: baseURL,name:userData.name })
     }
     return (
         <View style={styles.container}>

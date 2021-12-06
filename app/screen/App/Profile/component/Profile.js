@@ -25,24 +25,7 @@ export default function Profile(props) {
                         })}
                         value={props.profileData.firstName}
                     />
-                    <Input
-                        placeholder={"Last Name"}
-                        containerStyle={styles.display}
-                        onChangeText={(value) => props.setProfileData({
-                            ...props.profileData,
-                            lastName: value
-                        })}
-                        value={props.profileData.lastName}
-                    />
-                    <Input
-                        placeholder={"Designation"}
-                        containerStyle={styles.display}
-                        onChangeText={(value) => props.setProfileData({
-                            ...props.profileData,
-                            designation: value
-                        })}
-                        value={props.profileData.designation}
-                    />
+                   
                     <Input
                         placeholder={"Email"}
                         containerStyle={styles.display}

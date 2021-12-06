@@ -4,10 +4,13 @@ import { QuestionContext } from '../../../utils/QuestionContext'
 import { apiCall } from '../../../utils/httpClient'
 import apiEndPoints from '../../../utils/apiEndPoints'
 import Loader from '../.../../../../utils/Loader'
-export default function index({ navigation }) {
+import { BackHandler } from 'react-native'
+import { useFocusEffect, useNavigation } from '@react-navigation/core'
+export default function index({navigation}) {
     const [question, setquestion] = useContext(QuestionContext)
     const [isLoading, setisLoading] = useState(false)
     const [totalScore, settotalScore] = useState()
+    
     const fetchScore = async () => {
         setisLoading(true)
         const params = {
@@ -20,7 +23,18 @@ export default function index({ navigation }) {
     useEffect(() => {
         fetchScore()
     }, [])
-    console.log("Total Score",totalScore)
+    
+   useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+    return () =>
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+   }, [])
+      const onBackPress = () => {
+        //   alert(0)
+        navigation.navigate("Profile")
+      };
+
     const handleViewActionable = async () => {
         setisLoading(true)
         const params = {

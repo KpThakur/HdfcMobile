@@ -23,8 +23,6 @@ export default function index() {
             setProfileData({
                 ...profileData,
                 firstName: userData.name,
-                lastName: "",
-                designation: "",
                 email: userData.email,
                 phone: userData.phone
             })

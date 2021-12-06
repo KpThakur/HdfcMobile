@@ -1,7 +1,6 @@
 import moment from 'moment'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useContext } from 'react'
 import { View, Text, Alert } from 'react-native'
-import { useContext } from 'react/cjs/react.development'
 import apiEndPoints from '../../../utils/apiEndPoints'
 import { EditAuditContext } from '../../../utils/EditAuditContext'
 import { apiCall } from '../../../utils/httpClient'

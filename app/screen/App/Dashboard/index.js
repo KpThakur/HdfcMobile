@@ -138,7 +138,8 @@ const DashboardScreen = ({ navigation }) => {
         const params = {
             audit_id: id,
             questions_id: questions_id,
-            employee_id: userData.emp_id
+            employee_id: userData.emp_id,
+            type:1
         }
         socket.emit("getQuestionList", params, (data) => {
             console.log("sock data ", data)

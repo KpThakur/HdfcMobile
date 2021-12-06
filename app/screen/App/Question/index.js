@@ -14,6 +14,8 @@ const Question = ({ navigation, route }) => {
     const [rating, setrating] = useState(0)
     const [rmmactionable, setrmmactionable] = useState(0)
     const [bmActionable, setbmActionable] = useState(0)
+    const [atmActionable, setatmActionable] = useState(0)
+    const [adminActionable, setadminActionable] = useState(0)
     const [questionList, setquestionList] = useState()
     const [yesNo, setyesNo] = useState()
     const [quality, setquality] = useState(0)
@@ -36,9 +38,6 @@ const Question = ({ navigation, route }) => {
     useEffect(() => {
     }, [question])
     useEffect(() => {
-
-
-
         socket.on("image-sent", (data) => {
             console.log("image-sent data : ", data, question?.audit_id)
             if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
@@ -94,6 +93,8 @@ const Question = ({ navigation, route }) => {
         formdata.append('score_range', reviewValue);
         formdata.append('rmm_actionable_assignee', rmmactionable);
         formdata.append('bm_actionable_assignee', bmActionable);
+        formdata.append('admin_assignee', adminActionable);
+        formdata.append('atm_cordinator_assignee', atmActionable);
         formdata.append('yes_no', yesNo);
         formdata.append('quality', quality);
         formdata.append('check_answer', checkedAns);
@@ -198,6 +199,7 @@ const Question = ({ navigation, route }) => {
 
             }
             socket.emit("startAudit", paramss)
+            console.log("andss", data)
             if (data.answer.length == 0) {
                 setrmmactionable(0)
                 setbmActionable(0)
@@ -208,26 +210,32 @@ const Question = ({ navigation, route }) => {
                 setcheckedAns("")
                 setremark("")
             } else {
+                setCamImg()
+                console.log("consd",data.answer.image_capture !== "")
+                if (data.answer.image_capture !== "") {
+                    const imgs = data.answer.image_capture.split(',')
+                    const finalData = []
+                    console.log("fonalimg ", imgs)
 
-                const imgs = data.answer.image_capture.split(',')
-                const finalData = []
-                for (var i = 0; i < imgs.length; i++) {
-                    finalData.push({
-                        path: data.base_url + imgs[i],
-                        type: 'camera',
-                        image_name: imgs[i]
-                    })
+                    for (var i = 0; i < imgs.length; i++) {
+                        finalData.push({
+                            path: data.base_url + imgs[i],
+                            type: 'camera',
+                            image_data: imgs[i]
+                        })
+                    }
+                    setCamImg([...finalData])
+                    // console.log('prev data:',{ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
                 }
-                setCamImg([...finalData])
-                // console.log('prev data:',{ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
                 setremark(data.answer.remark)
-                setrmmactionable(data.answer.rmm_actionable_assignee)
-                setbmActionable(data.answer.bm_actionable_assignee)
-                // setCamImg()
-                setyesNo(data.answer.yes_no)
-                setquality(data.answer.quality)
-                setReviewValue(Number(data.answer.score_range))
-                setcheckedAns(data.answer.check_answer)
+                    setrmmactionable(data.answer.rmm_actionable_assignee)
+                    setbmActionable(data.answer.bm_actionable_assignee)
+                    // setCamImg()
+                    setyesNo(data.answer.yes_no)
+                    setquality(data.answer.quality)
+                    setReviewValue(Number(data.answer.score_range))
+                    setcheckedAns(data.answer.check_answer)
+                
             }
 
             await socket.emit("checker", params)
@@ -238,7 +246,7 @@ const Question = ({ navigation, route }) => {
                 audit_id: question?.audit_id,
                 audit_status: 5
             }
-            await socket.emit("completeAudit",params);
+            await socket.emit("completeAudit", params);
             const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
             if (response.status === 200)
                 navigation.navigate('AuditScore')
@@ -263,57 +271,30 @@ const Question = ({ navigation, route }) => {
         socket.emit("remarkview", params);
     }
     const onCapture = async () => {
-        try {
-            const params = {
-                audit_id: question?.audit_id,
-                question_id: question?.data?.question_id
-            }
-            socket.emit("captureImageRequest", params, (data) => {
-                if (data.status === 200) {
-                    // setTimeout(getIMG(),4000)
-                    // getIMG()
-                }
-            })
-            // const response = await apiCall("POST", apiEndPoints.CAPTURE_IMG, params)
-            // console.log(response)
-            // if (response.status === 200) {
-            //     // setTimeout(getIMG(),4000)
-            //     getIMG()
-            // }
-        } catch (error) {
-            console.log("ERROR", error)
+        const params = {
+            audit_id: question?.audit_id,
+            question_id: question?.data?.question_id
         }
-
+        socket.emit("captureImageRequest", params, (data) => {
+            if (data.status === 200) {
+                // setTimeout(getIMG(),4000)
+                // getIMG()
+            }
+        })
     }
     const getIMG = async () => {
-        try {
-            const params = {
-                audit_id: question?.audit_id,
-                question_id: question?.data?.question_id,
-            }
-            socket.emit("customergetImagedata", params, (data) => {
-                if (data.socketEvent == "customergetImagedata" + question.audit_id) {
-                    getIMGSOCKET(data)
-                }
-            })
-
-            // const response = await apiCall("POST", apiEndPoints.IMG_DATA, params)
-            // if (response.status === 200) {
-            //     console.log("RES IMG:L ", response.data.data)
-
-            //     let combineImg = camImg == null ? [] : [...camImg];
-            //     combineImg.push({
-            //         path: response.data.image,
-            //         type: 'camera'
-            //     })
-            //     setCamImg(combineImg)
-            // }
-        } catch (error) {
-            console.log("ERROR ", error)
+        const params = {
+            audit_id: question?.audit_id,
+            question_id: question?.data?.question_id,
         }
+        socket.emit("customergetImagedata", params, (data) => {
+            if (data.socketEvent == "customergetImagedata" + question.audit_id) {
+                getIMGSOCKET(data)
+            }
+        })
     }
     const getIMGSOCKET = async (data) => {
-        console.log("socket img",data)
+        console.log("socket img", data)
         if (data.status === 200) {
             // let combineImg = await camImg == null ? [] : [...camImg];
             // camImg.push({
@@ -324,7 +305,7 @@ const Question = ({ navigation, route }) => {
             setBaseUrl(data.base_url)
             setCamImg(data.data)
         }
-        console.log("camImg",camImg)
+        console.log("camImg", camImg)
     }
     const handleManagerJoin = (data) => {
         //alert(data)
@@ -371,11 +352,11 @@ const Question = ({ navigation, route }) => {
                 setquality(response.data.answer.quality)
                 setReviewValue(Number(response.data.answer.score_range))
                 setcheckedAns(response.data.answer.check_answer)
-                var previous ={
+                var previous = {
                     question_id: question?.data?.question_id,
                     audit_id: question?.audit_id,
                 }
-                await socket.emit("previousquestion",previous);
+                await socket.emit("previousquestion", previous);
                 var data = {
                     data: response.data.data[0],
                     audit_id: params.audit_id,
@@ -392,13 +373,14 @@ const Question = ({ navigation, route }) => {
     }
     function deleteImage(index) {
         // console.log("IMG delete",props.camImg[index].image_name)
-        handleDeleteIMG(camImg[index].image_name)
+        handleDeleteIMG(camImg[index].image_data)
         var imageArray = [...camImg]
         imageArray.splice(index, 1);
         setCamImg(imageArray)
 
     }
     const handleDeleteIMG = (name) => {
+        console.log("name;", name)
         const params = {
             image_name: name,
             question_id: question.data.question_id,
@@ -423,7 +405,7 @@ const Question = ({ navigation, route }) => {
         );
     }
     // console.log("CAMIMG: ", camImg)
-    // console.log("QUES", question)
+    console.log("QUES", question)
     return (
         <>
             {isLoading && <Loader />}
@@ -469,6 +451,8 @@ const Question = ({ navigation, route }) => {
                 bmJoined={bmJoined}
                 emitRating={emitRating}
                 emitRemark={emitRemark}
+                atmActionable={atmActionable} setatmActionable={setatmActionable}
+                adminActionable={adminActionable} setadminActionable={setadminActionable}
             />
 
         </>
