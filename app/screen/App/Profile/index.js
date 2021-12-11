@@ -8,7 +8,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default function index() {
     const [userData, setUserData] = useContext(UserContext)
-    // console.log('userData: ', userData);
     const [isLoading, setIsLoading] = useState(false)
     const [profileData, setProfileData] = useState({
         firstName: "",
@@ -39,9 +38,7 @@ export default function index() {
                 branch_id: userData.branch_id,
                 phone: profileData.phone,
             }
-            console.log('params: ', params);
             const { data } = await apiCall('POST', apiEndPoints.PROFILE_UPDATE, params)
-            console.log('data: ', data);
             if (data.status === 200) {
                 setIsLoading(false)
                 setUserData(data.data)

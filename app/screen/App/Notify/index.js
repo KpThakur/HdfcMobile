@@ -16,7 +16,6 @@ const Notify = ({managerJoin,joined,setstartAudit,bmJoined}) =>{
             setisLoading(true)
             var params={audit_id:question?.audit_id}
             const response = await apiCall("POST", apiEndPoints.GETAAUDITSHAREINFO, params)
-            console.log("RES IMG:L ", response)
             if (response.status === 200) {
                 var shareData = response.data?.data
                 const result = await Share.share({

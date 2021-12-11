@@ -31,6 +31,7 @@ export async function apiCall(method, url, data, header = { 'Content-Type': 'app
         // })
         // }
     } catch (error) {
+    console.log('error: api ', error);
         if (error.response) {
             if (error.response.status === 401) {
                 return error.response;

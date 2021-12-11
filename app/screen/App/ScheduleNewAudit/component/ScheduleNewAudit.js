@@ -14,7 +14,6 @@ let timeData = []
 export default function ScheduleNewAudit(props) {
     const [Cdate, setCdate] = useState(new Date())
     const [openDate, setopenDate] = useState(false)
-    console.log('openDate: ', openDate);
     const [openTime, setopenTime] = useState(false)
     const [dropDown, setdropDown] = useState(false)
     function _handleSelect(params) {
@@ -50,7 +49,6 @@ export default function ScheduleNewAudit(props) {
         }
     }
     timeData.push("19-00")
-    // console.log(timeData)
     const navigation = useNavigation()
     return (
         <>

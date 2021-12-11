@@ -11,26 +11,21 @@ const AuditWelcomeScreen = ({navigation,route}) => {
     useEffect(() => {
         _agoraToken()
     }, [])
-    console.log("question welcome audit",question)
+    
     const handleStartAudit=()=>{
         navigation.navigate("QuestionScreen",{token:token,channelId:channelId})
     }
-    console.log("wel ques",question)
     const _agoraToken = async () => {
-        console.log("AGORA API WORKI")
         try {
             const params = {
                 audit_id: route.params.audit_id,
             }
             const response = await apiCall("POST", apiEndPoints.AGORA_TOKEN, params)
-            console.log("AGORA RES:",response.data.data)
             if (response.status === 200) {
                 settoken(response.data.data.token)
                 setchannelId(response.data.data.channel)
             }
-        } catch (error) {
-            console.log("ERROR ", error)
-        }
+        } catch (error) {}
     }
     return (<AuditWelcomeScreenView handleStartAudit={handleStartAudit}/>)
 }

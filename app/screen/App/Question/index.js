@@ -8,6 +8,7 @@ import Loader from '../../../utils/Loader'
 import { socket } from "../../../utils/Client";
 import { UserContext } from "../../../utils/UserContext";
 import NetInfo from "@react-native-community/netinfo";
+import FormData from 'form-data';
 const Question = ({ navigation, route }) => {
     const [question, setquestion] = useContext(QuestionContext)
     const [remark, setremark] = useState("")
@@ -30,28 +31,30 @@ const Question = ({ navigation, route }) => {
     const [managerJoin, setmanagerJoin] = useState(false)
     const [baseUrl, setBaseUrl] = useState('')
     const [userData, setuserData] = useContext(UserContext)
-
+    const [showActionable, setshowActionable] = useState(true)
+    const [showCapIMG, setshowCapIMG] = useState(true)
     useEffect(() => {
         setstartAudit(question?.audit_type == 0 ? true : false)
         unsubscribe
+        setremark(question?.data.actionsble_remark)
+        emitRemark(question?.data.actionsble_remark)
+        //setshowActionable(true)
+        //setshowActionable(question?.data.count_actionable===1?true:false)
     }, [])
     useEffect(() => {
     }, [question])
     useEffect(() => {
         socket.on("image-sent", (data) => {
-            console.log("image-sent data : ", data, question?.audit_id)
             if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
                 getIMG()
             }
         })
-
-    }, []);
+      }, []);
     useEffect(() => {
         if (startAudit === true) {
             const params = {
                 question_id: question?.data?.question_id,
                 audit_id: question?.audit_id,
-
             }
             socket.emit("startAudit", params, async (data) => {
 
@@ -60,7 +63,6 @@ const Question = ({ navigation, route }) => {
     }, [startAudit])
 
     const unsubscribe = NetInfo.fetch().then(state => {
-        // console.log("ME:",state.isConnected)
         setjoined(state.isConnected)
     })
 
@@ -69,23 +71,24 @@ const Question = ({ navigation, route }) => {
             setisLoading(true)
             const response = await apiCall('POST', apiEndPoints.SUBMIT_QUESTION, formdata,
                 {
-                    'Content-Type': 'multipart/form-data'
+                    "Content-Type": "multipart/form-data",
+                    "cache-control": "no-cache",
+                    "processData": false,
+                    "contentType": false,
+                    "mimeType": "multipart/form-data",
                 })
-            setisLoading(false)
-            console.log("SNBMIT:", response.data)
             if (response.data.status === 200) {
+                setisLoading(false)
                 handleNext()
             }
             else {
-                console.log(response.data)
+                setisLoading(false)
                 alert(response.data.message)
             }
-        } catch (error) {
-            console.log("ERROR: ", error)
-        }
+        } catch (error) { }
     }
     const handleSubmit = async () => {
-
+        setisLoading(true)
         let formdata = new FormData();
         formdata.append('audit_id', question?.audit_id);
         formdata.append('question_id', question?.data.question_id);
@@ -117,7 +120,7 @@ const Question = ({ navigation, route }) => {
                 SubmitAPI(formdata)
             }
             else {
-                alert("Please Capture The Image")
+                !showCapIMG ? SubmitAPI(formdata) : alert("Please Capture The Image");
             }
         }
         else {
@@ -127,71 +130,41 @@ const Question = ({ navigation, route }) => {
     }
 
     const handleNext = async () => {
-        try {
-
-            // setisLoading(true)
-            const params = {
-                question_id: question?.data?.question_id,
-                audit_id: question?.audit_id,
-                audit_type: question?.audit_type,
-                employee_id: userData?.emp_id,
-                branch_manager: question?.branch_manager
-            }
-            socket.emit("getQuestionList", params, async (data) => {
-                if (data.socketEvent == "getQuestionList" + question?.audit_id) {
-                    await GetSocketData(data, params)
-                } else {
-                    const params = {
-                        audit_id: question?.audit_id,
-                        audit_status: 5
-                    }
-                    const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-                    if (response.status === 200)
-                        navigation.navigate('AuditScore')
-                    else
-                        navigator.navigate('DashboardScreen')
-                }
-
-                // let response = data
-                // // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-                // setisLoading(false)
-                // if (response.status === 200) {
-                //     if (response.data.data.check_data)
-                //         setquestionList(response.data.data.check_data.split(','))
-
-                //     setquestion({ data: response.data.data, audit_id: params.audit_id, audit_type: params.audit_type ,branch_manager:params.branch_manager})
-                //     setremark("")
-                //     setrmmactionable(0)
-                //     setbmActionable(0)
-                //     setCamImg()
-                //     setyesNo()
-                //     setquality(0)
-                //     setReviewValue(0)
-                //     setcheckedAns("")
-
-                // }
-                // else {
-                //     //Complete
-                //     const params = {
-                //         audit_id: question.audit_id,
-                //         audit_status: 5
-                //     }
-                //     const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-                //     if (response.status === 200)
-                //         navigation.navigate('AuditScore')
-                //     else
-                //         navigator.navigate('DashboardScreen')
-                // }
-            })
-        } catch (error) {
-            console.log("ERROR: ", error)
+        const params = {
+            question_id: question?.data?.question_id,
+            audit_id: question?.audit_id,
+            audit_type: question?.audit_type,
+            employee_id: userData?.emp_id,
+            branch_manager: question?.branch_manager
         }
+        socket.emit("getQuestionList", params, async (data) => {
+            if (data.socketEvent == "getQuestionList" + question?.audit_id) {
+                await GetSocketData(data, params)
+            } else {
+                const params = {
+                    audit_id: question?.audit_id,
+                    audit_status: 5
+                }
+                const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
+                if (response.status === 200)
+                    navigation.navigate('AuditScore')
+                else
+                    navigator.navigate('DashboardScreen')
+            }
+        })
+
     }
     const GetSocketData = async (data, params) => {
         if (data.status === 200) {
             if (data.data.check_data)
+
                 setquestionList(data.data.check_data.split(','))
             // setSliderValue(response.data.data)
+            setshowCapIMG(true)
+            setremark(data.data.actionsble_remark)
+            emitRemark(data.data.actionsble_remark)
+            //setshowActionable(data.data.count_actionable===1?true:false)
+            setshowActionable(true)
             setquestion({ data: data.data, audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
             const paramss = {
                 question_id: data.data.question_id,
@@ -199,7 +172,6 @@ const Question = ({ navigation, route }) => {
 
             }
             socket.emit("startAudit", paramss)
-            console.log("andss", data)
             if (data.answer.length == 0) {
                 setrmmactionable(0)
                 setbmActionable(0)
@@ -208,15 +180,11 @@ const Question = ({ navigation, route }) => {
                 setquality(0)
                 setReviewValue(0)
                 setcheckedAns("")
-                setremark("")
             } else {
                 setCamImg()
-                console.log("consd",data.answer.image_capture !== "")
                 if (data.answer.image_capture !== "") {
                     const imgs = data.answer.image_capture.split(',')
                     const finalData = []
-                    console.log("fonalimg ", imgs)
-
                     for (var i = 0; i < imgs.length; i++) {
                         finalData.push({
                             path: data.base_url + imgs[i],
@@ -225,23 +193,19 @@ const Question = ({ navigation, route }) => {
                         })
                     }
                     setCamImg([...finalData])
-                    // console.log('prev data:',{ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
                 }
                 setremark(data.answer.remark)
-                    setrmmactionable(data.answer.rmm_actionable_assignee)
-                    setbmActionable(data.answer.bm_actionable_assignee)
-                    // setCamImg()
-                    setyesNo(data.answer.yes_no)
-                    setquality(data.answer.quality)
-                    setReviewValue(Number(data.answer.score_range))
-                    setcheckedAns(data.answer.check_answer)
-                
+                setrmmactionable(data.answer.rmm_actionable_assignee)
+                setbmActionable(data.answer.bm_actionable_assignee)
+                setyesNo(data.answer.yes_no)
+                setquality(data.answer.quality)
+                setReviewValue(Number(data.answer.score_range))
+                setcheckedAns(data.answer.check_answer)
             }
 
             await socket.emit("checker", params)
         }
         else {
-            //Complete
             const params = {
                 audit_id: question?.audit_id,
                 audit_status: 5
@@ -276,10 +240,7 @@ const Question = ({ navigation, route }) => {
             question_id: question?.data?.question_id
         }
         socket.emit("captureImageRequest", params, (data) => {
-            if (data.status === 200) {
-                // setTimeout(getIMG(),4000)
-                // getIMG()
-            }
+            if (data.status === 200) { }
         })
     }
     const getIMG = async () => {
@@ -294,27 +255,16 @@ const Question = ({ navigation, route }) => {
         })
     }
     const getIMGSOCKET = async (data) => {
-        console.log("socket img", data)
         if (data.status === 200) {
-            // let combineImg = await camImg == null ? [] : [...camImg];
-            // camImg.push({
-            //     path: data.image,
-            //     type: 'camera',
-            //     image_name: data.image_name
-            // })
             setBaseUrl(data.base_url)
             setCamImg(data.data)
         }
-        console.log("camImg", camImg)
     }
     const handleManagerJoin = (data) => {
-        //alert(data)
-        console.log("MANAGER handleManagerJoin: ", data)
         setmanagerJoin(data)
     }
 
     const handleJoin = (data) => {
-        console.log("handleJoin:", data)
         setBmJoined(data)
     }
     const prevQuestion = async () => {
@@ -342,12 +292,16 @@ const Question = ({ navigation, route }) => {
                     })
                 }
                 setCamImg([...finalData])
-                // console.log('prev data:',{ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
                 setquestion({ data: response.data.data[0], audit_id: params.audit_id, audit_type: params.audit_type, branch_manager: params.branch_manager })
                 setremark(response.data.answer.remark)
                 setrmmactionable(response.data.answer.rmm_actionable_assignee)
                 setbmActionable(response.data.answer.bm_actionable_assignee)
-                // setCamImg()
+                
+                if (response.data.data[0].action_on_yes === 1 && response.data.answer.yes_no == 'YES') {
+                    setshowActionable(false)
+                } else {
+                    setshowActionable(true)
+                }
                 setyesNo(response.data.answer.yes_no)
                 setquality(response.data.answer.quality)
                 setReviewValue(Number(response.data.answer.score_range))
@@ -361,26 +315,21 @@ const Question = ({ navigation, route }) => {
                     data: response.data.data[0],
                     audit_id: params.audit_id,
                 }
-                await socket.emit("customergetImagedata", data)
+                await socket.emit("customergetImagedata", data, (result) => { })
             }
             else {
                 alert(response.data.message)
             }
 
-        } catch (error) {
-            console.log("Error", error)
-        }
+        } catch (error) { }
     }
     function deleteImage(index) {
-        // console.log("IMG delete",props.camImg[index].image_name)
         handleDeleteIMG(camImg[index].image_data)
         var imageArray = [...camImg]
         imageArray.splice(index, 1);
         setCamImg(imageArray)
-
     }
     const handleDeleteIMG = (name) => {
-        console.log("name;", name)
         const params = {
             image_name: name,
             question_id: question.data.question_id,
@@ -404,8 +353,48 @@ const Question = ({ navigation, route }) => {
             ]
         );
     }
-    // console.log("CAMIMG: ", camImg)
-    console.log("QUES", question)
+    const handleShowActionable = (state) => {
+        if (question?.data.action_taken_on_yes === 1) {
+            setshowActionable(state)
+        }
+        if (!state) {
+            if (question?.data.action_on_no == 2) {
+                setshowCapIMG(true)
+            }
+        }
+        if (state) {
+            if (question?.data.action_on_no == 2) {
+                setshowCapIMG(false)
+            }
+        }
+    }
+    const handleQuality = (text) => {
+        setquality(text)
+        const params = {
+            audit_id: question?.audit_id,
+            question_id: question?.data?.question_id,
+            count_previous_question_id: question?.data?.count_previous_question_id,
+            qty: text
+        }
+        if (question?.data?.count_previous_question_id != null) {
+
+            socket.emit("CountQuestionType", params, (data) => {
+                if (data.data.actioanble == 1) {
+                    setshowActionable(true)
+                }
+                else {
+                    setshowActionable(false)
+                }
+            })
+        }
+    }
+    const showSetRange=(state)=>{
+        if(state)
+            setReviewValue(question.data.set_range_1)
+        else
+            setReviewValue(question.data.set_range_2)
+    }
+    console.log("QUS:",question)
     return (
         <>
             {isLoading && <Loader />}
@@ -414,30 +403,22 @@ const Question = ({ navigation, route }) => {
                 baseUrl={baseUrl}
                 question={question}
                 setquestion={setquestion}
-                remark={remark}
-                setremark={setremark}
-                rating={rating}
-                setrating={setrating}
-                rmmactionable={rmmactionable}
-                setrmmactionable={setrmmactionable}
-                bmActionable={bmActionable}
-                setbmActionable={setbmActionable}
+                remark={remark} setremark={setremark}
+                rating={rating} setrating={setrating}
+                rmmactionable={rmmactionable} setrmmactionable={setrmmactionable}
+                bmActionable={bmActionable} setbmActionable={setbmActionable}
                 questionList={questionList}
                 yesNo={yesNo} setyesNo={setyesNo}
                 quality={quality} setquality={setquality}
                 checkedAns={checkedAns}
                 setcheckedAns={setcheckedAns}
                 handleSubmit={handleSubmit}
-                camImg={camImg}
-                setCamImg={setCamImg}
+                camImg={camImg} setCamImg={setCamImg}
                 sliderValue={sliderValue}
-                reviewValue={reviewValue}
-                setReviewValue={setReviewValue}
-                startAudit={startAudit}
-                setstartAudit={setstartAudit}
+                reviewValue={reviewValue} setReviewValue={setReviewValue}
+                startAudit={startAudit} setstartAudit={setstartAudit}
                 joined={joined} setjoined={setjoined}
-                managerJoin={managerJoin}
-                setmanagerJoin={setmanagerJoin}
+                managerJoin={managerJoin} setmanagerJoin={setmanagerJoin}
                 onCapture={onCapture}
                 getIMG={getIMG}
                 handleManagerJoin={handleManagerJoin}
@@ -453,6 +434,11 @@ const Question = ({ navigation, route }) => {
                 emitRemark={emitRemark}
                 atmActionable={atmActionable} setatmActionable={setatmActionable}
                 adminActionable={adminActionable} setadminActionable={setadminActionable}
+                showActionable={showActionable} setshowActionable={setshowActionable}
+                handleShowActionable={handleShowActionable}
+                handleQuality={handleQuality}
+                showCapIMG={showCapIMG}
+                showSetRange={showSetRange}
             />
 
         </>

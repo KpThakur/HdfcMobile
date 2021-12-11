@@ -26,7 +26,7 @@ const DashboardScreen = ({ navigation }) => {
     const [reason, setreason] = useState('')
     const [editAudit, seteditAudit] = useContext(EditAuditContext)
     const [auditArray, setauditArray] = useState([])
-    // console.log(userData, "USERDATA")
+    
     useFocusEffect(
         React.useCallback(() => {
             AuditList(tabBar)
@@ -71,17 +71,12 @@ const DashboardScreen = ({ navigation }) => {
     const AuditList = async (index) => {
         try {
             const params = { audit_type: index }
-            console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.GET_AUDIT_LIST, params)
-            console.log("response", response.data.data)
             if (response.status = 200) {
                 setauditArray(response.data.data);
                 setauditList(response.data.data);
-
             }
-        } catch (error) {
-            console.log(error)
-        }
+        } catch (error) {}
 
     }
 
@@ -91,9 +86,8 @@ const DashboardScreen = ({ navigation }) => {
             audit_status: 2,
             reason: reason
         }
-        console.log(params)
+        
         const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-        console.log(response.data)
         Alert.alert(
             'Audit Cancelled',
             response.data.message,
@@ -107,14 +101,10 @@ const DashboardScreen = ({ navigation }) => {
             audit_status: 4
         }
         const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params)
-        console.log(response)
     }
     const HandleStatus = async (id, status, questions_id, branch_manager) => {
-        console.log("question_id",questions_id)
-        //Online Audit
         if (status == 1)
             QuestionList(id, branch_manager, questions_id)
-        //Offline Audit
         else {
             StartAudit(id)
             const params = {
@@ -123,12 +113,7 @@ const DashboardScreen = ({ navigation }) => {
                 question_id: questions_id,
                 type:1,
             }
-            // socket.emit("getQuestionList",params,(data)=>{
-            //     console.log("sock data ",data)
-            // })
-            // console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-            // console.log(response.data.data)
             setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager, audit_type: 0 })
             navigation.navigate('QuestionScreen')
         }
@@ -142,21 +127,16 @@ const DashboardScreen = ({ navigation }) => {
             type:1
         }
         socket.emit("getQuestionList", params, (data) => {
-            console.log("sock data ", data)
             setquestion({ data: data.data, audit_id: id, branch_manager: branch_manager, audit_type: 1 ,answer:data.answer})
         })
-        // const response = await apiCall('POST', apiEndPoints.QUESTION, params)
-        // console.log(response.data.data)
-        // setquestion({ data: response.data.data, audit_id: id, branch_manager: branch_manager ,audit_type:1})
-        navigation.navigate('AuditWelcomeScreen', { audit_id: id })
-    }
+             navigation.navigate('AuditWelcomeScreen', { audit_id: id })
+        }
     const EditAudit = (item) => {
         seteditAudit(item)
         navigation.navigate('RescheduleAudit')
     }
     const HandleSearch = (text) => {
         setsearch(text)
-        if (tabBar == 1) {
             if (text.length > 0) {
                 var val = []
                 val = auditArray.filter(item => {
@@ -178,44 +158,8 @@ const DashboardScreen = ({ navigation }) => {
             else {
                 setauditList(auditArray)
             }
-        }
-        else {
-            var a = []
-            if (search.length > 0) {
-                var a4 = _.filter(auditArray, (row) => {
-                    var d = _.filter(row?.items, (items) => {
-                        return items?.branch_name.toLowerCase().match(search.toLowerCase())
-                    })
-                    return d;
-                })
-                var a5 = _.filter(auditArray, (row) => {
-                    var d = _.filter(row?.items, (items) => {
-                        return items?.city_name.toLowerCase().match(search.toLowerCase())
-                    })
-                    return d;
-                })
-                var a6 = _.filter(auditArray, (row) => {
-                    var d = _.filter(row?.items, (items) => { return items?.branch_manager.toLowerCase().match(search.toLowerCase()) })
-                    return d;
-                })
-                // console.log("branch:", a4)
-                // console.log("city:", a5)
-                // console.log("manager:", a6)
-                a = [...a4, ...a5, ...a6];
-
-                function onlyUnique(value, index, self) {
-                    return self.indexOf(value) === index;
-                }
-
-                setauditList(a.filter(onlyUnique))
-            }
-            else {
-                setauditList(auditArray)
-            }
-        }
     }
-    console.log("AUDITLIST: ", auditList)
-    console.log("AUDITARRAY: ", auditArray)
+//    console.log("audits:",auditList)
     const renderTodayAudit = ({ item, index }) => {
         return (
             <View style={{ backgroundColor: "#fff" }}>
@@ -325,25 +269,24 @@ const DashboardScreen = ({ navigation }) => {
                                     data={auditList}
                                     renderItem={({ item: audit }) => {
                                         return (
-                                            <View style={styles.display_audit}>
-                                                {console.log("RENDER", audit.items)}
-                                                {
-                                                    audit.date ?
-                                                        <View style={{ paddingTop: 10 }}>
-                                                            <Text style={styles.txt}>
-                                                                {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                                                            </Text>
-                                                        </View> : null
-                                                }
+                                            // <View style={styles.display_audit}>
+                                            //     {
+                                            //         audit.date ?
+                                            //             <View style={{ paddingTop: 10 }}>
+                                            //                 <Text style={styles.txt}>
+                                            //                     {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                            //                 </Text>
+                                            //             </View> : null
+                                            //     }
 
-                                                {
-                                                    audit?.items && audit?.items.map(item => (
+                                            //     {
+                                            //         audit?.items && audit?.items.map(item => (
                                                         <View style={styles.box}>
                                                             <Cancel popup={popup} togglePopUp={togglePopUp}
                                                                 reason={reason} setreason={setreason}
-                                                                onPress={() => handleCancelAudit(item.audit_id)} />
+                                                                onPress={() => handleCancelAudit(audit.audit_id)} />
                                                             <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
-                                                                <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                                <Text style={styles.header_txt}>{audit.branch_name}</Text>
                                                                 <Text style={styles.header_txt}>Bank</Text>
                                                             </View>
                                                             <View style={styles.box_body}>
@@ -352,7 +295,7 @@ const DashboardScreen = ({ navigation }) => {
                                                                         <Image source={CALENDAR} style={styles.img} />
                                                                         <Text style={styles.txt}>Date : </Text>
                                                                         <Text style={styles.p_txt}>
-                                                                            {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                                            {moment(audit.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
                                                                         </Text>
                                                                     </View>
 
@@ -360,13 +303,13 @@ const DashboardScreen = ({ navigation }) => {
                                                                         <Image source={CLOCK} style={styles.img} />
                                                                         <Text style={styles.txt}>Time : </Text>
                                                                         <Text style={styles.p_txt}>
-                                                                            {moment(item.audit_time, 'H-mm').format('h:mm A')}
+                                                                            {moment(audit.audit_time, 'H-mm').format('h:mm A')}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
                                                                 <View style={{ marginVertical: 10 }}>
                                                                     <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                                                    <Text style={styles.txt}>Vishwas Joshi</Text>
+                                                                    <Text style={styles.txt}>{audit.branch_manager}</Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
                                                                     <View>
@@ -376,19 +319,19 @@ const DashboardScreen = ({ navigation }) => {
                                                                     <View>
                                                                         <Text style={styles.s_txt}>Audit Status</Text>
                                                                         <Text style={styles.txt}>
-                                                                            {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                                            {audit.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
                                                                 <View style={{ marginVertical: 10 }}>
                                                                     <Text style={styles.s_txt}>City</Text>
                                                                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                                                        <Text style={styles.txt}>Indore</Text>
+                                                                        <Text style={styles.txt}>{audit.city_name}</Text>
                                                                         <View style={{ flexDirection: "row", justifyContent: "flex-end", justifyContent: "center" }}>
                                                                             <TouchableOpacity style={styles.cancel_btn} onPress={() => togglePopUp()}>
                                                                                 <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Cancel Audit</Text>
                                                                             </TouchableOpacity>
-                                                                            <TouchableOpacity style={styles.prim_btn} onPress={() => EditAudit(item)}>
+                                                                            <TouchableOpacity style={styles.prim_btn} onPress={() => EditAudit(audit)}>
                                                                                 <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Reschedule</Text>
                                                                             </TouchableOpacity>
                                                                         </View>
@@ -396,9 +339,9 @@ const DashboardScreen = ({ navigation }) => {
                                                                 </View>
                                                             </View>
                                                         </View>
-                                                    ))
-                                                }
-                                            </View>
+                                            //         ))
+                                            //     }
+                                            // </View>
                                         )
                                     }}
                                 /> :
@@ -429,17 +372,17 @@ const DashboardScreen = ({ navigation }) => {
                                     data={auditList}
                                     renderItem={({ item: audit }) => {
                                         return (
-                                            <View style={styles.display_audit}>
-                                                <View style={{ paddingTop: 10 }}>
-                                                    <Text style={styles.txt}>
-                                                        {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                                                    </Text>
-                                                </View>
-                                                {
-                                                    audit?.items && audit?.items.map(item => (
+                                            // <View style={styles.display_audit}>
+                                            //     <View style={{ paddingTop: 10 }}>
+                                            //         <Text style={styles.txt}>
+                                            //             {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                            //         </Text>
+                                            //     </View>
+                                            //     {
+                                            //         audit?.items && audit?.items.map(item => (
                                                         <View style={styles.box}>
                                                             <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
-                                                                <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                                <Text style={styles.header_txt}>{audit.branch_name}</Text>
                                                                 <Text style={styles.header_txt}>Bank</Text>
                                                             </View>
                                                             <View style={styles.box_body}>
@@ -448,7 +391,7 @@ const DashboardScreen = ({ navigation }) => {
                                                                         <Image source={CALENDAR} style={styles.img} />
                                                                         <Text style={styles.txt}>Date : </Text>
                                                                         <Text style={styles.p_txt}>
-                                                                            {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                                            {moment(audit.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
                                                                         </Text>
                                                                     </View>
 
@@ -456,13 +399,13 @@ const DashboardScreen = ({ navigation }) => {
                                                                         <Image source={CLOCK} style={styles.img} />
                                                                         <Text style={styles.txt}>Time : </Text>
                                                                         <Text style={styles.p_txt}>
-                                                                            {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                                            {moment(audit.audit_time, 'h-mm').format('h:mm A')}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
                                                                 <View style={{ marginVertical: 10 }}>
                                                                     <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                                                    <Text style={styles.txt}>{item.branch_manager}</Text>
+                                                                    <Text style={styles.txt}>{audit.branch_manager}</Text>
                                                                 </View>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
                                                                     <View>
@@ -479,9 +422,9 @@ const DashboardScreen = ({ navigation }) => {
                                                                 <View style={{ marginVertical: 10 }}>
                                                                     <Text style={styles.s_txt}>City</Text>
                                                                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                        <Text style={styles.txt}>{item.city_name}</Text>
+                                                                        <Text style={styles.txt}>{audit.city_name}</Text>
                                                                         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                                            <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("ReviewAduit", { audit_id: item.audit_id, branch_manager: item.branch_manager }) }}>
+                                                                            <TouchableOpacity style={styles.prim_btn} onPress={() => { navigation.navigate("ReviewAduit", { audit_id: audit.audit_id, branch_manager: audit.branch_manager }) }}>
                                                                                 <Text style={{ color: "#fff", fontSize: normalize(TINY_FONT_SIZE), fontFamily: FONT_FAMILY_SEMI_BOLD }}>Update</Text>
                                                                             </TouchableOpacity>
                                                                         </View>
@@ -489,9 +432,9 @@ const DashboardScreen = ({ navigation }) => {
                                                                 </View>
                                                             </View>
                                                         </View>
-                                                    ))
-                                                }
-                                            </View>
+                                                //     ))
+                                                // }
+                                            // </View>
                                         )
                                     }} />
                                 :
@@ -520,16 +463,16 @@ const DashboardScreen = ({ navigation }) => {
                                 data={auditList}
                                 renderItem={({ item: audit }) => {
                                     return (
-                                        audit?.items && audit?.items.map((item) => (
-                                            <View style={styles.display_audit}>
-                                                <View style={{ paddingTop: 10 }}>
-                                                    <Text style={styles.txt}>
-                                                        {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                                                    </Text>
-                                                </View>
+                                        // audit?.items && audit?.items.map((item) => (
+                                        //     <View style={styles.display_audit}>
+                                        //         <View style={{ paddingTop: 10 }}>
+                                        //             <Text style={styles.txt}>
+                                        //                 {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        //             </Text>
+                                        //         </View>
                                                 <View style={styles.box}>
                                                     <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
-                                                        <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                        <Text style={styles.header_txt}>{audit.branch_name}</Text>
                                                         <Text style={styles.header_txt}>Bank</Text>
                                                     </View>
                                                     <View style={styles.box_body}>
@@ -538,7 +481,7 @@ const DashboardScreen = ({ navigation }) => {
                                                                 <Image source={CALENDAR} style={styles.img} />
                                                                 <Text style={styles.txt}>Date : </Text>
                                                                 <Text style={styles.p_txt}>
-                                                                    {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                                    {moment(audit.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
                                                                 </Text>
                                                             </View>
 
@@ -546,13 +489,13 @@ const DashboardScreen = ({ navigation }) => {
                                                                 <Image source={CLOCK} style={styles.img} />
                                                                 <Text style={styles.txt}>Time : </Text>
                                                                 <Text style={styles.p_txt}>
-                                                                    {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                                    {moment(audit.audit_time, 'h-mm').format('h:mm A')}
                                                                 </Text>
                                                             </View>
                                                         </View>
                                                         <View style={{ marginVertical: 10 }}>
                                                             <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                                            <Text style={styles.txt}>{item.branch_manager}</Text>
+                                                            <Text style={styles.txt}>{audit.branch_manager}</Text>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
                                                             <View>
@@ -562,25 +505,25 @@ const DashboardScreen = ({ navigation }) => {
                                                             <View>
                                                                 <Text style={styles.s_txt}>Audit Status</Text>
                                                                 <Text style={styles.txt}>
-                                                                    {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                                    {audit.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
                                                                 </Text>
                                                             </View>
                                                         </View>
                                                         <View style={{ marginVertical: 10 }}>
                                                             <Text style={styles.s_txt}>City</Text>
                                                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <Text style={styles.txt}>{item.city_name}</Text>
+                                                                <Text style={styles.txt}>{audit.city_name}</Text>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
                                                                     <Text style={{ color: item.audit_status === 3 ? GREEN_COLOR : RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>
-                                                                        {item.audit_status === 3 ? 'Completed' : 'Cancelled'}
+                                                                        {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
                                                                     </Text>
                                                                 </View>
                                                             </View>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>
-                                        ))
+                                        //     </View>
+                                        // ))
                                     )
                                 }} /> :
                             <View style={{ flex: 5, backgroundColor: "#ffffff" }}>
@@ -608,16 +551,16 @@ const DashboardScreen = ({ navigation }) => {
                                 data={auditList}
                                 renderItem={({ item: audit }) => {
                                     return (
-                                        audit?.items && audit?.items.map((item) => (
-                                            <View style={styles.display_audit}>
-                                                <View style={{ paddingTop: 10 }}>
-                                                    <Text style={styles.txt}>
-                                                        {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                                                    </Text>
-                                                </View>
+                                        // audit?.items && audit?.items.map((item) => (
+                                        //     <View style={styles.display_audit}>
+                                        //         <View style={{ paddingTop: 10 }}>
+                                        //             <Text style={styles.txt}>
+                                        //                 {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
+                                        //             </Text>
+                                        //         </View>
                                                 <View style={styles.box}>
                                                     <View style={audit.branch_type === 0 ? styles.box_header : styles.box_header_new}>
-                                                        <Text style={styles.header_txt}>{item.branch_name}</Text>
+                                                        <Text style={styles.header_txt}>{audit.branch_name}</Text>
                                                         <Text style={styles.header_txt}>Bank</Text>
                                                     </View>
                                                     <View style={styles.box_body}>
@@ -626,7 +569,7 @@ const DashboardScreen = ({ navigation }) => {
                                                                 <Image source={CALENDAR} style={styles.img} />
                                                                 <Text style={styles.txt}>Date : </Text>
                                                                 <Text style={styles.p_txt}>
-                                                                    {moment(item.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
+                                                                    {moment(audit.audit_date, 'DD-MM-YYYY').format('DD/MM/YYYY, ddd')}
                                                                 </Text>
                                                             </View>
 
@@ -634,13 +577,13 @@ const DashboardScreen = ({ navigation }) => {
                                                                 <Image source={CLOCK} style={styles.img} />
                                                                 <Text style={styles.txt}>Time : </Text>
                                                                 <Text style={styles.p_txt}>
-                                                                    {moment(item.audit_time, 'h-mm').format('h:mm A')}
+                                                                    {moment(audit.audit_time, 'h-mm').format('h:mm A')}
                                                                 </Text>
                                                             </View>
                                                         </View>
                                                         <View style={{ marginVertical: 10 }}>
                                                             <Text style={styles.s_txt}>Branch Manager Name</Text>
-                                                            <Text style={styles.txt}>{item.branch_manager}</Text>
+                                                            <Text style={styles.txt}>{audit.branch_manager}</Text>
                                                         </View>
                                                         <View style={{ flexDirection: 'row', justifyContent: "space-between", marginVertical: 10 }}>
                                                             <View>
@@ -650,25 +593,25 @@ const DashboardScreen = ({ navigation }) => {
                                                             <View>
                                                                 <Text style={styles.s_txt}>Audit Status</Text>
                                                                 <Text style={styles.txt}>
-                                                                    {item.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
+                                                                    {audit.audit_type === 2 ? 'On-site Audit' : 'Online Audit'}
                                                                 </Text>
                                                             </View>
                                                         </View>
                                                         <View style={{ marginVertical: 10 }}>
                                                             <Text style={styles.s_txt}>City</Text>
                                                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                                <Text style={styles.txt}>{item.city_name}</Text>
+                                                                <Text style={styles.txt}>{audit.city_name}</Text>
                                                                 <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
-                                                                    <Text style={{ color: item.audit_status === 3 ? GREEN_COLOR : RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>
-                                                                        {item.audit_status === 3 ? 'Completed' : 'Cancelled'}
+                                                                    <Text style={{ color: audit.audit_status === 3 ? GREEN_COLOR : RED_COLOR, fontFamily: FONT_FAMILY_REGULAR }}>
+                                                                        {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
                                                                     </Text>
                                                                 </View>
                                                             </View>
                                                         </View>
                                                     </View>
                                                 </View>
-                                            </View>
-                                        ))
+                                        //     </View>
+                                        // ))
                                     )
                                 }} /> :
                             <View style={{ flex: 5, backgroundColor: "#ffffff" }}>

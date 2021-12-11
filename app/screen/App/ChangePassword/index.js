@@ -43,9 +43,8 @@ function ChangePassword() {
                     'new_password': passwordData.newPassword,
                     'old_password': passwordData.oldPassword,
                 }
-                console.log('params: ', params);
                 const res = await apiCall("POST", apiEndPoints.CHANGE_PASSWORD, params);
-                console.log('res: ', res);
+                
                 if (res?.data?.status === 200) {
                     setIsLoading(false)
                     setPasswordData({

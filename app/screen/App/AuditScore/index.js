@@ -41,9 +41,8 @@ export default function index({navigation}) {
             audit_id:question.audit_id,
             type:2
         }
-        console.log('params: ', params);
+        
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, params)
-        console.log('GET_ACTIONABLE_DETAIL: ', response);
         settotalScore(response.data)
         setisLoading(false)
         navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})

@@ -32,11 +32,7 @@ const Question = (props) => {
     const [userData, setUserData] = useContext(UserContext)
     const [maxIMG, setmaxIMG] = useState(false)
     const [showModalIMG, setshowModalIMG] = useState()
-    useEffect(() => {
-        console.log("LASTEST: ", props.camImg)
-
-    }, [props.camImg])
-    console.log("marger", props.managerJoin)
+    useEffect(() => { }, [props.camImg])
     const handleInfo = () => {
         setonInfo(!onInfo)
     }
@@ -54,7 +50,7 @@ const Question = (props) => {
         props.setReviewValue(val)
         props.emitRating(val);
     }
-    const handleRemark = (val)=>{
+    const handleRemark = (val) => {
         setremark(val);
         props.emitRemark(val)
     }
@@ -69,22 +65,21 @@ const Question = (props) => {
             await props.setadminActionable(0)
             await setdropDown(!dropDown)
         }
-        else if(type===2) {
+        else if (type === 2) {
             await setrmmactionable(1)
             await setbmActionable(0)
             await props.setatmActionable(0)
             await props.setadminActionable(0)
             await setdropDown(!dropDown)
         }
-        else if(type===3)
-        {
+        else if (type === 3) {
             await setbmActionable(0)
             await setrmmactionable(0)
             await props.setatmActionable(1)
             await props.setadminActionable(0)
             await setdropDown(!dropDown)
         }
-        else{
+        else {
             await setbmActionable(0)
             await setrmmactionable(0)
             await props.setatmActionable(0)
@@ -105,7 +100,6 @@ const Question = (props) => {
         }).then(image => {
             let combineImg = props.camImg == null ? [] : [...props.camImg];
             image.map((val) => {
-                console.log('val: ', val);
                 combineImg.push({
                     path: val.path,
                     type: 'gallery'
@@ -130,10 +124,9 @@ const Question = (props) => {
             setssDropDown(false)
         });
     }
-    // console.log("question update:  ",question)
     const renderImage = (item, index) => {
-        console.log('item: ', item);
         return (
+            startAudit?
             <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
                 <TouchableOpacity
                     style={{
@@ -156,19 +149,46 @@ const Question = (props) => {
                 </TouchableOpacity>
                 <View>
                     <Image
-                        source={{ uri:props.baseUrl+ item.image_data }}
+                        source={{ uri: item.path }}
                         style={{ width: "100%", height: "100%", borderRadius: 10 }}
                     />
                 </View>
             </TouchableOpacity>
+            :
+            <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
+            <TouchableOpacity
+                style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: 20,
+                    position: "absolute",
+                    zIndex: 9,
+                    backgroundColor: "#fff",
+                    right: 0,
+                    top: 0
+                }}
+                onPress={() => props.confirmDelete(index)}>
+                <Image
+                    source={require('../../../../assets/images/add-alt.png')}
+                    style={{
+                        width: 20, height: 20, tintColor: PRIMARY_BLUE_COLOR
+                    }}
+                />
+            </TouchableOpacity>
+            <View>
+                <Image
+                    source={{ uri: props.baseUrl + item.image_data }}
+                    style={{ width: "100%", height: "100%", borderRadius: 10 }}
+                />
+            </View>
+        </TouchableOpacity>
         )
     }
     const showMaxIMG = (index) => {
-        console.log("IMGSHOW:", props.camImg[index])
         setshowModalIMG(props.camImg[index])
         setmaxIMG(!maxIMG)
     }
-    const showModal=()=>{
+    const showModal = () => {
         setssDropDown(!ssDropDown)
     }
     return (
@@ -252,30 +272,30 @@ const Question = (props) => {
                     question?.audit_type == 0 ? null :
                         <View style={{ height: 250 }}>
                             {
-                                <JoinChannelVideo 
-                                            handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                                            token={props.token}
-                                            channelId={props.channelId}
-                                            setmanagerJoin={()=>{}}
-                                            handleJoin={(data) => props.handleJoin(data)}
-                                        />
-                               /* props.managerJoin ?
-                                    <>
-                                        <JoinChannelVideo 
-                                            handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                                            token={props.token}
-                                            channelId={props.channelId}
-                                            setmanagerJoin={()=>{}}
-                                            handleJoin={(data) => props.handleJoin(data)}
-                                        />
-                                    </>
-                                    :
-                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                                        <TouchableOpacity style={styles.bluestreaming}>
-                                            <Text style={styles.textstraming}>No Live Streaming</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    */
+                                <JoinChannelVideo
+                                    handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                    token={props.token}
+                                    channelId={props.channelId}
+                                    setmanagerJoin={() => { }}
+                                    handleJoin={(data) => props.handleJoin(data)}
+                                />
+                                /* props.managerJoin ?
+                                     <>
+                                         <JoinChannelVideo 
+                                             handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                                             token={props.token}
+                                             channelId={props.channelId}
+                                             setmanagerJoin={()=>{}}
+                                             handleJoin={(data) => props.handleJoin(data)}
+                                         />
+                                     </>
+                                     :
+                                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                                         <TouchableOpacity style={styles.bluestreaming}>
+                                             <Text style={styles.textstraming}>No Live Streaming</Text>
+                                         </TouchableOpacity>
+                                     </View>
+                                     */
                             }
                         </View>
                 }
@@ -296,21 +316,23 @@ const Question = (props) => {
                                             }
 
                                             <View style={styles.brnchmannme}>
-                                                
-                                                <TouchableOpacity
-                                                    onPress={() => { question?.audit_type == 0 ? showModal() : onCapture() }}
-                                                    style={{
-                                                        backgroundColor: '#1b7dec',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                        borderRadius: 20,
-                                                        paddingVertical: 10,
-                                                        paddingHorizontal: 15
-                                                    }} >
-                                                    <Text style={{
-                                                        fontSize: 14, fontWeight: '700', color: "#ffffff"
-                                                    }}>Capture The image</Text>
-                                                </TouchableOpacity>
+                                                {
+                                                    props.showCapIMG &&
+                                                    <TouchableOpacity
+                                                        onPress={() => { question?.audit_type == 0 ? showModal() : onCapture() }}
+                                                        style={{
+                                                            backgroundColor: '#1b7dec',
+                                                            justifyContent: 'center',
+                                                            alignItems: 'center',
+                                                            borderRadius: 20,
+                                                            paddingVertical: 10,
+                                                            paddingHorizontal: 15
+                                                        }} >
+                                                        <Text style={{
+                                                            fontSize: 14, fontWeight: '700', color: "#ffffff"
+                                                        }}>Capture The image</Text>
+                                                    </TouchableOpacity>
+                                                }
                                                 {
                                                     ssDropDown &&
                                                     <Modal transparent={true}>
@@ -355,6 +377,23 @@ const Question = (props) => {
                                 }
                                 {question?.data?.question_type === '1' && (
                                     <View style={styles.brnchmannme}>
+                                        <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => {
+                                            props.setyesNo('YES')
+                                            props.handleShowActionable(false)
+                                            if(question.data.score_range==1)
+                                                props.showSetRange(true)
+                                        }} />
+                                        <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => {
+                                            props.setyesNo('NO')
+                                            props.handleShowActionable(true)
+                                            if(question.data.score_range==1)
+                                                props.showSetRange(false)
+                                        }} />
+                                        {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
+                                    </View>
+                                )}
+                                {question?.data?.question_type === '5' && (
+                                    <View style={styles.brnchmannme}>
                                         <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('YES')} />
                                         <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NO')} />
                                         <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} />
@@ -363,7 +402,8 @@ const Question = (props) => {
                                 {question?.data?.question_type === '2' && (
                                     <View style={styles.brnchmannme}>
                                         <TextInput placeholder="Enter the quantity"
-                                            value={quality} onChangeText={text => setquality(text)}
+                                            value={quality}
+                                            onChangeText={text => { props.handleQuality(text) }}
                                             keyboardType={"numeric"}
                                             style={{ padding: 10, backgroundColor: "#ecececec", width: "100%" }} />
                                     </View>
@@ -418,68 +458,72 @@ const Question = (props) => {
                                         </View> : null
                                 }
                                 {
-                                    question?.data?.rmm_actionable_assignee === "1" || question?.data?.bm_actionable_assignee === "1" || question?.data?.admin_assignee === 1 || question?.data?.atm_cordinator_assignee === 1 ?
-                                        <View style={{ marginTop: 20 }}>
-                                            <Text style={styles.branname}>
-                                                Actionable
-                                            </Text>
-                                            <TouchableOpacity onPress={() => handleDropDown()} style={{
-                                                backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
-                                                justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
-                                            }} >
-                                                <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? question?.branch_manager :
-                                                 rmmactionable ? userData.name :
-                                                props.adminActionable?"Admin":props.atmActionable?"ATM Cordinator":"Select Actionable"}</Text>
+                                    props.showActionable ?
+                                        question?.data?.rmm_actionable_assignee === "1" || question?.data?.bm_actionable_assignee === "1" || question?.data?.admin_assignee === 1 || question?.data?.atm_cordinator_assignee === 1 ?
+                                            <View style={{ marginTop: 20 }}>
+                                                <Text style={styles.branname}>
+                                                    Actionable
+                                                </Text>
+                                                <TouchableOpacity onPress={() => handleDropDown()} style={{
+                                                    backgroundColor: GREY_TEXT_COLOR, flexDirection: 'row', alignItems: 'center', borderRadius: 5,
+                                                    justifyContent: "space-between", paddingVertical: 10, paddingHorizontal: 10
+                                                }} >
+                                                    <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>{bmActionable ? question?.branch_manager :
+                                                        rmmactionable ? userData.name :
+                                                            props.adminActionable ? "Admin" : props.atmActionable ? "ATM Cordinator" : "Select Actionable"}</Text>
+                                                    {
+                                                        dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
+                                                            <Image source={DOWNARROW} />
+                                                    }
+                                                </TouchableOpacity>
                                                 {
-                                                    dropDown ? <Image source={DOWNARROW} style={{ transform: [{ rotateZ: "180deg" }] }} /> :
-                                                        <Image source={DOWNARROW} />
+                                                    dropDown &&
+                                                    <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
+                                                        {
+                                                            question?.data.bm_actionable_assignee == "1" ?
+                                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(1)}>
+                                                                    <Text style={styles.drop_down_txt}>{question?.branch_manager}</Text>
+                                                                </TouchableOpacity> : null
+                                                        }
+                                                        {
+                                                            question?.data.rmm_actionable_assignee == "1" ?
+                                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(2)}>
+                                                                    <Text style={styles.drop_down_txt}>{userData.name}</Text>
+                                                                </TouchableOpacity> : null
+                                                        }
+                                                        {
+                                                            question?.data.atm_cordinator_assignee == 1 ?
+                                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(3)}>
+                                                                    <Text style={styles.drop_down_txt}>{"ATM Cordinator"}</Text>
+                                                                </TouchableOpacity> : null
+                                                        }
+                                                        {
+                                                            question?.data.admin_assignee == 1 ?
+                                                                <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(4)}>
+                                                                    <Text style={styles.drop_down_txt}>{"Admin"}</Text>
+                                                                </TouchableOpacity> : null
+                                                        }
+                                                    </View>
                                                 }
-                                            </TouchableOpacity>
-                                            {
-                                                dropDown &&
-                                                <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
-                                                    {
-                                                        question?.data.bm_actionable_assignee == "1" ?
-                                                            <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(1)}>
-                                                                <Text style={styles.drop_down_txt}>{question?.branch_manager}</Text>
-                                                            </TouchableOpacity> : null
-                                                    }
-                                                    {
-                                                        question?.data.rmm_actionable_assignee == "1" ?
-                                                            <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(2)}>
-                                                                <Text style={styles.drop_down_txt}>{userData.name}</Text>
-                                                            </TouchableOpacity> : null
-                                                    }
-                                                    {
-                                                        question?.data.atm_cordinator_assignee == 1 ?
-                                                            <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(3)}>
-                                                                <Text style={styles.drop_down_txt}>{"ATM Cordinator"}</Text>
-                                                            </TouchableOpacity> : null
-                                                    }
-                                                    {
-                                                        question?.data.admin_assignee == 1 ?
-                                                            <TouchableOpacity style={styles.drop_down_item} onPress={() => HandleActionable(4)}>
-                                                                <Text style={styles.drop_down_txt}>{"Admin"}</Text>
-                                                            </TouchableOpacity> : null
-                                                    }
-                                                </View>
-                                            }
-                                        </View> : null
-                                }
+                                            </View> : null
+                                        : null}
                                 {
                                     question?.data?.remark === '1' &&
                                     <View style={{ marginTop: 10 }}>
                                         <Text style={styles.branname}>
                                             Remarks
                                         </Text>
-                                        <TextInput placeholder="Remarks" style={styles.input} value={remark} onChangeText={text => handleRemark(text)} />
+                                        <TextInput placeholder="Remarks" 
+                                         multiline
+                                         numberOfLines={3}
+                                        style={styles.input} value={remark} onChangeText={text => handleRemark(text)} />
                                     </View>
                                 }
 
                                 <View style={{ marginVertical: 20, flex: 1, justifyContent: "flex-end" }}>
-                                    <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"100%"}}>
-                                        <Button buttonText={"Previous"} onPress={()=>props.prevQuestion()}/>
-                                        <Button buttonText={"Next"} onPress={() => handleSubmit()}/>
+                                    <View style={{ flexDirection: "row", justifyContent: "space-evenly", width: "100%" }}>
+                                        <Button buttonText={"Previous"} onPress={() => props.prevQuestion()} />
+                                        <Button buttonText={"Next"} onPress={() => handleSubmit()} />
                                     </View>
                                 </View>
                             </View>

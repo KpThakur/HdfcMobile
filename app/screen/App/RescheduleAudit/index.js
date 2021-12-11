@@ -57,7 +57,6 @@ export default function index({ navigation }) {
             setisLaoding(true)
             const params = { branch_id }
             const response = await apiCall('POST', apiEndPoints.GET_MANAGER_NAME, params)
-            // console.log("manager:",response)
             if (response.status === 200) {
                 seteditAudit({...editAudit,branch_manager:response.data.data[0].branch_manager,branch_manager_id:response.data.data[0].branch_manager_id,
                     branch_name:response.data.data[0].branch_name,branch_id:response.data.data[0].branch_id})
@@ -113,7 +112,6 @@ export default function index({ navigation }) {
             try {
                 setisLaoding(true)
                 const response = await apiCall('POST', apiEndPoints.EDIT_AUDIT, editAudit)
-                // console.log(response,"SCHEDULE AUDIT")
                 setisLaoding(false)
                 if(response.status===200)
                 {

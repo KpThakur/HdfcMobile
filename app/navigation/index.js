@@ -123,9 +123,6 @@ export default function Routes({ navigation }) {
             let userToken;
             try {
                 userToken = await AsyncStorage.getItem('userToken');
-
-
-                console.log('userToken: ', userToken);
                 if (userToken === null) {
                     const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
                     if (response.status === 200) {
@@ -137,11 +134,8 @@ export default function Routes({ navigation }) {
                     setUserData(JSON.parse(userData))
                     await setDefaultHeader('token', userToken);
                 }
-                //userToken ="abc";
-            } catch (e) {
-                console.log(': ', e);
-                // Restoring token failed
-            }
+                
+            } catch (e) { }
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
 
@@ -156,24 +150,17 @@ export default function Routes({ navigation }) {
                     await setDefaultHeader('token', userToken);
                     await AsyncStorage.setItem('userToken', userToken);
 
-                } catch (e) {
-                    console.log(e, "ERRROR");
-                }
+                } catch (e) {}
                 dispatch({ type: 'SIGN_IN', token: userToken });
             },
             signOut: async () => {
-                console.log("SINGOUT")
                 try {
-
                     await AsyncStorage.removeItem('userToken');
                     await AsyncStorage.removeItem('userData');
-                    // setUserData({})
                     const response = await apiCall('GET', ENDPOINTS.GENERATE_TOKEN);
                     await setDefaultHeader('token', response.data.token);
                     dispatch({ type: 'SIGN_OUT', token: response.data.token })
-                } catch (e) {
-                    console.log(e);
-                }
+                } catch (e) { }
             },
             signUp: async data => {
                 // In a production app, we need to send user data to server and get a token
@@ -189,7 +176,7 @@ export default function Routes({ navigation }) {
     return (
         <NavigationContainer>
             <AuthContext.Provider value={authContext}>
-                {console.log("state.userToken", state.userToken)}
+                {}
                 {state.userToken === null ? (
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="Login" component={AuthStack} />

@@ -163,27 +163,6 @@ export default function RescheduleAudit(props) {
                                                     </View>
                                                 }
                                             </View>
-
-                                            {/* <View>
-                                                <TouchableOpacity style={styles.date_time} onPress={() => { setopenTime(true) }}>
-                                                    <Image source={CLOCK} style={{ marginRight: 10 }} />
-                                                    {editAudit ? <Text>{editAudit.audit_time}</Text> : <Text>Date</Text>}
-                                                </TouchableOpacity>
-                                                <DatePicker modal open={openTime} mode="time" date={new Date()}
-                                                    minuteInterval={15}
-                                                    onConfirm={(date) => {
-                                                        if (moment(date).format('h:mma') <= '6:00pm' && moment(date).format('h:mma') >= '10:00am') {
-                                                            setopenTime(!openTime)
-                                                            // console.log(moment(date).format('h-mm'),"DATE")
-                                                            seteditAudit({...editAudit,audit_time:moment(date).format('h-mm')})
-                                                        } else {
-                                                            Alert.alert('Time', 'Please time between 10:00 AM to 6:00 PM')
-                                                        }
-                                                    }}
-                                                    onCancel={() => {
-                                                        setopenTime(false)
-                                                    }} />
-                                            </View> */}
                                         </View>
                                     </View>
                                     <View style={{ marginTop: 10 }}>

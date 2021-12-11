@@ -39,7 +39,6 @@ const Login = ({navigation}) => {
                     signIn(response.data.token)
                     setUserData(response.data.data)
                     AsyncStorage.setItem('userData',JSON.stringify(response.data.data))
-                    // console.log("response.data",response.data)
                     setisLoading(false)
                 }
                 else {
