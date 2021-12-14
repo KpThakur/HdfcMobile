@@ -8,8 +8,8 @@ import { Alert } from 'react-native';
 import Loader from '../../../utils/Loader';
 const Login = ({navigation}) => {
     const [userData, setUserData]=useContext(UserContext)
-    const [email, setemail] = useState('john@mailinator.com')
-    const [password, setpassword] = useState('123456')
+    const [email, setemail] = useState()
+    const [password, setpassword] = useState()
     const [isLoading, setisLoading] = useState(false)
     const [isChecked, setisChecked] = useState(false)
     const { signIn } = React.useContext(AuthContext);

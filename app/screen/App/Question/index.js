@@ -171,7 +171,7 @@ const Question = ({ navigation, route }) => {
                 audit_id: params.audit_id,
 
             }
-            socket.emit("startAudit", paramss)
+            socket.emit("startAudit", paramss,(result) => { })
             if (data.answer.length == 0) {
                 setrmmactionable(0)
                 setbmActionable(0)
@@ -248,11 +248,13 @@ const Question = ({ navigation, route }) => {
             audit_id: question?.audit_id,
             question_id: question?.data?.question_id,
         }
+        setisLoading(true)
         socket.emit("customergetImagedata", params, (data) => {
             if (data.socketEvent == "customergetImagedata" + question.audit_id) {
                 getIMGSOCKET(data)
             }
         })
+        setisLoading(false)
     }
     const getIMGSOCKET = async (data) => {
         if (data.status === 200) {
@@ -310,7 +312,7 @@ const Question = ({ navigation, route }) => {
                     question_id: question?.data?.question_id,
                     audit_id: question?.audit_id,
                 }
-                await socket.emit("previousquestion", previous);
+                await socket.emit("previousquestion", previous,(result) => { });
                 var data = {
                     data: response.data.data[0],
                     audit_id: params.audit_id,
@@ -394,7 +396,6 @@ const Question = ({ navigation, route }) => {
         else
             setReviewValue(question.data.set_range_2)
     }
-    console.log("QUS:",question)
     return (
         <>
             {isLoading && <Loader />}
