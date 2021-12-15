@@ -2,12 +2,10 @@ import { StyleSheet } from 'react-native';
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: "#ffffff"
     },
     scrollViewStyle: {
         flexGrow: 1,
-        paddingLeft: 10,
-        paddingRight: 10,
-        backgroundColor: "#ffffff"
     },
     display: {
         marginVertical: 10,

@@ -23,6 +23,6 @@ export default {
   IMG_DATA:'/api/v1/question/getImagedata',
   AGORA_TOKEN:'/api/v1/audit/getAgoraToken',
   PREV_QUESTION:'/api/v1/question/previousQuestion',
-  GETAAUDITSHAREINFO:"/api/v1/audit/getaAuditshareinfo"
+  GETAAUDITSHAREINFO:"/api/v1/audit/getaAuditshareinfo",
 
 }
