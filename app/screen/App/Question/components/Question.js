@@ -124,9 +124,10 @@ const Question = (props) => {
             setssDropDown(false)
         });
     }
+    console.log(question)
     const renderImage = (item, index) => {
         return (
-            startAudit?
+            question.audit_type===0?
             <TouchableOpacity style={{ width: 60, height: 65, marginHorizontal: 5 }} onPress={() => showMaxIMG(index)}>
                 <TouchableOpacity
                     style={{
