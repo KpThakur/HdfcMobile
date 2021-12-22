@@ -78,17 +78,18 @@ const Question = ({ navigation, route }) => {
           mimeType: "multipart/form-data",
         }
       );
-      console.log("RES: ",response)
+      // console.log("RES: ", response);
 
-      console.log("STATUS: ",response.status)
+      // console.log("STATUS: ", response.status);
       if (response.data.status === 200) {
         handleNext();
-      } 
-      else if(response.data.status!==500) {
+      } else if (response.data.status !== 500) {
         alert(response.data.message);
       }
       setisLoading(false);
-    } catch (error) {setisLoading(false);}
+    } catch (error) {
+      setisLoading(false);
+    }
   };
   const handleSubmit = async () => {
     NetInfo.fetch().then(async (state) => {
@@ -123,7 +124,7 @@ const Question = ({ navigation, route }) => {
             }
             SubmitAPI(formdata);
           } else {
-            setisLoading(false)
+            setisLoading(false);
             !showCapIMG
               ? SubmitAPI(formdata)
               : alert("Please Capture The Image");
@@ -258,7 +259,7 @@ const Question = ({ navigation, route }) => {
       question_id: question?.data?.question_id,
     };
     socket.emit("customergetImagedata", params, (data) => {
-      if (data.socketEvent == "customergetImagedata" + question.audit_id) {  
+      if (data.socketEvent == "customergetImagedata" + question.audit_id) {
         getIMGSOCKET(data);
       }
     });
@@ -293,24 +294,27 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
+        console.log("RES: ",response)
         if (response.data.data.check_data)
           setquestionList(response.data.data[0].check_data.split(","));
-        const imgs = response.data.answer.image_capture.split(",");
-        const finalData = [];
-        for (var i = 0; i < imgs.length; i++) {
-          finalData.push({
-            path: response.data.base_url + imgs[i],
-            type: "camera",
-            image_data: imgs[i],
-          });
+        if (response.data.answer.image_capture) {
+          const imgs = response.data.answer.image_capture.split(",");
+          const finalData = [];
+          for (var i = 0; i < imgs.length; i++) {
+            finalData.push({
+              path: response.data.base_url + imgs[i],
+              type: "camera",
+              image_data: imgs[i],
+            });
+          }
+          setCamImg([...finalData]);
         }
-        setCamImg([...finalData]);
         setquestion({
           data: response.data.data[0],
           audit_id: params.audit_id,
           audit_type: params.audit_type,
           branch_manager: params.branch_manager,
-        });
+        })
         setremark(response.data.answer.remark);
         setrmmactionable(response.data.answer.rmm_actionable_assignee);
         setbmActionable(response.data.answer.bm_actionable_assignee);
@@ -324,6 +328,10 @@ const Question = ({ navigation, route }) => {
           setshowActionable(true);
         }
         setyesNo(response.data.answer.yes_no);
+        if(response.data.answer.yes_no=="NO")
+        {
+          setshowCapIMG(false)
+        }
         setquality(response.data.answer.quality);
         setReviewValue(Number(response.data.answer.score_range));
         setcheckedAns(response.data.answer.check_answer);
@@ -374,7 +382,7 @@ const Question = ({ navigation, route }) => {
     }
     if (!state) {
       if (question?.data.action_on_no == 2) {
-        setshowCapIMG(true);
+        setshowCapIMG(true)
         setCamImg()
       }
     }
@@ -405,8 +413,8 @@ const Question = ({ navigation, route }) => {
   const showSetRange = (state) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
-  }
-  console.log("CamIMG: ",camImg)
+  };
+  console.log("CamIMG: ", camImg);
   return (
     <>
       {isLoading && <Loader />}
