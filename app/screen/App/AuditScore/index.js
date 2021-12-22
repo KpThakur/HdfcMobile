@@ -31,7 +31,6 @@ export default function index({navigation}) {
       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
    }, [])
       const onBackPress = () => {
-        //   alert(0)
         navigation.navigate("Profile")
       };
 
@@ -43,7 +42,6 @@ export default function index({navigation}) {
         }
         
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, params)
-        settotalScore(response.data)
         setisLoading(false)
         navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
     }

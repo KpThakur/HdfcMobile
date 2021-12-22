@@ -130,7 +130,6 @@ const DashboardScreen = ({ navigation }) => {
     branch_manager,
     time
   ) => {
-    console.log((moment(time).format("H-mm")+"00-30"));
 
     if (status == 1) QuestionList(id, branch_manager, questions_id);
     else {
