@@ -1,4 +1,4 @@
-package com.hdfc;
+package com.audit.Kreate;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen; 

@@ -380,12 +380,14 @@ const Question = (props) => {
                                     <View style={styles.brnchmannme}>
                                         <Button buttonText={"Yes"} style={{ paddingVertical: 5, backgroundColor: yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => {
                                             props.setyesNo('YES')
+                                            handleRemark(question.data.remark_yes)
                                             props.handleShowActionable(false)
                                             if(question.data.score_range==1)
                                                 props.showSetRange(true)
                                         }} />
                                         <Button buttonText={"No"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => {
                                             props.setyesNo('NO')
+                                            handleRemark(question.data.remark_no)
                                             props.handleShowActionable(true)
                                             if(question.data.score_range==1)
                                                 props.showSetRange(false)

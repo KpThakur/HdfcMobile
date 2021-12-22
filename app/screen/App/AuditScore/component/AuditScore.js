@@ -19,7 +19,7 @@ export default function AuditScore(props) {
                         </View>
                     </View>
                     {
-                        totalScore?.previous &&
+                        totalScore?.previous!=0 &&
                         <View style={styles.prev_audit}>
                             <Text style={styles.txt}>Preview Audit Score :</Text>
                             <FlatList
