@@ -123,6 +123,7 @@ const Question = ({ navigation, route }) => {
             }
             SubmitAPI(formdata);
           } else {
+            setisLoading(false)
             !showCapIMG
               ? SubmitAPI(formdata)
               : alert("Please Capture The Image");
@@ -256,13 +257,11 @@ const Question = ({ navigation, route }) => {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
     };
-    setisLoading(true);
     socket.emit("customergetImagedata", params, (data) => {
-      if (data.socketEvent == "customergetImagedata" + question.audit_id) {
+      if (data.socketEvent == "customergetImagedata" + question.audit_id) {  
         getIMGSOCKET(data);
       }
     });
-    setisLoading(false);
   };
   const getIMGSOCKET = async (data) => {
     if (data.status === 200) {
@@ -376,6 +375,7 @@ const Question = ({ navigation, route }) => {
     if (!state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(true);
+        setCamImg()
       }
     }
     if (state) {
@@ -405,7 +405,8 @@ const Question = ({ navigation, route }) => {
   const showSetRange = (state) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
-  };
+  }
+  console.log("CamIMG: ",camImg)
   return (
     <>
       {isLoading && <Loader />}

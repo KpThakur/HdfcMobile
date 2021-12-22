@@ -248,9 +248,8 @@ export default function ScheduleNewAudit(props) {
                                     moment(new Date()).format("DD-MM-YYYY")
                                   ) {
                                     if (moment(new Date()).format("H-mm")<"10-00") {
-                                      if (
-                                        item < moment(new Date()).format("H-mm")
-                                      ) {
+                                      console.log(item < moment(new Date()).format("H-mm"))
+                                      if (item < moment(new Date()).format("H-mm")) {
                                         setdropDown(false);
                                         alert("Please Select Proper Time");
                                       } else {
@@ -259,8 +258,12 @@ export default function ScheduleNewAudit(props) {
                                       }
                                     }
                                     else{
-                                        settime(item);
+                                      if (item < moment(new Date()).format("H-mm")) {
                                         setdropDown(false);
+                                        alert("Please Select Proper Time");
+                                      }else{
+                                        settime(item)
+                                        setdropDown(false)}
                                     }
                                   } else {
                                     settime(item);

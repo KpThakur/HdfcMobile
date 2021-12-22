@@ -40,14 +40,14 @@ const LoginScreen = (props) => {
                         </TouchableOpacity>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 }}>
-                            <TouchableOpacity onPress={() => handleCheck()} style={{ flexDirection:"row",alignItems:"center"}}>
+                            {/* <TouchableOpacity onPress={() => handleCheck()} style={{ flexDirection:"row",alignItems:"center"}}>
                                 {
                                     isChecked ?
                                         <Image source={CHECKED} style={styles.check_icon} /> :
                                         <Image source={UNCHECKED} style={styles.check_icon} />
                                 }
                                 <Text style={styles.txt}>Keep Me Sign in</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         <TouchableOpacity onPress={()=>handleForgetPassword()}><Text style={styles.p_txt}>Forget Password ?</Text></TouchableOpacity>
                     </View>
                     <View style={styles.btn_view}>

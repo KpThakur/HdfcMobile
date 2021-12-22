@@ -44,7 +44,7 @@ export default function Profile(props) {
                             phone: value
                         })}
                         keyboardType={"number-pad"}
-                        value={props.profileData.phone}
+                        value={props.profileData.phone.toString()}
                     />
                     <View style={{ paddingTop: 30 }}>
                         <Button
