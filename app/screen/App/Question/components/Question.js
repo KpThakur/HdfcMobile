@@ -167,7 +167,7 @@ const Question = (props) => {
       setssDropDown(false);
     });
   };
-  console.log(question);
+  // console.log(question);
   const renderImage = (item, index) => {
     return question.audit_type === 0 ? (
       <TouchableOpacity
@@ -638,7 +638,7 @@ const Question = (props) => {
               {question?.data?.question_type === "2" && (
                 <View style={styles.brnchmannme}>
                   <TextInput
-                    placeholder="Enter the quantity"
+                    placeholder="Enter the quantity (Default value is 0)"
                     value={quality}
                     onChangeText={(text) => {
                       props.handleQuality(text);

@@ -244,27 +244,45 @@ const Question = ({ navigation, route }) => {
     socket.emit("remarkview", params);
   };
   const onCapture = async () => {
+    setisLoading(true)
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
     };
+    console.log("onCapture",params);
     socket.emit("captureImageRequest", params, (data) => {
+      console.log("onCapture=>",data)
       if (data.status === 200) {
+        console.log("onCapture status 200")
+        socket.on("image-sent", (data) => {
+          console.log("onCapture====>",data)
+          if (data.socketEvent == "updateCaptureimage" + question?.audit_id+question?.data.question_id) {
+            console.log("WORking....")
+            getIMG();
+            setCamImg([...data.image_data]);
+          }
+          setisLoading(false)
+        });
+        // getIMG()
       }
     });
   };
   const getIMG = async () => {
+    setisLoading(true);
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
     };
+    console.log("onCapture GET IMG",params);
     socket.emit("customergetImagedata", params, (data) => {
       if (data.socketEvent == "customergetImagedata" + question.audit_id) {
         getIMGSOCKET(data);
+        setisLoading(false);
       }
     });
   };
   const getIMGSOCKET = async (data) => {
+    console.log("onCapture data of IMG: ",data)
     if (data.status === 200) {
       setBaseUrl(data.base_url);
       setCamImg(data.data);
@@ -294,7 +312,7 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
-        console.log("RES: ",response)
+        console.log("prevQuestion: ", response);
         if (response.data.data.check_data)
           setquestionList(response.data.data[0].check_data.split(","));
         if (response.data.answer.image_capture) {
@@ -314,7 +332,7 @@ const Question = ({ navigation, route }) => {
           audit_id: params.audit_id,
           audit_type: params.audit_type,
           branch_manager: params.branch_manager,
-        })
+        });
         setremark(response.data.answer.remark);
         setrmmactionable(response.data.answer.rmm_actionable_assignee);
         setbmActionable(response.data.answer.bm_actionable_assignee);
@@ -328,9 +346,8 @@ const Question = ({ navigation, route }) => {
           setshowActionable(true);
         }
         setyesNo(response.data.answer.yes_no);
-        if(response.data.answer.yes_no=="NO")
-        {
-          setshowCapIMG(false)
+        if (response.data.answer.yes_no == "NO") {
+          setshowCapIMG(false);
         }
         setquality(response.data.answer.quality);
         setReviewValue(Number(response.data.answer.score_range));
@@ -382,8 +399,8 @@ const Question = ({ navigation, route }) => {
     }
     if (!state) {
       if (question?.data.action_on_no == 2) {
-        setshowCapIMG(true)
-        setCamImg()
+        setshowCapIMG(true);
+        setCamImg();
       }
     }
     if (state) {
@@ -414,6 +431,7 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
+  // console.log("ID",question.data);
   console.log("CamIMG: ", camImg);
   return (
     <>

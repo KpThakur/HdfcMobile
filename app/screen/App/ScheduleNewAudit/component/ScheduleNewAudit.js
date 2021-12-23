@@ -243,19 +243,10 @@ export default function ScheduleNewAudit(props) {
                               <TouchableOpacity
                                 style={[styles.drop_down_item, { zIndex: 1 }]}
                                 onPress={() => {
-                                  if (
-                                    ACDATE ==
-                                    moment(new Date()).format("DD-MM-YYYY")
-                                  ) {
-                                    if (moment(new Date()).format("H-mm")<"10-00") {
-                                      console.log(item < moment(new Date()).format("H-mm"))
-                                      if (item < moment(new Date()).format("H-mm")) {
-                                        setdropDown(false);
-                                        alert("Please Select Proper Time");
-                                      } else {
+                                  if (date ==moment(new Date()).format("DD-MM-YYYY")) {
+                                    if ((moment(new Date()).format("H-mm")<"10-00")) {
                                         settime(item);
                                         setdropDown(false);
-                                      }
                                     }
                                     else{
                                       if (item < moment(new Date()).format("H-mm")) {
