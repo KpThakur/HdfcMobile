@@ -244,7 +244,7 @@ export default function ScheduleNewAudit(props) {
                                 style={[styles.drop_down_item, { zIndex: 1 }]}
                                 onPress={() => {
                                   if (date ==moment(new Date()).format("DD-MM-YYYY")) {
-                                    if ((moment(new Date()).format("H-mm")<"10-00")) {
+                                    if (moment(new Date()).format("HH-mm")<"10-00") {
                                         settime(item);
                                         setdropDown(false);
                                     }
