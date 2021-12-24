@@ -32,8 +32,6 @@ export default function index({ navigation }) {
                 setcityBranch(response.data.data)
                 setisLaoding(false)
             }
-            else
-                console.log("Status Code:", response.status)
 
         } catch (error) {
             console.log(error)
@@ -62,8 +60,6 @@ export default function index({ navigation }) {
                     branch_name:response.data.data[0].branch_name,branch_id:response.data.data[0].branch_id})
                     setisLaoding(false)
             }
-            else
-                console.log("Status Code:", response.status)
 
         } catch (error) {
             console.log(error)
@@ -75,9 +71,6 @@ export default function index({ navigation }) {
             const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME, params)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
-            }
-            else {
-                console.log(response.status)
             }
         } catch (error) {
             console.log(error.message)

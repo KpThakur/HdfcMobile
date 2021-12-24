@@ -21,7 +21,6 @@ export default function index() {
   }, []);
   const userDetail = async () => {
     const data = JSON.parse(await AsyncStorage.getItem("userData"));
-    console.log(data)
     if (data) {
       setProfileData({
         ...profileData,
@@ -66,7 +65,6 @@ export default function index() {
       alert(JSON.stringify(error));
     }
   }
-  console.log("PD: ",profileData)
   return (
     <>
       {isLoading && <Loader />}

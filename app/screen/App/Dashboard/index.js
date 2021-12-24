@@ -197,7 +197,6 @@ const DashboardScreen = ({ navigation }) => {
     }
   }
   
-  //    console.log("audits:",auditList)
   const renderTodayAudit = ({ item, index }) => {
     return (
       <View style={{ backgroundColor: "#fff" }}>

@@ -78,9 +78,6 @@ const Question = ({ navigation, route }) => {
           mimeType: "multipart/form-data",
         }
       );
-      // console.log("RES: ", response);
-
-      // console.log("STATUS: ", response.status);
       if (response.data.status === 200) {
         handleNext();
       } else if (response.data.status !== 500) {
@@ -249,31 +246,24 @@ const Question = ({ navigation, route }) => {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
     };
-    console.log("onCapture",params);
     socket.emit("captureImageRequest", params, (data) => {
-      console.log("onCapture=>",data)
       if (data.status === 200) {
-        console.log("onCapture status 200")
         socket.on("image-sent", (data) => {
-          console.log("onCapture====>",data)
           if (data.socketEvent == "updateCaptureimage" + question?.audit_id+question?.data.question_id) {
-            console.log("WORking....")
             getIMG();
             setCamImg([...data.image_data]);
           }
           setisLoading(false)
-        });
-        // getIMG()
+        })
       }
-    });
-  };
+    })
+  }
   const getIMG = async () => {
     setisLoading(true);
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
     };
-    console.log("onCapture GET IMG",params);
     socket.emit("customergetImagedata", params, (data) => {
       if (data.socketEvent == "customergetImagedata" + question.audit_id) {
         getIMGSOCKET(data);
@@ -282,7 +272,6 @@ const Question = ({ navigation, route }) => {
     });
   };
   const getIMGSOCKET = async (data) => {
-    console.log("onCapture data of IMG: ",data)
     if (data.status === 200) {
       setBaseUrl(data.base_url);
       setCamImg(data.data);
@@ -312,7 +301,6 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
-        console.log("prevQuestion: ", response);
         if (response.data.data.check_data)
           setquestionList(response.data.data[0].check_data.split(","));
         if (response.data.answer.image_capture) {
@@ -380,7 +368,6 @@ const Question = ({ navigation, route }) => {
       audit_id: question.audit_id,
     };
     socket.emit("deleteCaptureImg", params, (data) => {
-      console.log("socket delete", data);
     });
   };
   const confirmDelete = (index) => {
@@ -431,8 +418,6 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
-  // console.log("ID",question.data);
-  console.log("CamIMG: ", camImg);
   return (
     <>
       {isLoading && <Loader />}

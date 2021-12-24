@@ -32,8 +32,6 @@ export default function index({ navigation }) {
                 setcityBranch(response.data.data)
                 
             }
-            else
-                console.log("Status Code:", response.status)
 
         } catch (error) {
             console.log(error)
@@ -64,8 +62,6 @@ export default function index({ navigation }) {
                 setbranchManagerName(response.data.data[0].branch_manager)
                 setbranchManagerId(response.data.data[0].branch_manager_id)
             }
-            else
-                console.log("Status Code:", response.status)
 
         } catch (error) {
             console.log(error)
@@ -75,14 +71,10 @@ export default function index({ navigation }) {
         try {
             setisLaoding(true)
             const params = { city_id }
-            console.log("PARAMS", params)
             const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME, params)
             setisLaoding(false)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
-            }
-            else {
-                console.log(response.status)
             }
         } catch (error) {
             console.log(error.message)
@@ -134,7 +126,6 @@ export default function index({ navigation }) {
             try {
                 setisLaoding(true)
                 const response = await apiCall('POST', apiEndPoints.CREATE_AUDIT, params)
-                // console.log(response.data,"SCHEDULE AUDIT")
                 setisLaoding(false)
                 if(response.status===200)
                 {

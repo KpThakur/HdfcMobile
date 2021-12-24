@@ -11,7 +11,6 @@ export default function index({ navigation, route }) {
     const [baseURL, setbaseURL] = useState()
     const [RM, setRM] = useState()
     const [islaoding, setislaoding] = useState(false)
-    console.log(params)
 
     const Details = async () => {
         const param = {
@@ -19,7 +18,6 @@ export default function index({ navigation, route }) {
             type: 2
         }
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, param)
-        console.log("RES:", response.data)
         setbaseURL(response.data.base_url)
         setBM(response.data.BM)
         setRM(response.data.RMM)
@@ -28,15 +26,12 @@ export default function index({ navigation, route }) {
         Details()
     }, [])
     const handleSubmitReport = async () => {
-        // console.log("PARMAS",param)
         setislaoding(true)
         const param = {
             audit_id: params.audit_id,
             audit_status: 3
         }
-        // console.log("PARMAS",param)
         const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, param)
-        console.log("RES REVIEQW", response)
         if (response.status === 200)
             navigation.navigate("AuditSuccess")
         setislaoding(false)
