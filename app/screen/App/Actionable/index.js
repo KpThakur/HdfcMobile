@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import Actionable from "./component/Actionable";
 import ImagePicker from "react-native-image-crop-picker";
@@ -10,7 +10,35 @@ export default function index({ navigation, route }) {
   const [next, setnext] = useState(false);
   const [camImg, setcamImg] = useState();
   const [remark, setremark] = useState();
-  const [isLoading, setisLoading] = useState(false)
+  const [ID, setID] = useState('')
+  const [isLoading, setisLoading] = useState(false);
+  useEffect(() => {
+    getActionable();
+  }, []);
+  const getActionable = async () => {
+    try {
+      setisLoading(true)
+      const params = {
+        question_id: data.RM.question_id,
+        audit_id: data.RM.audit_id,
+      };
+      const response = await apiCall(
+        "POST",
+        apiEndPoints.GET_ACTIONABLE,
+        params
+      );
+      if (response.status == 200) {
+        setID(response.data.RMM[0].actionable_id)
+        setremark(response.data.RMM[0].actionable_remark);
+        setcamImg(response.data.base_url+response.data.RMM[0].image[0])
+        setisLoading(false)
+      }
+      setisLoading(false)
+    } catch (error) {
+      setisLoading(false)
+      console.log(error);
+    }
+  };
   const OpenCamera = () => {
     ImagePicker.openCamera({
       width: 300,
@@ -22,11 +50,16 @@ export default function index({ navigation, route }) {
   };
   const HandleUpdate = async () => {
     try {
-      setisLoading(true)
+      setisLoading(true);
       let formdata = new FormData();
       formdata.append("remark", remark);
-      formdata.append("image", camImg);
+      formdata.append("image", {
+        uri: camImg,
+        type: camImg.mime === undefined ? "image/jpeg" : camImg.mime,
+        name: camImg.substring(camImg.lastIndexOf("/") + 1),
+      });
       formdata.append("type", 2);
+      formdata.append("actionable_id", ID);
       formdata.append("audit_id", data.RM.audit_id);
       formdata.append("question_id", data.RM.question_id);
       const response = await apiCall(
@@ -41,21 +74,20 @@ export default function index({ navigation, route }) {
           mimeType: "multipart/form-data",
         }
       );
-      console.log("res",response)
-      if(response.status===200)
-      {
-        setisLoading(false)
-        setnext(false)
-        navigation.goBack()
+      if (response.status === 200) {
+        setisLoading(false);
+        setnext(false);
+        navigation.goBack();
       }
     } catch (error) {
-      setisLoading(false)
+      setisLoading(false);
       console.log(error);
     }
   };
+  
   return (
     <>
-    {isLoading&&<Loader/>}
+      {isLoading && <Loader />}
       <Actionable
         next={next}
         data={data}
