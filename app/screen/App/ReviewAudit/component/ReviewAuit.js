@@ -29,7 +29,7 @@ export default function ReviewAuit(props) {
         else
             alert("Branch Manager have not taken action!")
     }
-    const HandleRMM = (actionable) => {
+    const HandleRMM = (RM) => {
         navigation.navigate("Actionable", { RM: RM, baseURL: baseURL,name:userData.name })
     }
     return (

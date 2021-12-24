@@ -24,5 +24,6 @@ export default {
   AGORA_TOKEN:'/api/v1/audit/getAgoraToken',
   PREV_QUESTION:'/api/v1/question/previousQuestion',
   GETAAUDITSHAREINFO:"/api/v1/audit/getaAuditshareinfo",
+  ACTIONABLE_SUBMIT:'api/v1/question/actionableSubmit',
 
 }

@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
         justifyContent:"center"
     },
     body:{
-        paddingTop:20
+        paddingTop:20,
     },
     txt:{
         color:"gray",
@@ -50,6 +50,5 @@ export const styles = StyleSheet.create({
         width:30,height:30,
         tintColor:"#fff",
         resizeMode:"contain"
-    }
-
+    },
 })

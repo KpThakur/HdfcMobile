@@ -18,6 +18,7 @@ export default function index({ navigation, route }) {
             type: 2
         }
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, param)
+        // console.log("res:",response.data);
         setbaseURL(response.data.base_url)
         setBM(response.data.BM)
         setRM(response.data.RMM)
