@@ -403,12 +403,29 @@ const Question = ({ navigation, route }) => {
       question_id: question?.data?.question_id,
       count_previous_question_id: question?.data?.count_previous_question_id,
       qty: text,
+      count_type:question?.data?.count_type
     };
+    if(question.data.count_actionable===1)
+    {
+      if(text>=0)
+      {
+        setshowActionable(false);
+      }
+      else{
+        setshowActionable(true);
+      }
+    }
     if (question?.data?.count_previous_question_id != null) {
       socket.emit("CountQuestionType", params, (data) => {
-        if (data.data.actioanble == 1) {
+        if(data.data.set_range)
+        {
+          setReviewValue(data.data.set_range)
+        }
+        else if (data.data.actioanble == 1) {
+          setReviewValue(0)
           setshowActionable(true);
         } else {
+          setReviewValue(0)
           setshowActionable(false);
         }
       });
@@ -418,6 +435,7 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
+  console.log("QUES",question.data)
   return (
     <>
       {isLoading && <Loader />}
