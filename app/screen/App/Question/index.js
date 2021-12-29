@@ -91,6 +91,7 @@ const Question = ({ navigation, route }) => {
   const handleSubmit = async () => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
+        console.log("camImg.length>0",camImg.length)
         setisLoading(true);
         let formdata = new FormData();
         formdata.append("audit_id", question?.audit_id);
@@ -104,11 +105,9 @@ const Question = ({ navigation, route }) => {
         formdata.append("yes_no", yesNo);
         formdata.append("quality", quality);
         formdata.append("check_answer", checkedAns);
-        if (
-          question?.data.question_type === "3" ||
-          question?.data.image_capture === "1"
-        ) {
-          if (camImg) {
+        if (question?.data.image_capture === "1") {
+          console.log("camImg.length>0",camImg.length)
+          if (camImg.length>0) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
                 return formdata.append("question_image", {
@@ -119,17 +118,24 @@ const Question = ({ navigation, route }) => {
               });
             } else {
             }
+            setisLoading(false);
             SubmitAPI(formdata);
           } else {
             setisLoading(false);
-            !showCapIMG
-              ? SubmitAPI(formdata)
-              : alert("Please Capture The Image");
+            if (question.data.action_on_no) {
+              console.log("===>>>",!showCapIMG)
+              !showCapIMG
+                ? SubmitAPI(formdata)
+                : alert("Please Capture The Image");
+            }else{
+            alert("Please Capture The Image");}
           }
         } else {
+          setisLoading(false);
           SubmitAPI(formdata);
         }
       } else {
+        setisLoading(false);
         alert("Poor Connection");
       }
     });
@@ -185,13 +191,13 @@ const Question = ({ navigation, route }) => {
       if (data.answer.length == 0) {
         setrmmactionable(0);
         setbmActionable(0);
-        setCamImg();
+        setCamImg([]);
         setyesNo();
         setquality(0);
         setReviewValue(0);
         setcheckedAns("");
       } else {
-        setCamImg();
+        setCamImg([]);
         if (data.answer.image_capture !== "") {
           const imgs = data.answer.image_capture.split(",");
           const finalData = [];
@@ -241,7 +247,7 @@ const Question = ({ navigation, route }) => {
     socket.emit("remarkview", params);
   };
   const onCapture = async () => {
-    setisLoading(true)
+    setisLoading(true);
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
@@ -249,15 +255,20 @@ const Question = ({ navigation, route }) => {
     socket.emit("captureImageRequest", params, (data) => {
       if (data.status === 200) {
         socket.on("image-sent", (data) => {
-          if (data.socketEvent == "updateCaptureimage" + question?.audit_id+question?.data.question_id) {
+          if (
+            data.socketEvent ==
+            "updateCaptureimage" +
+              question?.audit_id +
+              question?.data.question_id
+          ) {
             getIMG();
             setCamImg([...data.image_data]);
           }
-          setisLoading(false)
-        })
+          setisLoading(false);
+        });
       }
-    })
-  }
+    });
+  };
   const getIMG = async () => {
     setisLoading(true);
     const params = {
@@ -367,8 +378,7 @@ const Question = ({ navigation, route }) => {
       question_id: question.data.question_id,
       audit_id: question.audit_id,
     };
-    socket.emit("deleteCaptureImg", params, (data) => {
-    });
+    socket.emit("deleteCaptureImg", params, (data) => {});
   };
   const confirmDelete = (index) => {
     Alert.alert("Delete Image", "Confirm to delete image.", [
@@ -387,7 +397,7 @@ const Question = ({ navigation, route }) => {
     if (!state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(true);
-        setCamImg();
+        setCamImg([]);
       }
     }
     if (state) {
@@ -403,29 +413,24 @@ const Question = ({ navigation, route }) => {
       question_id: question?.data?.question_id,
       count_previous_question_id: question?.data?.count_previous_question_id,
       qty: text,
-      count_type:question?.data?.count_type
+      count_type: question?.data?.count_type,
     };
-    if(question.data.count_actionable===1)
-    {
-      if(text>=0)
-      {
+    if (question.data.count_actionable === 1) {
+      if (text >= 0) {
         setshowActionable(false);
-      }
-      else{
+      } else {
         setshowActionable(true);
       }
     }
     if (question?.data?.count_previous_question_id != null) {
       socket.emit("CountQuestionType", params, (data) => {
-        if(data.data.set_range)
-        {
-          setReviewValue(data.data.set_range)
-        }
-        else if (data.data.actioanble == 1) {
-          setReviewValue(0)
+        if (data.data.set_range) {
+          setReviewValue(data.data.set_range);
+        } else if (data.data.actioanble == 1) {
+          setReviewValue(0);
           setshowActionable(true);
         } else {
-          setReviewValue(0)
+          setReviewValue(0);
           setshowActionable(false);
         }
       });
@@ -435,7 +440,7 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
-  console.log("QUES",question.data)
+  console.log("CamImG", showCapIMG);
   return (
     <>
       {isLoading && <Loader />}
