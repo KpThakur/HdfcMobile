@@ -67,7 +67,7 @@ const Question = (props) => {
     question,
     managerJoin,
     joined,
-    setquestion,
+    HandleActionable,
     remark,
     setremark,
     rating,
@@ -88,6 +88,7 @@ const Question = (props) => {
     getIMG,
     onCapture,
   } = props;
+  
   const handleRating = async (item) => {
     await setdefaultRating(item);
     await setrating(item);
@@ -103,33 +104,7 @@ const Question = (props) => {
   const handleDropDown = () => {
     setdropDown(!dropDown);
   };
-  const HandleActionable = async (type) => {
-    if (type === 1) {
-      await setbmActionable(1);
-      await setrmmactionable(0);
-      await props.setatmActionable(0);
-      await props.setadminActionable(0);
-      await setdropDown(!dropDown);
-    } else if (type === 2) {
-      await setrmmactionable(1);
-      await setbmActionable(0);
-      await props.setatmActionable(0);
-      await props.setadminActionable(0);
-      await setdropDown(!dropDown);
-    } else if (type === 3) {
-      await setbmActionable(0);
-      await setrmmactionable(0);
-      await props.setatmActionable(1);
-      await props.setadminActionable(0);
-      await setdropDown(!dropDown);
-    } else {
-      await setbmActionable(0);
-      await setrmmactionable(0);
-      await props.setatmActionable(0);
-      await props.setadminActionable(1);
-      await setdropDown(!dropDown);
-    }
-  };
+  
   const HandleAns = (index, question) => {
     setshowIndex(index);
     setcheckedAns(question);
@@ -167,7 +142,6 @@ const Question = (props) => {
       setssDropDown(false);
     });
   };
-  // console.log(question);
   const renderImage = (item, index) => {
     return question.audit_type === 0 ? (
       <TouchableOpacity
@@ -409,7 +383,6 @@ const Question = (props) => {
                 <>
                   {props?.camImg && !props.managerJoin ? (
                     <View style={{ alignItems: "center", marginTop: 10 }}>
-                      {console.log("WOEJ:",props.camImg.length)}
                       {props.camImg.length > 0 ? (
                         <Image
                           source={{

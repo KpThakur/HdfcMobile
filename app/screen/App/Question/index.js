@@ -52,6 +52,12 @@ const Question = ({ navigation, route }) => {
     
   }, [question]);
   useEffect(() => {
+    if(question.data.bm_actionable_assignee==1 && question.data.rmm_actionable_assignee==1)
+    {
+      HandleActionable(1)
+    }
+  }, [question])
+  useEffect(() => {
     socket.on("image-sent", (data) => {
       if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
         getIMG();
@@ -100,7 +106,6 @@ const Question = ({ navigation, route }) => {
   const handleSubmit = async () => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
-        console.log("camImg.length>0",camImg.length)
         setisLoading(true);
         let formdata = new FormData();
         formdata.append("audit_id", question?.audit_id);
@@ -115,7 +120,6 @@ const Question = ({ navigation, route }) => {
         formdata.append("quality", quality);
         formdata.append("check_answer", checkedAns);
         if (question?.data.image_capture === "1") {
-          console.log("camImg.length>0",camImg.length)
           if (camImg.length>0) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
@@ -132,7 +136,6 @@ const Question = ({ navigation, route }) => {
           } else {
             setisLoading(false);
             if (question.data.action_on_no) {
-              console.log("===>>>",!showCapIMG)
               !showCapIMG
                 ? SubmitAPI(formdata)
                 : alert("Please Capture The Image");
@@ -450,10 +453,39 @@ const Question = ({ navigation, route }) => {
     }
   };
   const showSetRange = (state) => {
-    if (state) setReviewValue(question.data.set_range_1);
-    else setReviewValue(question.data.set_range_2);
+    if (state) {setReviewValue(question.data.set_range_1);
+      emitRating(question.data.set_range_1);}
+    else {setReviewValue(question.data.set_range_2);
+      emitRating(question.data.set_range_2);}
   };
-  console.log("QES", showCapIMG);
+  const HandleActionable = async (type) => {
+    if (type === 1) {
+      setbmActionable(1);
+       setrmmactionable(0);
+       props.setatmActionable(0);
+       props.setadminActionable(0);
+       setdropDown(!dropDown);
+    } else if (type === 2) {
+      setrmmactionable(1);
+      setbmActionable(0);
+      props.setatmActionable(0);
+      props.setadminActionable(0);
+      setdropDown(!dropDown);
+    } else if (type === 3) {
+      setbmActionable(0);
+      setrmmactionable(0);
+      props.setatmActionable(1);
+      props.setadminActionable(0);
+      setdropDown(!dropDown);
+    } else {
+       setbmActionable(0);
+       setrmmactionable(0);
+       props.setatmActionable(0);
+       props.setadminActionable(1);
+       setdropDown(!dropDown);
+    }
+  };
+  console.log("QES:",question.data)
   return (
     <>
       {isLoading && <Loader />}
@@ -461,6 +493,7 @@ const Question = ({ navigation, route }) => {
       <QuestionView
         baseUrl={baseUrl}
         question={question}
+        HandleActionable={HandleActionable}
         setquestion={setquestion}
         remark={remark}
         setremark={setremark}
