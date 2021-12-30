@@ -416,10 +416,10 @@ const Question = ({ navigation, route }) => {
       count_type: question?.data?.count_type,
     };
     if (question.data.count_actionable === 1) {
-      if (text >= 0) {
-        setshowActionable(false);
-      } else {
+      if (text >=0 && text<=1) {
         setshowActionable(true);
+      } else {
+        setshowActionable(false);
       }
     }
     if (question?.data?.count_previous_question_id != null) {
@@ -440,7 +440,7 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
-  console.log("CamImG", showCapIMG);
+  console.log("QES", question.data);
   return (
     <>
       {isLoading && <Loader />}
