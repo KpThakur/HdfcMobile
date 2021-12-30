@@ -238,9 +238,9 @@ export default function ScheduleNewAudit(props) {
                         }}
                       >
                         {timeData &&
-                          timeData.map((item) => {
+                          timeData.map((item,index) => {
                             return (
-                              <TouchableOpacity key={item}
+                              <TouchableOpacity key={index}
                                 style={[styles.drop_down_item, { zIndex: 1 }]}
                                 onPress={() => {
                                   if (date ==moment(new Date()).format("DD-MM-YYYY")) {

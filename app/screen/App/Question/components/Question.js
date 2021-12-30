@@ -409,7 +409,8 @@ const Question = (props) => {
                 <>
                   {props?.camImg && !props.managerJoin ? (
                     <View style={{ alignItems: "center", marginTop: 10 }}>
-                      {props?.camImg && props.camImg.length > 0 ? (
+                      {console.log("WOEJ:",props.camImg.length)}
+                      {props.camImg.length > 0 ? (
                         <Image
                           source={{
                             uri: props.camImg[props.camImg.length - 1].path,
@@ -426,7 +427,7 @@ const Question = (props) => {
                   ) : null}
 
                   <View style={styles.brnchmannme}>
-                    {props.showCapIMG && (
+                    {props.showCapIMG ? (
                       <TouchableOpacity
                         onPress={() => {
                           question?.audit_type == 0 ? showModal() : onCapture();
@@ -450,7 +451,7 @@ const Question = (props) => {
                           Capture The image
                         </Text>
                       </TouchableOpacity>
-                    )}
+                    ):null}
                     {ssDropDown && (
                       <Modal transparent={true}>
                         <View

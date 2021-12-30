@@ -41,7 +41,16 @@ const Question = ({ navigation, route }) => {
     //setshowActionable(true)
     //setshowActionable(question?.data.count_actionable===1?true:false)
   }, []);
-  useEffect(() => {}, [question]);
+  useEffect(() => {
+    if(question.data.yes_no=="NO" && question.data.action_on_no == 2)
+    {
+      setshowCapIMG(false);
+    }
+    else{
+      setshowCapIMG(true)
+    }
+    
+  }, [question]);
   useEffect(() => {
     socket.on("image-sent", (data) => {
       if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
@@ -297,6 +306,7 @@ const Question = ({ navigation, route }) => {
   };
   const prevQuestion = async () => {
     try {
+      setCamImg([])
       setisLoading(true);
       const params = {
         question_id: question?.data?.question_id,
@@ -397,12 +407,14 @@ const Question = ({ navigation, route }) => {
     if (!state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(true);
-        setCamImg([]);
+        // if(question.data.yes_no=="YES"){
+        //   setCamImg([]);}
       }
     }
     if (state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(false);
+        setCamImg([])
       }
     }
   };
@@ -415,6 +427,7 @@ const Question = ({ navigation, route }) => {
       qty: text,
       count_type: question?.data?.count_type,
     };
+    socket.emit("qtyView", params);
     if (question.data.count_actionable === 1) {
       if (text >=0 && text<=1) {
         setshowActionable(true);
@@ -440,7 +453,7 @@ const Question = ({ navigation, route }) => {
     if (state) setReviewValue(question.data.set_range_1);
     else setReviewValue(question.data.set_range_2);
   };
-  console.log("QES", question.data);
+  console.log("QES", showCapIMG);
   return (
     <>
       {isLoading && <Loader />}
