@@ -5,8 +5,9 @@ import { apiCall } from '../../../utils/httpClient'
 import apiEndPoints from '../../../utils/apiEndPoints'
 import Loader from '../.../../../../utils/Loader'
 import { BackHandler } from 'react-native'
-import { useFocusEffect, useNavigation } from '@react-navigation/core'
-export default function index({navigation}) {
+import {  useNavigation } from '@react-navigation/core'
+export default function index(props) {
+    const navigation =useNavigation()
     const [question, setquestion] = useContext(QuestionContext)
     const [isLoading, setisLoading] = useState(false)
     const [totalScore, settotalScore] = useState()
@@ -43,6 +44,7 @@ export default function index({navigation}) {
         
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, params)
         setisLoading(false)
+        // props.setstartAudit(4)
         navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
     }
     return (

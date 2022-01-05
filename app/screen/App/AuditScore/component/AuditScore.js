@@ -7,8 +7,8 @@ import moment from 'moment';
 export default function AuditScore(props) {
     const { handleViewActionable, totalScore } = props
     return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        // <View style={styles.container}>
+        //     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.heroic_txt}>Total Branch</Text>
@@ -30,8 +30,8 @@ export default function AuditScore(props) {
                     onPress={() => handleViewActionable()}
                     />
                 </View>
-            </ScrollView>
-        </View>
+        //     </ScrollView>
+        // </View>
     )
 }
 const displayScoreAudit = ({ item }) => {

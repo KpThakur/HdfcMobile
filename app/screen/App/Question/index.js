@@ -17,9 +17,9 @@ const Question = ({ navigation, route }) => {
   const [bmActionable, setbmActionable] = useState(0);
   const [atmActionable, setatmActionable] = useState(0);
   const [adminActionable, setadminActionable] = useState(0);
-  const [questionList, setquestionList] = useState();
+  const [questionList, setquestionList] = useState(null);
   const [yesNo, setyesNo] = useState();
-  const [quality, setquality] = useState(0);
+  const [quality, setquality] = useState();
   const [checkedAns, setcheckedAns] = useState("");
   const [camImg, setCamImg] = useState([]);
   const [sliderValue, setSliderValue] = useState("");
@@ -33,30 +33,39 @@ const Question = ({ navigation, route }) => {
   const [userData, setuserData] = useContext(UserContext);
   const [showActionable, setshowActionable] = useState(true);
   const [showCapIMG, setshowCapIMG] = useState(true);
+  const [dropDown, setdropDown] = useState(false);
+  const [selected, setselected] = useState([])
+  const [disableBtn, setdisableBtn] = useState()
   useEffect(() => {
-    setstartAudit(question?.audit_type == 0 ? true : false);
+    setstartAudit(question?.audit_type == 0 ? 1 : 2);
     unsubscribe;
-    setremark(question?.data.actionsble_remark);
-    emitRemark(question?.data.actionsble_remark);
-    //setshowActionable(true)
-    //setshowActionable(question?.data.count_actionable===1?true:false)
+    setremark(question?.data?.actionsble_remark);
+    emitRemark(question?.data?.actionsble_remark);
+    if (question?.data?.check_box_value){
+        // setquestionList(question.data.check_box_value.split(","));
+        var item=question?.data?.check_box_value.split(",")
+        var copy=[]
+        item.map(element => {
+          copy.push({name:element})
+        });
+        setquestionList(copy)
+      }
   }, []);
   useEffect(() => {
-    if(question.data.yes_no=="NO" && question.data.action_on_no == 2)
-    {
+    if (question?.data?.yes_no == "NO" && question?.data?.action_on_no == 2) {
       setshowCapIMG(false);
+    } else {
+      setshowCapIMG(true);
     }
-    else{
-      setshowCapIMG(true)
-    }
-    
   }, [question]);
   useEffect(() => {
-    if(question.data.bm_actionable_assignee==1 && question.data.rmm_actionable_assignee==1)
-    {
-      HandleActionable(1)
+    if (
+      question?.data?.bm_actionable_assignee == 1 &&
+      question?.data?.rmm_actionable_assignee == 1
+    ) {
+      HandleActionable(1);
     }
-  }, [question])
+  }, [question]);
   useEffect(() => {
     socket.on("image-sent", (data) => {
       if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
@@ -65,13 +74,21 @@ const Question = ({ navigation, route }) => {
     });
   }, []);
   useEffect(() => {
-    if (startAudit === true) {
+    if (startAudit === 1) {
       const params = {
         question_id: question?.data?.question_id,
         audit_id: question?.audit_id,
       };
-      socket.emit("startAudit", params, async (data) => {});
+        socket.emit("startAudit", params, async (data) => {});
     }
+    socket.on('bmOnlineStatus', (data) => {
+      if(data.socketEvent==`pauseOnlineAudit${question?.audit_id}`)
+      {
+        if(data.data.bm_online==0)
+          alert("User is offline")
+        setdisableBtn(data.data.bm_online)
+      }
+  })
   }, [startAudit]);
 
   const unsubscribe = NetInfo.fetch().then((state) => {
@@ -107,6 +124,13 @@ const Question = ({ navigation, route }) => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
         setisLoading(true);
+        var checked_val=""
+        questionList&&questionList.map(list=>{
+          if(list.isSelected)
+          {
+            checked_val+=list.name+","
+          }
+        })
         let formdata = new FormData();
         formdata.append("audit_id", question?.audit_id);
         formdata.append("question_id", question?.data.question_id);
@@ -118,9 +142,10 @@ const Question = ({ navigation, route }) => {
         formdata.append("atm_cordinator_assignee", atmActionable);
         formdata.append("yes_no", yesNo);
         formdata.append("quality", quality);
+        formdata.append("check_box_data",checked_val);
         formdata.append("check_answer", checkedAns);
         if (question?.data.image_capture === "1") {
-          if (camImg.length>0) {
+          if (camImg.length > 0) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
                 return formdata.append("question_image", {
@@ -139,8 +164,9 @@ const Question = ({ navigation, route }) => {
               !showCapIMG
                 ? SubmitAPI(formdata)
                 : alert("Please Capture The Image");
-            }else{
-            alert("Please Capture The Image");}
+            } else {
+              alert("Please Capture The Image");
+            }
           }
         } else {
           setisLoading(false);
@@ -174,15 +200,25 @@ const Question = ({ navigation, route }) => {
           apiEndPoints.CANCEL_AUDIT,
           params
         );
-        if (response.status === 200) navigation.navigate("AuditScore");
+        if (response.status === 200){ 
+          // navigation.navigate("AuditScore")
+          setstartAudit(3)
+        }
         else navigator.navigate("DashboardScreen");
       }
     });
   };
   const GetSocketData = async (data, params) => {
     if (data.status === 200) {
-      if (data.data.check_data)
-        setquestionList(data.data.check_data.split(","));
+      if (data.data.check_box_value){
+        // setquestionList(data.data.check_box_value.split(","));
+        var item=data.data.check_box_value.split(",")
+        var copy=[]
+        item.map(element => {
+          copy.push({name:element})
+        });
+        setquestionList(copy)
+      }
       // setSliderValue(response.data.data)
       setshowCapIMG(true);
       setremark(data.data.actionsble_remark);
@@ -239,7 +275,10 @@ const Question = ({ navigation, route }) => {
       };
       await socket.emit("completeAudit", params);
       const response = await apiCall("POST", apiEndPoints.CANCEL_AUDIT, params);
-      if (response.status === 200) navigation.navigate("AuditScore");
+      if (response.status === 200) {
+        // navigation.navigate("AuditScore");
+        setstartAudit(3)
+      }
       else navigator.navigate("DashboardScreen");
     }
   };
@@ -309,7 +348,7 @@ const Question = ({ navigation, route }) => {
   };
   const prevQuestion = async () => {
     try {
-      setCamImg([])
+      setCamImg([]);
       setisLoading(true);
       const params = {
         question_id: question?.data?.question_id,
@@ -325,8 +364,15 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
-        if (response.data.data.check_data)
-          setquestionList(response.data.data[0].check_data.split(","));
+        if (response.data.data.check_box_value){
+          setquestionList(response.data.data[0].check_box_value.split(","));
+          var item=response.data.data[0].check_box_value.split(",")
+        var copy=[]
+        item.map(element => {
+          copy.push({name:element})
+        });
+        setquestionList(copy)
+        }
         if (response.data.answer.image_capture) {
           const imgs = response.data.answer.image_capture.split(",");
           const finalData = [];
@@ -345,6 +391,7 @@ const Question = ({ navigation, route }) => {
           audit_type: params.audit_type,
           branch_manager: params.branch_manager,
         });
+        console.log("RES:",response.data.answer.remark)
         setremark(response.data.answer.remark);
         setrmmactionable(response.data.answer.rmm_actionable_assignee);
         setbmActionable(response.data.answer.bm_actionable_assignee);
@@ -404,20 +451,18 @@ const Question = ({ navigation, route }) => {
     ]);
   };
   const handleShowActionable = (state) => {
-    if (question?.data.action_taken_on_yes === 1) {
+    if (question?.data.action_on_yes === 1) {
       setshowActionable(state);
     }
     if (!state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(true);
-        // if(question.data.yes_no=="YES"){
-        //   setCamImg([]);}
       }
     }
     if (state) {
       if (question?.data.action_on_no == 2) {
         setshowCapIMG(false);
-        setCamImg([])
+        setCamImg([]);
       }
     }
   };
@@ -432,19 +477,36 @@ const Question = ({ navigation, route }) => {
     };
     socket.emit("qtyView", params);
     if (question.data.count_actionable === 1) {
-      if (text >=0 && text<=1) {
+      if (text >= 0 && text <= 1) {
         setshowActionable(true);
       } else {
         setshowActionable(false);
       }
     }
+    socket.emit("CountQuestionType", params, (data) => {
+      if (text<2) {
+        setrmmactionable(1);
+        setremark(data.data.rm_remark);
+        setbmActionable(0);
+        setatmActionable(0);
+        setadminActionable(0);
+      }else{
+        setrmmactionable(0);
+        setremark("");
+        setbmActionable(0);
+        setatmActionable(0);
+        setadminActionable(0);
+      }
+    });
     if (question?.data?.count_previous_question_id != null) {
       socket.emit("CountQuestionType", params, (data) => {
+        console.log("CountQuestionType:", data);
         if (data.data.set_range) {
           setReviewValue(data.data.set_range);
         } else if (data.data.actioanble == 1) {
           setReviewValue(0);
           setshowActionable(true);
+          setremark(data.data.remark)
         } else {
           setReviewValue(0);
           setshowActionable(false);
@@ -453,39 +515,49 @@ const Question = ({ navigation, route }) => {
     }
   };
   const showSetRange = (state) => {
-    if (state) {setReviewValue(question.data.set_range_1);
-      emitRating(question.data.set_range_1);}
-    else {setReviewValue(question.data.set_range_2);
-      emitRating(question.data.set_range_2);}
+    if (state) {
+      setReviewValue(question.data.set_range_1);
+      emitRating(question.data.set_range_1);
+    } else {
+      setReviewValue(question.data.set_range_2);
+      emitRating(question.data.set_range_2);
+    }
   };
   const HandleActionable = async (type) => {
     if (type === 1) {
       setbmActionable(1);
-       setrmmactionable(0);
-       props.setatmActionable(0);
-       props.setadminActionable(0);
-       setdropDown(!dropDown);
+      setremark(question.data.bm_remark);
+      setrmmactionable(0);
+      setatmActionable(0);
+      setadminActionable(0);
+      setdropDown(!dropDown);
     } else if (type === 2) {
       setrmmactionable(1);
+      setremark(question.data.rm_remark);
       setbmActionable(0);
-      props.setatmActionable(0);
-      props.setadminActionable(0);
+      setatmActionable(0);
+      setadminActionable(0);
       setdropDown(!dropDown);
     } else if (type === 3) {
       setbmActionable(0);
       setrmmactionable(0);
-      props.setatmActionable(1);
-      props.setadminActionable(0);
+      setatmActionable(1);
+      setadminActionable(0);
       setdropDown(!dropDown);
     } else {
-       setbmActionable(0);
-       setrmmactionable(0);
-       props.setatmActionable(0);
-       props.setadminActionable(1);
-       setdropDown(!dropDown);
+      setbmActionable(0);
+      setrmmactionable(0);
+      setatmActionable(0);
+      setadminActionable(1);
+      setdropDown(!dropDown);
     }
   };
-  console.log("QES:",question.data)
+  const handleCheckList=async(index)=>{
+const itemsArray = await [...questionList]
+    itemsArray[index].isSelected = await !itemsArray[index].isSelected
+    setquestionList(itemsArray)
+  }
+  console.log("QES:", question.data);
   return (
     <>
       {isLoading && <Loader />}
@@ -501,9 +573,9 @@ const Question = ({ navigation, route }) => {
         setrating={setrating}
         rmmactionable={rmmactionable}
         setrmmactionable={setrmmactionable}
+        questionList={questionList}
         bmActionable={bmActionable}
         setbmActionable={setbmActionable}
-        questionList={questionList}
         yesNo={yesNo}
         setyesNo={setyesNo}
         quality={quality}
@@ -545,6 +617,12 @@ const Question = ({ navigation, route }) => {
         handleQuality={handleQuality}
         showCapIMG={showCapIMG}
         showSetRange={showSetRange}
+        dropDown={dropDown}
+        setdropDown={setdropDown}
+        selected={selected}
+        setselected={setselected}
+        handleCheckList={handleCheckList}
+        disableBtn={disableBtn}
       />
     </>
   );

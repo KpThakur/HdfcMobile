@@ -7,6 +7,7 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../../../utils/Loader";
 export default function index({ navigation, route }) {
   const data = route.params;
+  
   const [next, setnext] = useState(false);
   const [camImg, setcamImg] = useState();
   const [remark, setremark] = useState();

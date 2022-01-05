@@ -14,6 +14,9 @@ import {
 import Header from "../../../../component/Header";
 import Button from "../../../../component/Button";
 import { styles } from "./styles";
+import AuditScoreScreen from "../../AuditScore";
+import ReviewAuditScreen from "../../ReviewAudit";
+import ActionableScreen from "../../Actionable";
 import ImagePicker from "react-native-image-crop-picker";
 import {
   STAR,
@@ -51,7 +54,6 @@ const Question = (props) => {
   const [onInfo, setonInfo] = useState(false);
   const [defaultRating, setdefaultRating] = useState(0);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
-  const [dropDown, setdropDown] = useState(false);
   const [showIndex, setshowIndex] = useState();
   const [ssDropDown, setssDropDown] = useState(false);
   const [userData, setUserData] = useContext(UserContext);
@@ -70,7 +72,8 @@ const Question = (props) => {
     HandleActionable,
     remark,
     setremark,
-    rating,
+    dropDown,
+    setdropDown,
     setrating,
     rmmactionable,
     setrmmactionable,
@@ -88,7 +91,7 @@ const Question = (props) => {
     getIMG,
     onCapture,
   } = props;
-  
+
   const handleRating = async (item) => {
     await setdefaultRating(item);
     await setrating(item);
@@ -104,7 +107,7 @@ const Question = (props) => {
   const handleDropDown = () => {
     setdropDown(!dropDown);
   };
-  
+
   const HandleAns = (index, question) => {
     setshowIndex(index);
     setcheckedAns(question);
@@ -220,13 +223,17 @@ const Question = (props) => {
   const showModal = () => {
     setssDropDown(!ssDropDown);
   };
+  console.log("StartAudit;", startAudit);
   return (
     <View style={styles.container}>
       {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
       {/* <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}> */}
-      {!startAudit ? <Header leftImg={""} headerText={"Start Audit"} /> : null}
+      {startAudit === 2 ? (
+        <Header leftImg={""} headerText={"Start Audit"} />
+      )
+      : null}
       <View style={styles.mainvwe}>
-        {startAudit ? (
+        {startAudit === 1 ? (
           <>
             <TouchableOpacity
               style={{
@@ -352,27 +359,10 @@ const Question = (props) => {
                 setmanagerJoin={() => {}}
                 handleJoin={(data) => props.handleJoin(data)}
               />
-              /* props.managerJoin ?
-                                     <>
-                                         <JoinChannelVideo 
-                                             handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                                             token={props.token}
-                                             channelId={props.channelId}
-                                             setmanagerJoin={()=>{}}
-                                             handleJoin={(data) => props.handleJoin(data)}
-                                         />
-                                     </>
-                                     :
-                                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                                         <TouchableOpacity style={styles.bluestreaming}>
-                                             <Text style={styles.textstraming}>No Live Streaming</Text>
-                                         </TouchableOpacity>
-                                     </View>
-                                     */
             }
           </View>
         )}
-        {startAudit ? (
+        {startAudit === 1 ? (
           <ScrollView
             keyboardShouldPersistTaps={"always"}
             showsVerticalScrollIndicator={false}
@@ -424,7 +414,7 @@ const Question = (props) => {
                           Capture The image
                         </Text>
                       </TouchableOpacity>
-                    ):null}
+                    ) : null}
                     {ssDropDown && (
                       <Modal transparent={true}>
                         <View
@@ -531,6 +521,35 @@ const Question = (props) => {
                   </View>
                 </>
               )}
+              {question?.data?.check_box_type == 1 && (
+                <>
+                  <Text style={styles.branname}>
+                    Select Appropriate Creatives from List
+                  </Text>
+                  <View style={{ flexDirection: "column" }}>
+                    {props.questionList.map((list, index) => (
+                      <TouchableOpacity
+                        style={{ flexDirection: "row", marginBottom: 5 }}
+                        key={index}
+                        onPress={() => props.handleCheckList(index, list.name)}
+                      >
+                        <Image
+                          source={
+                            list.isSelected ? CHECKED_FILLED : UNCHECKED_ICON
+                          }
+                          style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: 10,
+                            resizeMode: "contain",
+                          }}
+                        />
+                        <Text>{list.name}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
+              )}
               {question?.data?.question_type === "1" && (
                 <View style={styles.brnchmannme}>
                   <Button
@@ -612,7 +631,7 @@ const Question = (props) => {
               {question?.data?.question_type === "2" && (
                 <View style={styles.brnchmannme}>
                   <TextInput
-                    placeholder="Enter the quantity (Default value is 0)"
+                    placeholder="Enter the quantity"
                     value={quality}
                     onChangeText={(text) => {
                       props.handleQuality(text);
@@ -812,7 +831,7 @@ const Question = (props) => {
               ) : null}
               {question?.data?.remark === "1" && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={styles.branname}>Remarks</Text>
+                  <Text style={styles.branname}>Remark on Actionable</Text>
                   <TextInput
                     placeholder="Remarks"
                     multiline
@@ -839,22 +858,32 @@ const Question = (props) => {
                   }}
                 >
                   <Button
+                    disabled={props.disableBtn == 0 ? true : false}
                     buttonText={"Previous"}
+                    style={props.disableBtn == 0 && { backgroundColor: "gray" }}
                     onPress={() => props.prevQuestion()}
                   />
-                  <Button buttonText={"Next"} onPress={() => handleSubmit()} />
+                  <Button
+                    disabled={props.disableBtn == 0 ? true : false}
+                    buttonText={"Next"}
+                    style={props.disableBtn == 0 && { backgroundColor: "gray" }}
+                    onPress={() => handleSubmit()}
+                  />
                 </View>
               </View>
             </View>
           </ScrollView>
-        ) : (
+        ) : startAudit === 2 ? (
           <Notify
             managerJoin={managerJoin}
             joined={joined}
             setstartAudit={setstartAudit}
             bmJoined={props.bmJoined}
           />
-        )}
+        ) : startAudit === 3 ? (
+          <AuditScoreScreen setstartAudit={setstartAudit} />
+        ) 
+        : null}
       </View>
       {/* </ScrollView> */}
     </View>

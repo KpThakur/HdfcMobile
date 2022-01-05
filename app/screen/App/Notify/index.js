@@ -40,8 +40,8 @@ const Notify = ({managerJoin,joined,setstartAudit,bmJoined}) =>{
         setisLoading(false)
     };
     const handleStartCall=()=>{
-        setstartAudit(true)
-        navigation.navigate("QuestionScreen")
+        setstartAudit(1)
+        // navigation.navigate("QuestionScreen")
     }
     return (
         <>

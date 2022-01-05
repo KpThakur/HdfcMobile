@@ -3,15 +3,18 @@ import ReviewAuit from './component/ReviewAuit'
 import { apiCall } from '../../../utils/httpClient'
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from '../../../utils/Loader';
-export default function index({ navigation, route }) {
-    const params = route.params
+import {  useNavigation } from '@react-navigation/core'
+import { UserContext } from '../../../utils/UserContext';
+export default function index({route }) {
+    const params=route.params
+    const navigation =useNavigation()
     const [bmDropDown, setbmDropDown] = useState(false)
     const [rmDropDown, setrmDropDown] = useState(false)
     const [BM, setBM] = useState()
     const [baseURL, setbaseURL] = useState()
     const [RM, setRM] = useState()
     const [islaoding, setislaoding] = useState(false)
-
+    const [userData,setuserData]=useContext(UserContext)
     const Details = async () => {
         const param = {
             audit_id: params.audit_id,
@@ -37,11 +40,25 @@ export default function index({ navigation, route }) {
             navigation.navigate("AuditSuccess")
         setislaoding(false)
     }
+    const HandleBM = (actionable) => {
+        if(actionable.length>0){
+            props.setstartAudit(5)
+            navigation.navigate("Actionable", { actionable: actionable, baseURL: baseURL,name:params.branch_manager })
+        }
+        else{
+            alert("Branch Manager have not taken action!")
+        }
+    }
+    const HandleRMM = (RM) => {
+        navigation.navigate("Actionable", { RM: RM, baseURL: baseURL,name:userData.name })
+    }
     return (
         <>
             {islaoding && <Loader />}
             <ReviewAuit handleSubmitReport={handleSubmitReport}
                 BM={BM} RM={RM}
+                HandleBM={HandleBM}
+                HandleRMM={HandleRMM}
                 bmDropDown={bmDropDown} setbmDropDown={setbmDropDown}
                 baseURL={baseURL}
                 params={params}

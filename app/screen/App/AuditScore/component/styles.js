@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     main: {
         flex: 4,
         elevation: 2,
-        margin: 20,
+        // margin: 10,
         borderRadius: 6,
         backgroundColor: WHITE_BG_COLOR,
         justifyContent: "space-evenly",

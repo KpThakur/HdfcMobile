@@ -12,17 +12,12 @@ export const MAIN_BG_GREY_COLOR="#f5f5f5"
 export const WHITE_BG_COLOR="#ffffff"
 export const GREEN_COLOR="#11ad2b"
 export const RED_COLOR="#e91818"
-
 export const GREY_TEXT_COLOR="#ececec"
-
 export const PRIMARY_TEXT_COLOR="#ffffff"
 export const PRIMARY_BTN_COLOR="#1b7dec"
 export const BORDER_COLOR="#d1e5fb"
 
-
-
 //Images
-// export const BRAND_ICON=require('../assets/images/HDFC_Bank_Logo.svg.png')
 export const BRAND_ICON=require('../assets/images/auditor.png')
 export const HEROIC_ICON=require('../assets/images/Audit.png')
 export const EYE_CLOSE=require('../assets/images/Group_7.png')
@@ -58,6 +53,7 @@ export const CHECKED_FILLED=require('../assets/images/check.png')
 export const GALLERY=require('../assets/images/image-gallery.png')
 export const MICON=require('../assets/images/voice-recording.png')
 export const MICOFF=require('../assets/images/mute.png')
+
 // FontSize
 export const TINY_FONT_SIZE = 10;
 export const SMALL_FONT_SIZE = 15;
@@ -69,7 +65,5 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
-export const BASEURL = 'https://audits.kreate.co.in:3000';
-
-
-
+// export const BASEURL = 'https://audits.kreate.co.in:3000';
+export const BASEURL = 'https://easycalls.in:3000';
