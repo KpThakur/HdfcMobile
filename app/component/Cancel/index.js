@@ -18,7 +18,7 @@ export default function index(props) {
                     </TouchableOpacity>
                 </View>
                 <Text style={{ color: "#000", fontSize: 18 }}>Let us know why you want to cancel the audit.</Text>
-                <TextInput placeholder="Reasone for canceling the audit."
+                <TextInput placeholder="Reason for canceling the audit."
                     style={{ backgroundColor: "#eee", width: "100%", paddingHorizontal: 10, paddingBottom: 40 }} 
                     value={reason} onChangeText={text=>setreason(text)}
                     />

@@ -85,7 +85,7 @@ const Question = ({ navigation, route }) => {
       if(data.socketEvent==`pauseOnlineAudit${question?.audit_id}`)
       {
         if(data.data.bm_online==0)
-          alert("User is offline")
+          alert(`${question?.branch_manager} is offline`)
         setdisableBtn(data.data.bm_online)
       }
   })
@@ -525,15 +525,17 @@ const Question = ({ navigation, route }) => {
   };
   const HandleActionable = async (type) => {
     if (type === 1) {
+      if(question.data.bm_remark!=="")
+        setremark(question.data.bm_remark);
       setbmActionable(1);
-      setremark(question.data.bm_remark);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
       setdropDown(!dropDown);
     } else if (type === 2) {
+      if(question.data.rm_remark!=="")
+        setremark(question.data.rm_remark);
       setrmmactionable(1);
-      setremark(question.data.rm_remark);
       setbmActionable(0);
       setatmActionable(0);
       setadminActionable(0);

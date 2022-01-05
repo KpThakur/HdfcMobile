@@ -30,6 +30,8 @@ import {
   FONT_FAMILY_REGULAR,
   DOWNARROW,
   CAMERA,
+  CHECKED,
+  UNCHECKED,
   UNCHECKED_ICON,
   DARK_BLUE_COLOR,
   GALLERY,
@@ -230,8 +232,15 @@ const Question = (props) => {
       {/* <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}> */}
       {startAudit === 2 ? (
         <Header leftImg={""} headerText={"Start Audit"} />
-      )
-      : null}
+      ) : //  : startAudit === 4 ? (
+      //   <Header
+      //     headerText={"Audit Actionable Review"}
+      //     onPress={() => {
+      //       navigation.openDrawer();
+      //     }}
+      //   />
+      // )
+      null}
       <View style={styles.mainvwe}>
         {startAudit === 1 ? (
           <>
@@ -534,9 +543,7 @@ const Question = (props) => {
                         onPress={() => props.handleCheckList(index, list.name)}
                       >
                         <Image
-                          source={
-                            list.isSelected ? CHECKED_FILLED : UNCHECKED_ICON
-                          }
+                          source={list.isSelected ? CHECKED_FILLED : UNCHECKED}
                           style={{
                             width: 20,
                             height: 20,
@@ -773,7 +780,7 @@ const Question = (props) => {
                           ? "Admin"
                           : props.atmActionable
                           ? "ATM Cordinator"
-                          : "Select Actionable"}
+                          : "Assign to"}
                       </Text>
                       {dropDown ? (
                         <Image
@@ -831,7 +838,7 @@ const Question = (props) => {
               ) : null}
               {question?.data?.remark === "1" && (
                 <View style={{ marginTop: 10 }}>
-                  <Text style={styles.branname}>Remark on Actionable</Text>
+                  <Text style={styles.branname}>Actionable/ Remarks </Text>
                   <TextInput
                     placeholder="Remarks"
                     multiline
@@ -882,8 +889,7 @@ const Question = (props) => {
           />
         ) : startAudit === 3 ? (
           <AuditScoreScreen setstartAudit={setstartAudit} />
-        ) 
-        : null}
+        ) : null}
       </View>
       {/* </ScrollView> */}
     </View>
