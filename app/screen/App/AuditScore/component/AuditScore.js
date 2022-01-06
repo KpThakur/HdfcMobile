@@ -21,7 +21,7 @@ export default function AuditScore(props) {
                     {
                         totalScore?.previous[0].previous_score>0 &&
                         <View style={styles.prev_audit}>
-                            <Text style={styles.txt}>Preview Audit Score :</Text>
+                            <Text style={styles.txt}>Previous Audit Score :</Text>
                             <FlatList
                                 data={totalScore?.previous} renderItem={displayScoreAudit} />
                         </View>

@@ -631,7 +631,11 @@ const Question = (props) => {
                       backgroundColor:
                         yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
                     }}
-                    onPress={() => props.setyesNo("NA")}
+                    onPress={() => {
+                      props.setyesNo("NA")
+                      setremark("")
+                      props.HandleActionable(0)
+                    }}
                   />
                 </View>
               )}

@@ -546,7 +546,15 @@ const Question = ({ navigation, route }) => {
       setatmActionable(1);
       setadminActionable(0);
       setdropDown(!dropDown);
-    } else {
+    } 
+    else if(type===0)
+    {
+      setbmActionable(0);
+      setrmmactionable(0);
+      setatmActionable(0);
+      setadminActionable(0);
+    }
+    else {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);

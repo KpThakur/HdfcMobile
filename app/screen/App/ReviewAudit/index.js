@@ -42,7 +42,6 @@ export default function index({route }) {
     }
     const HandleBM = (actionable) => {
         if(actionable.length>0){
-            props.setstartAudit(5)
             navigation.navigate("Actionable", { actionable: actionable, baseURL: baseURL,name:params.branch_manager })
         }
         else{
