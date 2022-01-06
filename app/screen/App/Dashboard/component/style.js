@@ -104,9 +104,9 @@ export const styles = StyleSheet.create({
     },
     prim_btn: {
         backgroundColor: PRIMARY_BLUE_COLOR,
-        paddingVertical: 5,
-        borderRadius: 20,
-        paddingHorizontal: 15,
+        paddingVertical: normalize(5),
+        borderRadius: normalize(20),
+        paddingHorizontal: normalize(15),
         alignItems: "center",
     }
 })

@@ -34,22 +34,22 @@ const Question = ({ navigation, route }) => {
   const [showActionable, setshowActionable] = useState(true);
   const [showCapIMG, setshowCapIMG] = useState(true);
   const [dropDown, setdropDown] = useState(false);
-  const [selected, setselected] = useState([])
-  const [disableBtn, setdisableBtn] = useState()
+  const [selected, setselected] = useState([]);
+  const [disableBtn, setdisableBtn] = useState();
   useEffect(() => {
     setstartAudit(question?.audit_type == 0 ? 1 : 2);
     unsubscribe;
     setremark(question?.data?.actionsble_remark);
     emitRemark(question?.data?.actionsble_remark);
-    if (question?.data?.check_box_value){
-        // setquestionList(question.data.check_box_value.split(","));
-        var item=question?.data?.check_box_value.split(",")
-        var copy=[]
-        item.map(element => {
-          copy.push({name:element})
-        });
-        setquestionList(copy)
-      }
+    if (question?.data?.check_box_value) {
+      // setquestionList(question.data.check_box_value.split(","));
+      var item = question?.data?.check_box_value.split(",");
+      var copy = [];
+      item.map((element) => {
+        copy.push({ name: element });
+      });
+      setquestionList(copy);
+    }
   }, []);
   useEffect(() => {
     if (question?.data?.yes_no == "NO" && question?.data?.action_on_no == 2) {
@@ -79,17 +79,19 @@ const Question = ({ navigation, route }) => {
         question_id: question?.data?.question_id,
         audit_id: question?.audit_id,
       };
-        socket.emit("startAudit", params, async (data) => {});
+      socket.emit("startAudit", params, async (data) => {});
     }
-    socket.on('bmOnlineStatus', (data) => {
-      if(data.socketEvent==`pauseOnlineAudit${question?.audit_id}`)
-      {
-        if(data.data.bm_online==0)
-          alert(`${question?.branch_manager} is offline`)
-        setdisableBtn(data.data.bm_online)
+    socket.on("bmOnlineStatus", (data) => {
+      if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
+        if (data.data.bm_online == 0)
+          alert(`${question?.branch_manager} is offline`);
+        setdisableBtn(data.data.bm_online);
       }
-  })
-  }, [startAudit]);
+    });
+    if (!managerJoin) {
+      alert(`${question?.branch_manager} is offline`);
+    }
+  }, [startAudit, managerJoin]);
 
   const unsubscribe = NetInfo.fetch().then((state) => {
     setjoined(state.isConnected);
@@ -124,13 +126,13 @@ const Question = ({ navigation, route }) => {
     NetInfo.fetch().then(async (state) => {
       if (state.isConnected) {
         setisLoading(true);
-        var checked_val=""
-        questionList&&questionList.map(list=>{
-          if(list.isSelected)
-          {
-            checked_val+=list.name+","
-          }
-        })
+        var checked_val = "";
+        questionList &&
+          questionList.map((list) => {
+            if (list.isSelected) {
+              checked_val += list.name + ",";
+            }
+          });
         let formdata = new FormData();
         formdata.append("audit_id", question?.audit_id);
         formdata.append("question_id", question?.data.question_id);
@@ -142,7 +144,7 @@ const Question = ({ navigation, route }) => {
         formdata.append("atm_cordinator_assignee", atmActionable);
         formdata.append("yes_no", yesNo);
         formdata.append("quality", quality);
-        formdata.append("check_box_data",checked_val);
+        formdata.append("check_box_data", checked_val);
         formdata.append("check_answer", checkedAns);
         if (question?.data.image_capture === "1") {
           if (camImg.length > 0) {
@@ -200,24 +202,23 @@ const Question = ({ navigation, route }) => {
           apiEndPoints.CANCEL_AUDIT,
           params
         );
-        if (response.status === 200){ 
+        if (response.status === 200) {
           // navigation.navigate("AuditScore")
-          setstartAudit(3)
-        }
-        else navigator.navigate("DashboardScreen");
+          setstartAudit(3);
+        } else navigator.navigate("DashboardScreen");
       }
     });
   };
   const GetSocketData = async (data, params) => {
     if (data.status === 200) {
-      if (data.data.check_box_value){
+      if (data.data.check_box_value) {
         // setquestionList(data.data.check_box_value.split(","));
-        var item=data.data.check_box_value.split(",")
-        var copy=[]
-        item.map(element => {
-          copy.push({name:element})
+        var item = data.data.check_box_value.split(",");
+        var copy = [];
+        item.map((element) => {
+          copy.push({ name: element });
         });
-        setquestionList(copy)
+        setquestionList(copy);
       }
       // setSliderValue(response.data.data)
       setshowCapIMG(true);
@@ -277,9 +278,8 @@ const Question = ({ navigation, route }) => {
       const response = await apiCall("POST", apiEndPoints.CANCEL_AUDIT, params);
       if (response.status === 200) {
         // navigation.navigate("AuditScore");
-        setstartAudit(3)
-      }
-      else navigator.navigate("DashboardScreen");
+        setstartAudit(3);
+      } else navigator.navigate("DashboardScreen");
     }
   };
 
@@ -364,14 +364,14 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
-        if (response.data.data.check_box_value){
+        if (response.data.data.check_box_value) {
           setquestionList(response.data.data[0].check_box_value.split(","));
-          var item=response.data.data[0].check_box_value.split(",")
-        var copy=[]
-        item.map(element => {
-          copy.push({name:element})
-        });
-        setquestionList(copy)
+          var item = response.data.data[0].check_box_value.split(",");
+          var copy = [];
+          item.map((element) => {
+            copy.push({ name: element });
+          });
+          setquestionList(copy);
         }
         if (response.data.answer.image_capture) {
           const imgs = response.data.answer.image_capture.split(",");
@@ -391,7 +391,7 @@ const Question = ({ navigation, route }) => {
           audit_type: params.audit_type,
           branch_manager: params.branch_manager,
         });
-        console.log("RES:",response.data.answer.remark)
+        console.log("RES:", response.data.answer.remark);
         setremark(response.data.answer.remark);
         setrmmactionable(response.data.answer.rmm_actionable_assignee);
         setbmActionable(response.data.answer.bm_actionable_assignee);
@@ -484,13 +484,13 @@ const Question = ({ navigation, route }) => {
       }
     }
     socket.emit("CountQuestionType", params, (data) => {
-      if (text<2) {
+      if (text < 2) {
         setrmmactionable(1);
         setremark(data.data.rm_remark);
         setbmActionable(0);
         setatmActionable(0);
         setadminActionable(0);
-      }else{
+      } else {
         setrmmactionable(0);
         setremark("");
         setbmActionable(0);
@@ -506,7 +506,7 @@ const Question = ({ navigation, route }) => {
         } else if (data.data.actioanble == 1) {
           setReviewValue(0);
           setshowActionable(true);
-          setremark(data.data.remark)
+          setremark(data.data.remark);
         } else {
           setReviewValue(0);
           setshowActionable(false);
@@ -525,16 +525,14 @@ const Question = ({ navigation, route }) => {
   };
   const HandleActionable = async (type) => {
     if (type === 1) {
-      if(question.data.bm_remark!=="")
-        setremark(question.data.bm_remark);
+      if (question.data.bm_remark !== "") setremark(question.data.bm_remark);
       setbmActionable(1);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
       setdropDown(!dropDown);
     } else if (type === 2) {
-      if(question.data.rm_remark!=="")
-        setremark(question.data.rm_remark);
+      if (question.data.rm_remark !== "") setremark(question.data.rm_remark);
       setrmmactionable(1);
       setbmActionable(0);
       setatmActionable(0);
@@ -546,15 +544,12 @@ const Question = ({ navigation, route }) => {
       setatmActionable(1);
       setadminActionable(0);
       setdropDown(!dropDown);
-    } 
-    else if(type===0)
-    {
+    } else if (type === 0) {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
-    }
-    else {
+    } else {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
@@ -562,12 +557,13 @@ const Question = ({ navigation, route }) => {
       setdropDown(!dropDown);
     }
   };
-  const handleCheckList=async(index)=>{
-const itemsArray = await [...questionList]
-    itemsArray[index].isSelected = await !itemsArray[index].isSelected
-    setquestionList(itemsArray)
-  }
-  console.log("QES:", question.data);
+  const handleCheckList = async (index) => {
+    const itemsArray = await [...questionList];
+    itemsArray[index].isSelected = await !itemsArray[index].isSelected;
+    setquestionList(itemsArray);
+  };
+  console.log("managerJoin", managerJoin);
+  // console.log("QES:", question.data);
   return (
     <>
       {isLoading && <Loader />}
