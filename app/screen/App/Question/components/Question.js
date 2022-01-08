@@ -632,9 +632,9 @@ const Question = (props) => {
                         yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
                     }}
                     onPress={() => {
-                      props.setyesNo("NA")
-                      setremark("")
-                      props.HandleActionable(0)
+                      props.setyesNo("NA");
+                      setremark("");
+                      props.HandleActionable(0);
                     }}
                   />
                 </View>
@@ -797,6 +797,19 @@ const Question = (props) => {
                     </TouchableOpacity>
                     {dropDown && (
                       <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
+                        {props?.revActionable == 1 ? (
+                          <TouchableOpacity
+                            style={styles.drop_down_item}
+                            onPress={() => {
+                              HandleActionable(0);
+                              props.setdropDown(false);
+                            }}
+                          >
+                            <Text style={styles.drop_down_txt}>
+                              Remove actionable
+                            </Text>
+                          </TouchableOpacity>
+                        ) : null}
                         {question?.data.bm_actionable_assignee == "1" ? (
                           <TouchableOpacity
                             style={styles.drop_down_item}

@@ -36,6 +36,7 @@ const Question = ({ navigation, route }) => {
   const [dropDown, setdropDown] = useState(false);
   const [selected, setselected] = useState([]);
   const [disableBtn, setdisableBtn] = useState();
+  const [revActionable, setrevActionable] = useState(0)
   useEffect(() => {
     setstartAudit(question?.audit_type == 0 ? 1 : 2);
     unsubscribe;
@@ -88,7 +89,7 @@ const Question = ({ navigation, route }) => {
         setdisableBtn(data.data.bm_online);
       }
     });
-    if (!managerJoin) {
+    if (!managerJoin&&question?.audit_type==1) {
       alert(`${question?.branch_manager} is offline`);
     }
   }, [startAudit, managerJoin]);
@@ -530,6 +531,7 @@ const Question = ({ navigation, route }) => {
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
+      setrevActionable(1)
       setdropDown(!dropDown);
     } else if (type === 2) {
       if (question.data.rm_remark !== "") setremark(question.data.rm_remark);
@@ -537,23 +539,27 @@ const Question = ({ navigation, route }) => {
       setbmActionable(0);
       setatmActionable(0);
       setadminActionable(0);
+      setrevActionable(1)
       setdropDown(!dropDown);
     } else if (type === 3) {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(1);
       setadminActionable(0);
+      setrevActionable(1)
       setdropDown(!dropDown);
     } else if (type === 0) {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
+      setrevActionable(0)
     } else {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(1);
+      setrevActionable(1)
       setdropDown(!dropDown);
     }
   };
@@ -562,7 +568,7 @@ const Question = ({ navigation, route }) => {
     itemsArray[index].isSelected = await !itemsArray[index].isSelected;
     setquestionList(itemsArray);
   };
-  console.log("managerJoin", managerJoin);
+  console.log("revActionable", revActionable);
   // console.log("QES:", question.data);
   return (
     <>
@@ -576,6 +582,7 @@ const Question = ({ navigation, route }) => {
         remark={remark}
         setremark={setremark}
         rating={rating}
+        revActionable={revActionable}
         setrating={setrating}
         rmmactionable={rmmactionable}
         setrmmactionable={setrmmactionable}
