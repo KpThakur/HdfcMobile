@@ -46,6 +46,7 @@ export default function ReviewAuit(props) {
           <Text style={styles.h_txt}>Audits Actions By :</Text>
           {BM ? (
             <View style={{ marginTop: 20 }}>
+              {console.log("BM",BM)}
               <TouchableOpacity
                 onPress={() => handleBMDropDown()}
                 style={{
@@ -82,10 +83,10 @@ export default function ReviewAuit(props) {
                       <Text style={styles.drop_down_txt}>
                         {bm.audit_question.substring(0, 200)}
                       </Text>
-                      {bm.actionable.actionable_remark ? (
+                      {bm?.actionable[0]?.actionable_remark ? (
                         <Text>
                           Remark:{" "}
-                          {bm.actionable.actionable_remark.substring(0, 100)}
+                          {bm?.actionable[0]?.actionable_remark.substring(0, 100)}
                         </Text>
                       ) : null}
                     </TouchableOpacity>

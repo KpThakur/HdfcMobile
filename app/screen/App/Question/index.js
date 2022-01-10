@@ -36,7 +36,7 @@ const Question = ({ navigation, route }) => {
   const [dropDown, setdropDown] = useState(false);
   const [selected, setselected] = useState([]);
   const [disableBtn, setdisableBtn] = useState();
-  const [revActionable, setrevActionable] = useState(0)
+  const [revActionable, setrevActionable] = useState(0);
   useEffect(() => {
     setstartAudit(question?.audit_type == 0 ? 1 : 2);
     unsubscribe;
@@ -59,14 +59,14 @@ const Question = ({ navigation, route }) => {
       setshowCapIMG(true);
     }
   }, [question]);
-  useEffect(() => {
-    if (
-      question?.data?.bm_actionable_assignee == 1 &&
-      question?.data?.rmm_actionable_assignee == 1
-    ) {
-      HandleActionable(1);
-    }
-  }, [question]);
+  // useEffect(() => {
+  //   if (
+  //     question?.data?.bm_actionable_assignee == 1 &&
+  //     question?.data?.rmm_actionable_assignee == 1
+  //   ) {
+  //     HandleActionable(1);
+  //   }
+  // }, [question]);
   useEffect(() => {
     socket.on("image-sent", (data) => {
       if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
@@ -89,7 +89,7 @@ const Question = ({ navigation, route }) => {
         setdisableBtn(data.data.bm_online);
       }
     });
-    if (!managerJoin&&question?.audit_type==1) {
+    if (!managerJoin && question?.audit_type == 1) {
       alert(`${question?.branch_manager} is offline`);
     }
   }, [startAudit, managerJoin]);
@@ -147,34 +147,36 @@ const Question = ({ navigation, route }) => {
         formdata.append("quality", quality);
         formdata.append("check_box_data", checked_val);
         formdata.append("check_answer", checkedAns);
-        if (question?.data.image_capture === "1") {
-          if (camImg.length > 0) {
-            if (question.audit_type !== 1) {
-              camImg?.map((img, index) => {
-                return formdata.append("question_image", {
-                  uri: img.path,
-                  type: img.mime === undefined ? "image/jpeg" : img.mime,
-                  name: img.path.substring(img.path.lastIndexOf("/") + 1),
+        formdata.append("show_actionable",showActionable)
+          if (question?.data.image_capture === "1") {
+            if (camImg.length > 0) {
+              if (question.audit_type !== 1) {
+                camImg?.map((img, index) => {
+                  return formdata.append("question_image", {
+                    uri: img.path,
+                    type: img.mime === undefined ? "image/jpeg" : img.mime,
+                    name: img.path.substring(img.path.lastIndexOf("/") + 1),
+                  });
                 });
-              });
+              } else {
+              }
+              setisLoading(false);
+              SubmitAPI(formdata);
             } else {
+              setisLoading(false);
+              if (question.data.action_on_no) {
+                !showCapIMG
+                  ? SubmitAPI(formdata)
+                  : alert("Please Capture The Image");
+              } else {
+                alert("Please Capture The Image");
+              }
             }
-            setisLoading(false);
-            SubmitAPI(formdata);
           } else {
             setisLoading(false);
-            if (question.data.action_on_no) {
-              !showCapIMG
-                ? SubmitAPI(formdata)
-                : alert("Please Capture The Image");
-            } else {
-              alert("Please Capture The Image");
-            }
+            SubmitAPI(formdata);
           }
-        } else {
-          setisLoading(false);
-          SubmitAPI(formdata);
-        }
+        
       } else {
         setisLoading(false);
         alert("Poor Connection");
@@ -531,7 +533,7 @@ const Question = ({ navigation, route }) => {
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
-      setrevActionable(1)
+      setrevActionable(1);
       setdropDown(!dropDown);
     } else if (type === 2) {
       if (question.data.rm_remark !== "") setremark(question.data.rm_remark);
@@ -539,27 +541,27 @@ const Question = ({ navigation, route }) => {
       setbmActionable(0);
       setatmActionable(0);
       setadminActionable(0);
-      setrevActionable(1)
+      setrevActionable(1);
       setdropDown(!dropDown);
     } else if (type === 3) {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(1);
       setadminActionable(0);
-      setrevActionable(1)
+      setrevActionable(1);
       setdropDown(!dropDown);
     } else if (type === 0) {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(0);
-      setrevActionable(0)
+      setrevActionable(0);
     } else {
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
       setadminActionable(1);
-      setrevActionable(1)
+      setrevActionable(1);
       setdropDown(!dropDown);
     }
   };
@@ -568,8 +570,7 @@ const Question = ({ navigation, route }) => {
     itemsArray[index].isSelected = await !itemsArray[index].isSelected;
     setquestionList(itemsArray);
   };
-  console.log("revActionable", revActionable);
-  // console.log("QES:", question.data);
+  console.log("QES:", question.data);
   return (
     <>
       {isLoading && <Loader />}
@@ -582,6 +583,7 @@ const Question = ({ navigation, route }) => {
         remark={remark}
         setremark={setremark}
         rating={rating}
+        setrevActionable={setrevActionable}
         revActionable={revActionable}
         setrating={setrating}
         rmmactionable={rmmactionable}

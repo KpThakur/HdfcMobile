@@ -530,33 +530,7 @@ const Question = (props) => {
                   </View>
                 </>
               )}
-              {question?.data?.check_box_type == 1 && (
-                <>
-                  <Text style={styles.branname}>
-                    Select Appropriate Creatives from List
-                  </Text>
-                  <View style={{ flexDirection: "column" }}>
-                    {props.questionList.map((list, index) => (
-                      <TouchableOpacity
-                        style={{ flexDirection: "row", marginBottom: 5 }}
-                        key={index}
-                        onPress={() => props.handleCheckList(index, list.name)}
-                      >
-                        <Image
-                          source={list.isSelected ? CHECKED_FILLED : UNCHECKED}
-                          style={{
-                            width: 20,
-                            height: 20,
-                            marginRight: 10,
-                            resizeMode: "contain",
-                          }}
-                        />
-                        <Text>{list.name}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </>
-              )}
+              
               {question?.data?.question_type === "1" && (
                 <View style={styles.brnchmannme}>
                   <Button
@@ -568,6 +542,7 @@ const Question = (props) => {
                     }}
                     onPress={() => {
                       props.setyesNo("YES");
+                      props.setrevActionable(0)
                       handleRemark(question.data.remark_yes);
                       props.handleShowActionable(false);
                       if (question.data.score_range == 1)
@@ -583,6 +558,7 @@ const Question = (props) => {
                     }}
                     onPress={() => {
                       props.setyesNo("NO");
+                      props.setrevActionable(1)
                       handleRemark(question.data.remark_no);
                       props.handleShowActionable(true);
                       if (question.data.score_range == 1)
@@ -655,6 +631,33 @@ const Question = (props) => {
                     }}
                   />
                 </View>
+              )}
+              {question?.data?.check_box_type == 1 && (
+                <>
+                  <Text style={styles.branname}>
+                    Select Appropriate Creatives from List
+                  </Text>
+                  <View style={{ flexDirection: "column" }}>
+                    {props.questionList.map((list, index) => (
+                      <TouchableOpacity
+                        style={{ flexDirection: "row", marginBottom: 5 }}
+                        key={index}
+                        onPress={() => props.handleCheckList(index, list.name)}
+                      >
+                        <Image
+                          source={list.isSelected ? CHECKED_FILLED : UNCHECKED}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: 10,
+                            resizeMode: "contain",
+                          }}
+                        />
+                        <Text>{list.name}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </>
               )}
               {question?.data?.question_type === "4" && (
                 <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>

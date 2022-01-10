@@ -3,12 +3,13 @@ import { View, Text, ScrollView, FlatList } from 'react-native'
 import { styles } from './styles'
 import Button from '../../../../component/Button';
 import moment from 'moment';
+import { FONT_FAMILY_REGULAR } from '../../../../utils/constant';
 
 export default function AuditScore(props) {
     const { handleViewActionable, totalScore } = props
     return (
         // <View style={styles.container}>
-        //     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1,marginLeft:10 }}>
                 <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.heroic_txt}>Total Branch</Text>
@@ -26,11 +27,12 @@ export default function AuditScore(props) {
                                 data={totalScore?.previous} renderItem={displayScoreAudit} />
                         </View>
                     }
-                    <Button buttonText={"View Actionables"}
+                    <Text style={{fontFamily:FONT_FAMILY_REGULAR}}>Note: Live streaming will be stopped after click on view actionable.</Text>
+                    <Button buttonText={"Complete Audit"}
                     onPress={() => handleViewActionable()}
                     />
                 </View>
-        //     </ScrollView>
+            </ScrollView>
         // </View>
     )
 }

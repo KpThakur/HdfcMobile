@@ -45,7 +45,8 @@ export default function index(props) {
         const response = await apiCall('POST', apiEndPoints.GET_ACTIONABLE_DETAIL, params)
         setisLoading(false)
         // props.setstartAudit(4)
-        navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
+        // navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
+        navigation.navigate("DashboardScreen")
     }
     return (
         <>
