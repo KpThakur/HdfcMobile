@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, Image, View, TouchableOpacity, StatusBar, Platform } from 'react-native';
 //import { FONT_FAMILY_BOLD, THEME_BACKGROUND_SECONDRY_COLOR, MEDIUM_FONT_SIZE, THEME_NORMAL_SECONDRY_TEXT_COLOR } from '../../utils/constant';
 import { FONT_FAMILY_REGULAR, STATUS_BAR_COLOR } from '../../utils/constant';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { useNavigation, DrawerActions } from '@react-navigation/core';
 const Header = (props) => {
     const {
         HeaderView, HeaderRightView, container

@@ -551,6 +551,7 @@ const Question = ({ navigation, route }) => {
       setrevActionable(1);
       setdropDown(!dropDown);
     } else if (type === 0) {
+      setremark("")
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);

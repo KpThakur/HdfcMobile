@@ -34,5 +34,9 @@ export const styles = StyleSheet.create({
     drop_down_txt: {
         color: PRIMARY_BLUE_COLOR,
         fontSize: normalize(SMALL_FONT_SIZE)
+    },
+    download_text:{
+        color:PRIMARY_BLUE_COLOR,
+        fontFamily:FONT_FAMILY_REGULAR
     }
 })

@@ -137,7 +137,7 @@ export default function Actionable(props) {
                 {data.RM.image_capture ? (
                   <TouchableOpacity
                     style={styles.head}
-                    onPress={() => props.OpenCamera()}
+                    onPress={() => {props.setssDropDown(true)}}
                   >
                     {props.camImg ? (
                       <Image
@@ -152,7 +152,7 @@ export default function Actionable(props) {
                       <>
                         <Image source={CAMERA} />
                         <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
-                          Image not available
+                          Upload Image
                         </Text>
                       </>
                     )}
@@ -262,7 +262,7 @@ export default function Actionable(props) {
                   ) : null}
                   <View style={{ marginVertical: 10 }}>
                     <Text style={styles.txt}>Remarks</Text>
-                    <Text style={styles.b_txt}>{data.RM.remark}</Text>
+                    <Text style={styles.b_txt}>{data.RM.remark!=='undefined'?data.RM.remark:""}</Text>
                   </View>
                 </View>
               </>
@@ -281,7 +281,7 @@ export default function Actionable(props) {
           >
             {props.next ? (
               <Button
-                buttonText={"Update"}
+                buttonText={"Complete Actionable"}
                 onPress={() => props.HandleUpdate()}
               />
             ) : (
