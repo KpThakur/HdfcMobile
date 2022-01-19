@@ -469,7 +469,7 @@ const Question = ({ navigation, route }) => {
       }
     }
   };
-  const handleQuality = (text) => {
+  const handleQuality = async(text) => {
     setquality(text);
     const params = {
       audit_id: question?.audit_id,
@@ -486,8 +486,24 @@ const Question = ({ navigation, route }) => {
         setshowActionable(false);
       }
     }
-    socket.emit("CountQuestionType", params, (data) => {
-      if (text < 2) {
+   await socket.emit("CountQuestionType", params, (data) => {
+
+    if (question?.data?.count_previous_question_id != null) 
+    {
+      if (data?.data?.set_range) {
+        console.log("else",data.data.set_range)
+        setremark("");
+        setReviewValue(data.data.set_range);
+      } else if (data.data.actioanble == 1) {
+        setReviewValue(0);
+        setshowActionable(true);
+        setremark(data.data.remark);
+      } else {
+        setReviewValue(0);
+        setremark("");
+        setshowActionable(false);
+      }
+    }else if (text < 2) {
         setrmmactionable(1);
         setremark(data.data.rm_remark);
         setbmActionable(0);
@@ -501,21 +517,26 @@ const Question = ({ navigation, route }) => {
         setadminActionable(0);
       }
     });
-    if (question?.data?.count_previous_question_id != null) {
-      socket.emit("CountQuestionType", params, (data) => {
-        console.log("CountQuestionType:", data);
-        if (data.data.set_range) {
-          setReviewValue(data.data.set_range);
-        } else if (data.data.actioanble == 1) {
-          setReviewValue(0);
-          setshowActionable(true);
-          setremark(data.data.remark);
-        } else {
-          setReviewValue(0);
-          setshowActionable(false);
-        }
-      });
-    }
+    // if (question?.data?.count_previous_question_id != null) {
+    //   console.log("emit case 1");
+    //   await socket.emit("CountQuestionType", params, (data) => {
+    //     console.log("CountQuestionType: 1", data);
+    //     if (data?.data?.set_range) {
+    //       console.log("else",data.data.set_range)
+    //       setReviewValue(data.data.set_range);
+    //     } else if (data.data.actioanble == 1) {
+    //       console.log("else case 2");
+    //       console.log("else data.data.actioanble",data.data.actioanble)
+    //       console.log("else data.data.remark",data.data.remark)
+    //       setReviewValue(0);
+    //       setshowActionable(true);
+    //       setremark(data.data.remark);
+    //     } else {
+    //       setReviewValue(0);
+    //       setshowActionable(false);
+    //     }
+    //   });
+    // }
   };
   const showSetRange = (state) => {
     if (state) {
