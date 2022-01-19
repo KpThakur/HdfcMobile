@@ -875,7 +875,7 @@ const DashboardScreen = ({ navigation }) => {
                               <Text
                                 style={{
                                   color:
-                                    item.audit_status === 3
+                                    audit.audit_status === 3
                                       ? GREEN_COLOR
                                       : RED_COLOR,
                                   fontFamily: FONT_FAMILY_REGULAR,
