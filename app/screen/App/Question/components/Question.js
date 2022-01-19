@@ -864,7 +864,7 @@ const Question = (props) => {
                     multiline
                     numberOfLines={3}
                     style={styles.input}
-                    value={remark}
+                    value={remark!=='undefined'?remark:""}
                     onChangeText={(text) => handleRemark(text)}
                   />
                 </View>
