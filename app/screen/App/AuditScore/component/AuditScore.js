@@ -19,6 +19,7 @@ export default function AuditScore(props) {
                             <Text style={styles.hs_txt}>Audit Score</Text>
                         </View>
                     </View>
+                    {console.log("totalScore",totalScore?.previous[0].previous_score)}
                     {
                         totalScore?.previous[0].previous_score>0 &&
                         <View style={styles.prev_audit}>
@@ -40,7 +41,7 @@ const displayScoreAudit = ({ item }) => {
     const orderDate = moment(item?.previous_score_date).format("DD/MM/YYYY");
     return (
         <View style={styles.display_score}>
-            <Text style={styles.s_txt}>Score : {item.previous_score}</Text>
+            <Text style={styles.s_txt}>Score : {item.previous_score}%</Text>
             <Text style={styles.txt}>{orderDate}</Text>
         </View>
     )

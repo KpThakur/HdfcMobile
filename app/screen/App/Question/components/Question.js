@@ -321,7 +321,7 @@ const Question = (props) => {
             </Text>
           </>
         ) : null}
-
+        {console.log("managerJoin && maxIMG",managerJoin && maxIMG)}
         {managerJoin && maxIMG ? (
           <Modal>
             <View style={{ flex: 1, backgroundColor: "#171717" }}>
@@ -349,8 +349,9 @@ const Question = (props) => {
               <View
                 style={{ alignItems: "center", marginTop: 150, padding: 10 }}
               >
+                {console.log("showModalIMG.path",showModalIMG)}
                 <Image
-                  source={{ uri: showModalIMG.path }}
+                  source={{ uri: props.baseUrl+showModalIMG.image_data }}
                   style={{ width: "100%", height: 300, resizeMode: "contain" }}
                 />
               </View>

@@ -24,6 +24,7 @@ export default function index() {
             const response=await apiCall("POST",apiEndPoints.FORGET_PASSWORD,params)
             if(response.data.status===200)
             {
+                alert("OTP send to your email")
                 setverfyOTP(true)
             }
         }
