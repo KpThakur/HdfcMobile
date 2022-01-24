@@ -101,6 +101,12 @@ const Question = (props) => {
   function _handleReivew(val) {
     props.setReviewValue(val);
     props.emitRating(val);
+    if (val > 0) {
+      props.HandleActionable(0);
+      props.setshowActionable(false);
+    } else {
+      props.setshowActionable(true);
+    }
   }
   const handleRemark = (val) => {
     setremark(val);
@@ -321,7 +327,6 @@ const Question = (props) => {
             </Text>
           </>
         ) : null}
-        {console.log("managerJoin && maxIMG",managerJoin && maxIMG)}
         {managerJoin && maxIMG ? (
           <Modal>
             <View style={{ flex: 1, backgroundColor: "#171717" }}>
@@ -349,9 +354,9 @@ const Question = (props) => {
               <View
                 style={{ alignItems: "center", marginTop: 150, padding: 10 }}
               >
-                {console.log("showModalIMG.path",showModalIMG)}
+                {console.log("showModalIMG.path", showModalIMG)}
                 <Image
-                  source={{ uri: props.baseUrl+showModalIMG.image_data }}
+                  source={{ uri: props.baseUrl + showModalIMG.image_data }}
                   style={{ width: "100%", height: 300, resizeMode: "contain" }}
                 />
               </View>
@@ -531,7 +536,7 @@ const Question = (props) => {
                   </View>
                 </>
               )}
-              
+
               {question?.data?.question_type === "1" && (
                 <View style={styles.brnchmannme}>
                   <Button
@@ -543,7 +548,7 @@ const Question = (props) => {
                     }}
                     onPress={() => {
                       props.setyesNo("YES");
-                      props.setrevActionable(0)
+                      props.setrevActionable(0);
                       handleRemark(question.data.remark_yes);
                       props.handleShowActionable(false);
                       if (question.data.score_range == 1)
@@ -559,11 +564,15 @@ const Question = (props) => {
                     }}
                     onPress={() => {
                       props.setyesNo("NO");
-                      props.setrevActionable(1)
+                      props.setrevActionable(1);
                       handleRemark(question.data.remark_no);
                       props.handleShowActionable(true);
                       if (question.data.score_range == 1)
                         props.showSetRange(false);
+                      if (question.data.action_on_no == 3) {
+                        props.HandleActionable(0);
+                        props.setshowActionable(false);
+                      }
                     }}
                   />
                   {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
@@ -599,6 +608,10 @@ const Question = (props) => {
                       props.handleShowActionable(true);
                       if (question.data.score_range == 1)
                         props.showSetRange(false);
+                      if (question.data.action_on_no == 3) {
+                        props.HandleActionable(0);
+                        props.setshowActionable(false);
+                      }
                     }}
                   />
                   <Button
@@ -781,9 +794,9 @@ const Question = (props) => {
                     >
                       <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
                         {bmActionable
-                          ? question?.branch_manager
+                          ? "BM"
                           : rmmactionable
-                          ? userData.name
+                          ? "RMM"
                           : props.adminActionable
                           ? "Admin"
                           : props.atmActionable
@@ -820,7 +833,8 @@ const Question = (props) => {
                             onPress={() => HandleActionable(1)}
                           >
                             <Text style={styles.drop_down_txt}>
-                              {question?.branch_manager}
+                              {/* {question?.branch_manager} */}
+                              BM
                             </Text>
                           </TouchableOpacity>
                         ) : null}
@@ -830,7 +844,8 @@ const Question = (props) => {
                             onPress={() => HandleActionable(2)}
                           >
                             <Text style={styles.drop_down_txt}>
-                              {userData.name}
+                              {/* {userData.name} */}
+                              RMM
                             </Text>
                           </TouchableOpacity>
                         ) : null}
@@ -865,7 +880,7 @@ const Question = (props) => {
                     multiline
                     numberOfLines={3}
                     style={styles.input}
-                    value={remark!=='undefined'?remark:""}
+                    value={remark !== "undefined" ? remark : ""}
                     onChangeText={(text) => handleRemark(text)}
                   />
                 </View>

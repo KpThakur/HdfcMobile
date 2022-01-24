@@ -11,11 +11,12 @@ export const styles = StyleSheet.create({
     },
     head:{
         backgroundColor:GREY_TEXT_COLOR,
-        width:"100%",
+        width:"95%",
         height:300,
         borderRadius:10,
         alignItems:"center",
-        justifyContent:"center"
+        justifyContent:"center",
+        alignSelf:"center",
     },
     body:{
         paddingTop:20,

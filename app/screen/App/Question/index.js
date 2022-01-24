@@ -75,6 +75,15 @@ const Question = ({ navigation, route }) => {
     });
   }, []);
   useEffect(() => {
+    if (reviewValue > 0) {
+      HandleActionable(0);
+      setshowActionable(false);
+    } else {
+      setshowActionable(true);
+    }
+  }, [reviewValue]);
+  
+  useEffect(() => {
     if (startAudit === 1) {
       const params = {
         question_id: question?.data?.question_id,
@@ -85,13 +94,18 @@ const Question = ({ navigation, route }) => {
     socket.on("bmOnlineStatus", (data) => {
       if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
         if (data.data.bm_online == 0)
-          alert(`${question?.branch_manager} is offline`);
+          // alert(`${question?.branch_manager} is offline`);
+          alert(`BM is offline`);
         setdisableBtn(data.data.bm_online);
       }
     });
-    if (!managerJoin && question?.audit_type == 1) {
-      alert(`${question?.branch_manager} is offline`);
-    }
+    socket.on("bmcapture", (data) => {
+      alert(data)
+      if (!managerJoin && question?.audit_type == 1&&data.state==1) {
+        // alert(`${question?.branch_manager} is offline`);
+        alert(`BM is offline`);
+      }
+    })
   }, [startAudit, managerJoin]);
 
   const unsubscribe = NetInfo.fetch().then((state) => {
@@ -467,6 +481,9 @@ const Question = ({ navigation, route }) => {
         setshowCapIMG(false);
         setCamImg([]);
       }
+    }else{
+
+      setshowActionable(true)
     }
   };
   const handleQuality = async(text) => {
@@ -487,6 +504,7 @@ const Question = ({ navigation, route }) => {
       }
     }
    await socket.emit("CountQuestionType", params, (data) => {
+   console.log('data: ', data.data.actioanble);
 
     if (question?.data?.count_previous_question_id != null) 
     {
@@ -498,7 +516,9 @@ const Question = ({ navigation, route }) => {
         setReviewValue(0);
         setshowActionable(true);
         setremark(data.data.remark);
-      } else {
+      } 
+      
+      else {
         setReviewValue(0);
         setremark("");
         setshowActionable(false);
@@ -509,7 +529,14 @@ const Question = ({ navigation, route }) => {
         setbmActionable(0);
         setatmActionable(0);
         setadminActionable(0);
-      } else {
+        setshowActionable(true);
+      } 
+      else if (data.data.actioanble == 2) {
+        // setReviewValue(0);
+        setshowActionable(false);
+        setremark("");
+      }
+      else {
         setrmmactionable(0);
         setremark("");
         setbmActionable(0);

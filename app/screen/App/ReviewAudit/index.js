@@ -44,22 +44,35 @@ export default function index({ route }) {
     if (response.status === 200) navigation.navigate("AuditSuccess");
     setislaoding(false);
   };
-  const HandleBM = (actionable) => {
+  const HandleBM = (actionable,question_id,audit_id) => {
     if (actionable.length > 0) {
       navigation.navigate("Actionable", {
         actionable: actionable,
         baseURL: baseURL,
+        question_id,
+        audit_id,
+        display_next:false,
         name: params.branch_manager,
       });
     } else {
-      alert("Branch Manager have not taken action!");
+      navigation.navigate("Actionable", {
+        actionable: actionable,
+        baseURL: baseURL,
+        name: params.branch_manager,
+        question_id,
+        audit_id,
+        display_next:false
+      });
+      // alert("Branch Manager have not taken action!");
     }
   };
-  const HandleRMM = (RM) => {
+  const HandleRMM = (RM,question_id,audit_id) => {
     navigation.navigate("Actionable", {
       RM: RM,
       baseURL: baseURL,
-      name: userData.name,
+      question_id,
+      audit_id,
+      display_next:true
     });
   };
   const getRepoStatus = async () => {

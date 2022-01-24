@@ -17,10 +17,20 @@ export default function index({ navigation, route }) {
   const [ID, setID] = useState('')
   const [isLoading, setisLoading] = useState(false);
   const [ssDropDown, setssDropDown] = useState(false)
+  const [work, setwork] = useState(0);
   useEffect(() => {
     getActionable();
-    
   }, []);
+  useEffect(() => {
+    if(data?.actionable?.length>0)
+    {
+      setcamImg(data.baseURL + data.actionable[0].image)
+      setwork(data.actionable[0].work_status)
+      setremark(data.actionable[0].actionable_remark)
+      setID(data.actionable[0].actionable_id)
+    }
+  }, []);
+  
   const getActionable = async () => {
     try {
       setisLoading(true)
@@ -35,6 +45,7 @@ export default function index({ navigation, route }) {
       );
       if (response.status == 200) {
         setID(response.data.RMM[0].actionable_id)
+        setwork(response.data.RMM[0].work_status?response.data.RMM[0].work_status:0)
         setremark(response.data.RMM[0].actionable_remark);
         setcamImg(response.data.base_url+response.data.RMM[0].image[0])
         setisLoading(false)
@@ -65,7 +76,8 @@ export default function index({ navigation, route }) {
       setssDropDown(false);
     });
   };
-  const HandleUpdate = async () => {
+  console.log()
+  const HandleUpdate = async (type) => {
     try {
       if(camImg){
       setisLoading(true);
@@ -76,10 +88,11 @@ export default function index({ navigation, route }) {
         type: camImg.mime === undefined ? "image/jpeg" : camImg.mime,
         name: camImg.substring(camImg.lastIndexOf("/") + 1),
       });
-      formdata.append("type", 2);
+      formdata.append("type", type);
+      formdata.append("work_status", work);
+      formdata.append("audit_id", data.audit_id);
+      formdata.append("question_id", data.question_id);
       formdata.append("actionable_id", ID);
-      formdata.append("audit_id", data.RM.audit_id);
-      formdata.append("question_id", data.RM.question_id);
       const response = await apiCall(
         "POST",
         apiEndPoints.ACTIONABLE_SUBMIT,
@@ -91,11 +104,11 @@ export default function index({ navigation, route }) {
           contentType: false,
           mimeType: "multipart/form-data",
         }
-      );
+        );
       if (response.status === 200) {
         setisLoading(false);
         setnext(false);
-        navigation.goBack();
+        navigation.navigate("DashboardScreen");
       }}else{
         alert("Please upload image")
       }
@@ -104,7 +117,7 @@ export default function index({ navigation, route }) {
       console.log(error);
     }
   };
-  
+  console.log("data?.actionable",data?.actionable)
   return (
     <>
       {isLoading && <Loader />}
@@ -119,6 +132,8 @@ export default function index({ navigation, route }) {
         setnext={setnext}
         setssDropDown={setssDropDown}
         HandleUpdate={HandleUpdate}
+        work={work}
+        setwork={setwork}
       />
       {ssDropDown && (
                       <Modal transparent={true}

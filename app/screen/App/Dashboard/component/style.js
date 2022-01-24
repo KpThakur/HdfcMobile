@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
     },
     box_body: {
         padding: 10,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
     },
     txt: {
         fontSize: normalize(SMALL_FONT_SIZE),

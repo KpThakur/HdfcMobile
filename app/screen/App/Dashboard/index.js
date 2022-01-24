@@ -238,10 +238,11 @@ const DashboardScreen = ({ navigation }) => {
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
+                              // backgroundColor:"red"
                             }}
                           >
                             <Image source={CALENDAR} style={styles.img} />
-                            <Text style={styles.txt}>Date : </Text>
+                            <Text style={styles.txt}>{"Date: "}</Text>
                             <Text style={styles.p_txt}>
                               {moment(audit.audit_date, "DD-MM-YYYY").format(
                                 "DD/MM/YYYY , ddd"
@@ -253,10 +254,11 @@ const DashboardScreen = ({ navigation }) => {
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
+                              // backgroundColor:"blue"
                             }}
                           >
                             <Image source={CLOCK} style={styles.img} />
-                            <Text style={styles.txt}>Time : </Text>
+                            <Text style={styles.txt}>{"Time: "}</Text>
                             <Text style={styles.p_txt}>
                               {moment(audit.audit_time, "H-mm").format(
                                 "h:mm A"

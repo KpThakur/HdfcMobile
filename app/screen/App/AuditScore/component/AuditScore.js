@@ -38,7 +38,8 @@ export default function AuditScore(props) {
     )
 }
 const displayScoreAudit = ({ item }) => {
-    const orderDate = moment(item?.previous_score_date).format("DD/MM/YYYY");
+    console.log("item?.previous_score_date",item)
+    const orderDate = moment(item?.previous_score_date,"DD-MM-YYYY").format("DD/MM/YYYY");
     return (
         <View style={styles.display_score}>
             <Text style={styles.s_txt}>Score : {item.previous_score}%</Text>

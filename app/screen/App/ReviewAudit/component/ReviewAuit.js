@@ -53,7 +53,6 @@ export default function ReviewAuit(props) {
           </View>
           {BM ? (
             <View style={{ marginTop: 20 }}>
-              {console.log("BM",BM)}
               <TouchableOpacity
                 onPress={() => handleBMDropDown()}
                 style={{
@@ -68,7 +67,8 @@ export default function ReviewAuit(props) {
                 }}
               >
                 <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
-                  {params.branch_manager}
+                  {/* {params.branch_manager} */}
+                  BM
                 </Text>
                 {bmDropDown ? (
                   <Image
@@ -85,8 +85,8 @@ export default function ReviewAuit(props) {
                     <TouchableOpacity
                     style={[styles.drop_down_item,{backgroundColor:bm.actiondone==1?PRIMARY_BLUE_COLOR:"#fff"}]}
                       key={index}
-                      onPress={() => props.HandleBM(bm.actionable)}
-                    >
+                      onPress={() => props.HandleBM(bm.actionable,bm.question_id,bm.audit_id)}
+                    >{console.log("BM=>",bm)}
                       <Text style={[styles.drop_down_txt,{color:bm.actiondone==1?"#fff":PRIMARY_BLUE_COLOR}]}>
                         {bm.audit_question.substring(0, 200)}
                       </Text>
@@ -118,7 +118,8 @@ export default function ReviewAuit(props) {
                 }}
               >
                 <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
-                  {userData.name}
+                  {/* {userData.name} */}
+                  RMM
                 </Text>
                 {rmDropDown ? (
                   <Image
@@ -135,8 +136,8 @@ export default function ReviewAuit(props) {
                     <TouchableOpacity
                     key={index}
                     style={[styles.drop_down_item,{backgroundColor:rm.actiondone==1?PRIMARY_BLUE_COLOR:"#fff"}]}
-                      onPress={() => props.HandleRMM(rm)}
-                    >
+                      onPress={() => props.HandleRMM(rm,rm.question_id,rm.audit_id)}
+                    >{console.log("Rm=>",rm)}
                       <Text style={[styles.drop_down_txt,{color:rm.actiondone==1?"#fff":PRIMARY_BLUE_COLOR}]}>
                         {rm.audit_question.substring(0, 200)}
                       </Text>
