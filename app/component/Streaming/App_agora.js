@@ -110,6 +110,7 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
     });
     this._engine?.addListener("UserOffline", (uid, reason) => {
       console.log("UserOffline", uid, reason);
+      
       this.props.handleManagerJoin(false);
       this.setState({
         remoteUid: this.state.remoteUid.filter((value) => value !== uid),

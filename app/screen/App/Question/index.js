@@ -59,14 +59,6 @@ const Question = ({ navigation, route }) => {
       setshowCapIMG(true);
     }
   }, [question]);
-  // useEffect(() => {
-  //   if (
-  //     question?.data?.bm_actionable_assignee == 1 &&
-  //     question?.data?.rmm_actionable_assignee == 1
-  //   ) {
-  //     HandleActionable(1);
-  //   }
-  // }, [question]);
   useEffect(() => {
     socket.on("image-sent", (data) => {
       if (data.socketEvent == "updateCaptureimage" + question?.audit_id) {
@@ -82,7 +74,7 @@ const Question = ({ navigation, route }) => {
       setshowActionable(true);
     }
   }, [reviewValue]);
-  
+
   useEffect(() => {
     if (startAudit === 1) {
       const params = {
@@ -93,19 +85,15 @@ const Question = ({ navigation, route }) => {
     }
     socket.on("bmOnlineStatus", (data) => {
       if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
-        if (data.data.bm_online == 0)
-          // alert(`${question?.branch_manager} is offline`);
+        if (data.data.bm_online == 0) {
           alert(`BM is offline`);
-        setdisableBtn(data.data.bm_online);
+          setdisableBtn(data.data.bm_online);
+        }
       }
     });
-    socket.on("bmcapture", (data) => {
-      alert(data)
-      if (!managerJoin && question?.audit_type == 1&&data.state==1) {
-        // alert(`${question?.branch_manager} is offline`);
-        alert(`BM is offline`);
-      }
-    })
+      // if (!managerJoin && question?.audit_type == 1) {
+      //   alert(`BM is offline`);
+      // }
   }, [startAudit, managerJoin]);
 
   const unsubscribe = NetInfo.fetch().then((state) => {
@@ -161,36 +149,35 @@ const Question = ({ navigation, route }) => {
         formdata.append("quality", quality);
         formdata.append("check_box_data", checked_val);
         formdata.append("check_answer", checkedAns);
-        formdata.append("show_actionable",showActionable)
-          if (question?.data.image_capture === "1") {
-            if (camImg.length > 0) {
-              if (question.audit_type !== 1) {
-                camImg?.map((img, index) => {
-                  return formdata.append("question_image", {
-                    uri: img.path,
-                    type: img.mime === undefined ? "image/jpeg" : img.mime,
-                    name: img.path.substring(img.path.lastIndexOf("/") + 1),
-                  });
+        formdata.append("show_actionable", showActionable);
+        if (question?.data.image_capture === "1") {
+          if (camImg.length > 0) {
+            if (question.audit_type !== 1) {
+              camImg?.map((img, index) => {
+                return formdata.append("question_image", {
+                  uri: img.path,
+                  type: img.mime === undefined ? "image/jpeg" : img.mime,
+                  name: img.path.substring(img.path.lastIndexOf("/") + 1),
                 });
-              } else {
-              }
-              setisLoading(false);
-              SubmitAPI(formdata);
+              });
             } else {
-              setisLoading(false);
-              if (question.data.action_on_no) {
-                !showCapIMG
-                  ? SubmitAPI(formdata)
-                  : alert("Please Capture The Image");
-              } else {
-                alert("Please Capture The Image");
-              }
             }
-          } else {
             setisLoading(false);
             SubmitAPI(formdata);
+          } else {
+            setisLoading(false);
+            if (question.data.action_on_no) {
+              !showCapIMG
+                ? SubmitAPI(formdata)
+                : alert("Please Capture The Image");
+            } else {
+              alert("Please Capture The Image");
+            }
           }
-        
+        } else {
+          setisLoading(false);
+          SubmitAPI(formdata);
+        }
       } else {
         setisLoading(false);
         alert("Poor Connection");
@@ -481,12 +468,11 @@ const Question = ({ navigation, route }) => {
         setshowCapIMG(false);
         setCamImg([]);
       }
-    }else{
-
-      setshowActionable(true)
+    } else {
+      setshowActionable(true);
     }
   };
-  const handleQuality = async(text) => {
+  const handleQuality = async (text) => {
     setquality(text);
     const params = {
       audit_id: question?.audit_id,
@@ -503,40 +489,35 @@ const Question = ({ navigation, route }) => {
         setshowActionable(false);
       }
     }
-   await socket.emit("CountQuestionType", params, (data) => {
-   console.log('data: ', data.data.actioanble);
+    await socket.emit("CountQuestionType", params, (data) => {
+      console.log("data: ", data.data.actioanble);
 
-    if (question?.data?.count_previous_question_id != null) 
-    {
-      if (data?.data?.set_range) {
-        console.log("else",data.data.set_range)
-        setremark("");
-        setReviewValue(data.data.set_range);
-      } else if (data.data.actioanble == 1) {
-        setReviewValue(0);
-        setshowActionable(true);
-        setremark(data.data.remark);
-      } 
-      
-      else {
-        setReviewValue(0);
-        setremark("");
-        setshowActionable(false);
-      }
-    }else if (text < 2) {
+      if (question?.data?.count_previous_question_id != null) {
+        if (data?.data?.set_range) {
+          console.log("else", data.data.set_range);
+          setremark("");
+          setReviewValue(data.data.set_range);
+        } else if (data.data.actioanble == 1) {
+          setReviewValue(0);
+          setshowActionable(true);
+          setremark(data.data.remark);
+        } else {
+          setReviewValue(0);
+          setremark("");
+          setshowActionable(false);
+        }
+      } else if (text < 2) {
         setrmmactionable(1);
         setremark(data.data.rm_remark);
         setbmActionable(0);
         setatmActionable(0);
         setadminActionable(0);
         setshowActionable(true);
-      } 
-      else if (data.data.actioanble == 2) {
+      } else if (data.data.actioanble == 2) {
         // setReviewValue(0);
         setshowActionable(false);
         setremark("");
-      }
-      else {
+      } else {
         setrmmactionable(0);
         setremark("");
         setbmActionable(0);
@@ -599,7 +580,7 @@ const Question = ({ navigation, route }) => {
       setrevActionable(1);
       setdropDown(!dropDown);
     } else if (type === 0) {
-      setremark("")
+      setremark("");
       setbmActionable(0);
       setrmmactionable(0);
       setatmActionable(0);
