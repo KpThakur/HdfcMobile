@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
  import { BASEURL } from './constant';
+ import AsyncStorage from '@react-native-community/async-storage';
 //import { AuthContext } from '../Components/AuthContext';
 // import NetInfo from "@react-native-community/netinfo";
 // import { Alert, Platform } from 'react-native';
@@ -37,6 +38,7 @@ export async function apiCall(method, url, data, header = { 'Content-Type': 'app
                 return error.response;
             }
             if (error.response.status === 403) {
+                AsyncStorage.removeItem('userToken')
                 return error.response;
             }
             if (error.response.status === 404) {
