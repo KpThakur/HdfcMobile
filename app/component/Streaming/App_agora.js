@@ -25,6 +25,7 @@ import SplashScreen from "react-native-splash-screen";
 import { MICOFF, MICON, PRIMARY_BLUE_COLOR,PAUSE,PLAY } from "../../utils/constant";
 import { apiCall } from "../../utils/httpClient";
 import apiEndPoints from "../../utils/apiEndPoints";
+import { check, PERMISSIONS, request } from 'react-native-permissions';
 const WindowWidth = Dimensions.get("window").width;
 const WindowHeight = Dimensions.get("window").height;
 const config = require("./agora.config.json");
@@ -131,6 +132,11 @@ export default class JoinChannelVideo extends Component<{}, State, any> {
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
         PermissionsAndroid.PERMISSIONS.CAMERA,
       ]);
+    }
+    if(Platform.OS==='ios')
+    {
+      await request(PERMISSIONS.IOS.MICROPHONE)
+      await request(PERMISSIONS.IOS.CAMERA)
     }
     await this._engine?.joinChannel(
       this.state.token,

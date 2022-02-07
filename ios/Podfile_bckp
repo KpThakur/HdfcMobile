@@ -11,10 +11,9 @@ target 'HDFC' do
     # to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
-  permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone/Permission-Microphone.podspec"
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera/Permission-Camera.podspec"
+
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'HDFCTests' do
     inherit! :complete
     # Pods for testing
