@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StatusBar,KeyboardAvoidingView} from 'react-native';
 import { styles } from './styles'
 import Button from '../.../../../../../component/Button'
 import { FONT_FAMILY_BOLD, GREY_TEXT_COLOR, STATUS_BAR_COLOR } from "../../../../utils/constant";
@@ -18,7 +18,11 @@ const LoginScreen = (props) => {
     }
     return (
         <ScrollView contentContainerStyle={{flexGrow:1}}>
-        <View style={styles.container}>
+        {/* <View style={styles.container}> */}
+        <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
             <StatusBar backgroundColor={STATUS_BAR_COLOR}/>
                 <Image source={BRAND_ICON} style={styles.brand_img} />
                 <Image source={HEROIC_ICON} style={styles.img} />
@@ -54,7 +58,7 @@ const LoginScreen = (props) => {
                         <Button buttonText="Log in" onPress={handleLogin}/>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
             </ScrollView>
         
     )
