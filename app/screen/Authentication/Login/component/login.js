@@ -17,7 +17,7 @@ const LoginScreen = (props) => {
 
     }
     return (
-        <ScrollView contentContainerStyle={{flexGrow:1}}>
+        <ScrollView contentContainerStyle={{flex:1}}>
         {/* <View style={styles.container}> */}
         <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}

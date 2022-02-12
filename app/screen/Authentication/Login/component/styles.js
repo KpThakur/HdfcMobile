@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
         alignItems:'center',
         paddingHorizontal:30,
         backgroundColor:"white",
-        justifyContent:"space-evenly"
+        justifyContent:"space-evenly",
     },
     header:{
         fontSize:normalize(LARGE_FONT_SIZE),

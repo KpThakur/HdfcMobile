@@ -10,6 +10,7 @@ import {
   BackHandler,
   Dimensions,
   FlatList,
+  KeyboardAvoidingView,
 } from "react-native";
 import Header from "../../../../component/Header";
 import Button from "../../../../component/Button";
@@ -21,7 +22,7 @@ import ImagePicker from "react-native-image-crop-picker";
 import {
   STAR,
   UNSTAR,
-  ARROW,
+  LEFT_ARROW,
   INFO_ICON,
   CROSS,
   PRIMARY_BLUE_COLOR,
@@ -61,7 +62,7 @@ const Question = (props) => {
   const [userData, setUserData] = useContext(UserContext);
   const [maxIMG, setmaxIMG] = useState(false);
   const [showModalIMG, setshowModalIMG] = useState();
-  useEffect(() => {}, [props.camImg]);
+  useEffect(() => { }, [props.camImg]);
   const handleInfo = () => {
     setonInfo(!onInfo);
   };
@@ -237,16 +238,20 @@ const Question = (props) => {
       {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
       {/* <ScrollView keyboardShouldPersistTaps={"always"} contentContainerStyle={{ flexGrow: 1, }}> */}
       {startAudit === 2 ? (
-        <Header leftImg={""} headerText={"Start Audit"} />
+        <Header
+          leftImg={LEFT_ARROW}
+          headerText={"Start Audit"}
+          onPress={() => navigation.goBack()}
+        />
       ) : //  : startAudit === 4 ? (
-      //   <Header
-      //     headerText={"Audit Actionable Review"}
-      //     onPress={() => {
-      //       navigation.openDrawer();
-      //     }}
-      //   />
-      // )
-      null}
+        //   <Header
+        //     headerText={"Audit Actionable Review"}
+        //     onPress={() => {
+        //       navigation.openDrawer();
+        //     }}
+        //   />
+        // )
+        null}
       <View style={styles.mainvwe}>
         {startAudit === 1 ? (
           <>
@@ -296,17 +301,33 @@ const Question = (props) => {
               </View>
             )}
             <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <Image
+                  source={LEFT_ARROW}
+                  style={{
+                    tintColor: PRIMARY_BLUE_COLOR,
+                    width: 20,
+                    height: 20,
+                    justifyContent: "flex-start",
+                  }}
+                />
+              </TouchableOpacity>
               <View
                 style={{
                   flex: 5,
                   alignItems: "center",
                   justifyContent: "center",
+                  flexDirection: "row",
                 }}
               >
                 <Text
                   style={
                     ([styles.branname],
-                    { fontFamily: FONT_FAMILY_BOLD, color: "#000" })
+                      { fontFamily: FONT_FAMILY_BOLD, color: "#000" })
                   }
                 >
                   {question?.data?.question_title}
@@ -364,558 +385,588 @@ const Question = (props) => {
           </Modal>
         ) : null}
 
-        {question?.audit_type == 0 ? null : (
-          <View style={{ height: 250 }}>
-            {
-              <JoinChannelVideo
-                handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                token={props.token}
-                channelId={props.channelId}
-                setmanagerJoin={() => {}}
-                handleJoin={(data) => props.handleJoin(data)}
-              />
-            }
-          </View>
-        )}
-        {startAudit === 1 ? (
-          <ScrollView
-            keyboardShouldPersistTaps={"always"}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
+<KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
           >
-            <View style={styles.body}>
-              {question?.data?.image_capture === "1" && (
-                <>
-                  {props?.camImg && !props.managerJoin ? (
-                    <View style={{ alignItems: "center", marginTop: 10 }}>
-                      {props.camImg.length > 0 ? (
-                        <Image
-                          source={{
-                            uri: props.camImg[props.camImg.length - 1].path,
+            <ScrollView
+              keyboardShouldPersistTaps={"always"}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{ flexGrow: 1 }}
+            >
+        {question?.audit_type == 0 ? null : (
+  <View style={{ height: 250 }}>
+    {
+      <JoinChannelVideo
+        handleManagerJoin={(data) => props.handleManagerJoin(data)}
+        token={props.token}
+        channelId={props.channelId}
+        setmanagerJoin={() => {}}
+        handleJoin={(data) => props.handleJoin(data)}
+      />
+    }
+  </View>
+)}
+        {startAudit === 1 ? (
+          // <KeyboardAvoidingView
+          //   behavior={Platform.OS === "ios" ? "padding" : "height"}
+          //   style={{ flex: 1 }}
+          // >
+          //   <ScrollView
+          //     keyboardShouldPersistTaps={"always"}
+          //     showsVerticalScrollIndicator={false}
+          //     contentContainerStyle={{ flexGrow: 1 }}
+          //   >
+              <View style={styles.body}>
+                {question?.data?.image_capture === "1" && (
+                  <>
+                    {props?.camImg && !props.managerJoin ? (
+                      <View style={{ alignItems: "center", marginTop: 10 }}>
+                        {props.camImg.length > 0 ? (
+                          <Image
+                            source={{
+                              uri: props.camImg[props.camImg.length - 1].path,
+                            }}
+                            style={{
+                              width: "100%",
+                              height: 300,
+                              borderRadius: 10,
+                              resizeMode: "contain",
+                            }}
+                          />
+                        ) : null}
+                      </View>
+                    ) : null}
+
+                    <View style={styles.brnchmannme}>
+                      {props.showCapIMG ? (
+                        <TouchableOpacity
+                          onPress={() => {
+                            question?.audit_type == 0
+                              ? showModal()
+                              : onCapture();
                           }}
                           style={{
-                            width: "100%",
-                            height: 300,
-                            borderRadius: 10,
-                            resizeMode: "contain",
+                            backgroundColor: "#1b7dec",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: 20,
+                            paddingVertical: 10,
+                            paddingHorizontal: 15,
                           }}
-                        />
+                        >
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              fontWeight: "700",
+                              color: "#ffffff",
+                            }}
+                          >
+                            Capture The image
+                          </Text>
+                        </TouchableOpacity>
                       ) : null}
+                      {ssDropDown && (
+                        <Modal transparent={true}>
+                          <View
+                            style={{
+                              backgroundColor: "#fff",
+                              width: "100%",
+                              position: "absolute",
+                              bottom: 0,
+                              paddingVertical: 40,
+                            }}
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                marginHorizontal: 10,
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: "#000",
+                                  color: "#000",
+                                  fontFamily: FONT_FAMILY_REGULAR,
+                                  fontSize: normalize(SMALL_FONT_SIZE),
+                                }}
+                              >
+                                Choose from
+                              </Text>
+                              <TouchableOpacity
+                                onPress={() => setssDropDown(!ssDropDown)}
+                              >
+                                <Image source={CROSS} />
+                              </TouchableOpacity>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-evenly",
+                              }}
+                            >
+                              <TouchableOpacity
+                                style={{ alignItems: "center" }}
+                                onPress={() => OpenCamera()}
+                              >
+                                <Image
+                                  source={CAMERA}
+                                  style={{
+                                    width: 30,
+                                    height: 30,
+                                    resizeMode: "contain",
+                                    tintColor: PRIMARY_BLUE_COLOR,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    color: "#000",
+                                    fontFamily: FONT_FAMILY_REGULAR,
+                                  }}
+                                >
+                                  Camera
+                                </Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{ alignItems: "center" }}
+                                onPress={() => OpenGallery()}
+                              >
+                                <Image
+                                  source={GALLERY}
+                                  style={{
+                                    width: 30,
+                                    height: 30,
+                                    resizeMode: "contain",
+                                    tintColor: PRIMARY_BLUE_COLOR,
+                                  }}
+                                />
+                                <Text
+                                  style={{
+                                    color: "#000",
+                                    fontFamily: FONT_FAMILY_REGULAR,
+                                  }}
+                                >
+                                  Gallery
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </Modal>
+                      )}
                     </View>
-                  ) : null}
+                    <View style={styles.img_sec}>
+                      <View style={styles.d_sec_img}>
+                        <View style={{}}>
+                          <FlatList
+                            keyExtractor={(item, index) => index.toString()}
+                            data={props.camImg}
+                            horizontal={true}
+                            pagingEnabled={true}
+                            renderItem={({ item, index }) => {
+                              return renderImage(item, index);
+                            }}
+                          />
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                )}
 
+                {question?.data?.question_type === "1" && (
                   <View style={styles.brnchmannme}>
-                    {props.showCapIMG ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          question?.audit_type == 0 ? showModal() : onCapture();
-                        }}
+                    <Button
+                      buttonText={"Yes"}
+                      style={{
+                        paddingVertical: 5,
+                        backgroundColor:
+                          yesNo === "YES"
+                            ? DARK_BLUE_COLOR
+                            : PRIMARY_BLUE_COLOR,
+                      }}
+                      onPress={() => {
+                        props.setyesNo("YES");
+                        props.setrevActionable(0);
+                        handleRemark(question.data.remark_yes);
+                        props.handleShowActionable(false);
+                        if (question.data.score_range == 1)
+                          props.showSetRange(true);
+                      }}
+                    />
+                    <Button
+                      buttonText={"No"}
+                      style={{
+                        paddingVertical: 5,
+                        backgroundColor:
+                          yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                      }}
+                      onPress={() => {
+                        props.setyesNo("NO");
+                        props.setrevActionable(1);
+                        handleRemark(question.data.remark_no);
+                        props.handleShowActionable(true);
+                        if (question.data.score_range == 1)
+                          props.showSetRange(false);
+                        if (question.data.action_on_no == 3) {
+                          props.HandleActionable(0);
+                          props.setshowActionable(false);
+                        }
+                      }}
+                    />
+                    {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
+                  </View>
+                )}
+                {question?.data?.question_type === "5" && (
+                  <View style={styles.brnchmannme}>
+                    <Button
+                      buttonText={"Yes"}
+                      style={{
+                        paddingVertical: 5,
+                        backgroundColor:
+                          yesNo === "YES"
+                            ? DARK_BLUE_COLOR
+                            : PRIMARY_BLUE_COLOR,
+                      }}
+                      onPress={() => {
+                        props.setyesNo("YES");
+                        handleRemark(question.data.remark_yes);
+                        props.handleShowActionable(false);
+                        if (question.data.score_range == 1)
+                          props.showSetRange(true);
+                      }}
+                    />
+                    <Button
+                      buttonText={"No"}
+                      style={{
+                        paddingVertical: 5,
+                        backgroundColor:
+                          yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                      }}
+                      onPress={() => {
+                        props.setyesNo("NO");
+                        handleRemark(question.data.remark_no);
+                        props.handleShowActionable(true);
+                        if (question.data.score_range == 1)
+                          props.showSetRange(false);
+                        if (question.data.action_on_no == 3) {
+                          props.HandleActionable(0);
+                          props.setshowActionable(false);
+                        }
+                      }}
+                    />
+                    <Button
+                      buttonText={"NA"}
+                      style={{
+                        paddingVertical: 5,
+                        backgroundColor:
+                          yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                      }}
+                      onPress={() => {
+                        props.setyesNo("NA");
+                        setremark("");
+                        props.HandleActionable(0);
+                      }}
+                    />
+                  </View>
+                )}
+                {question?.data?.question_type === "2" && (
+                  <View style={styles.brnchmannme}>
+                    <TextInput
+                      placeholder="Enter the quantity"
+                      value={quality}
+                      onChangeText={(text) => {
+                        props.handleQuality(text);
+                      }}
+                      keyboardType={"numeric"}
+                      style={{
+                        padding: 10,
+                        backgroundColor: "#ecececec",
+                        width: "100%",
+                      }}
+                    />
+                  </View>
+                )}
+                {question?.data?.check_box_type == 1 && (
+                  <>
+                    <Text style={styles.branname}>
+                      Select Appropriate Creatives from List
+                    </Text>
+                    <View style={{ flexDirection: "column" }}>
+                      {props.questionList.map((list, index) => (
+                        <TouchableOpacity
+                          style={{ flexDirection: "row", marginBottom: 5 }}
+                          key={index}
+                          onPress={() =>
+                            props.handleCheckList(index, list.name)
+                          }
+                        >
+                          <Image
+                            source={
+                              list.isSelected ? CHECKED_FILLED : UNCHECKED
+                            }
+                            style={{
+                              width: 20,
+                              height: 20,
+                              marginRight: 10,
+                              resizeMode: "contain",
+                            }}
+                          />
+                          <Text>{list.name}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </>
+                )}
+                {question?.data?.question_type === "4" && (
+                  <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+                    {/* <Text style={styles.txt}>Answer the following question</Text> */}
+                    {questionList &&
+                      questionList.map((question, index) => {
+                        return (
+                          <TouchableOpacity
+                            style={{ flexDirection: "row", marginBottom: 5 }}
+                            onPress={() => HandleAns(index, question)}
+                            key={index}
+                          >
+                            <Image
+                              source={
+                                showIndex === index
+                                  ? CHECKED_FILLED
+                                  : UNCHECKED_ICON
+                              }
+                              style={{ width: 20, height: 20, marginRight: 5 }}
+                            />
+                            <Text
+                              style={{
+                                fontSize: normalize(12),
+                                fontFamily: FONT_FAMILY_REGULAR,
+                                color:
+                                  showIndex === index
+                                    ? PRIMARY_BLUE_COLOR
+                                    : "#000",
+                              }}
+                            >
+                              {question}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                  </View>
+                )}
+                {question?.data.score_range_to > 1 ? (
+                  <View style={{}}>
+                    <Text style={styles.branname}>Rating</Text>
+                    <View style={{ alignItems: "center" }}>
+                      <Text>
+                        Rating:{" "}
+                        <Text
+                          style={{
+                            color: PRIMARY_BLUE_COLOR,
+                            fontFamily: FONT_FAMILY_SEMI_BOLD,
+                          }}
+                        >
+                          {props.reviewValue}
+                        </Text>
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <View
                         style={{
-                          backgroundColor: "#1b7dec",
+                          flex: 0.5,
                           justifyContent: "center",
-                          alignItems: "center",
-                          borderRadius: 20,
-                          paddingVertical: 10,
-                          paddingHorizontal: 15,
+                          alignItems: "flex-end",
                         }}
                       >
                         <Text
                           style={{
-                            fontSize: 14,
-                            fontWeight: "700",
-                            color: "#ffffff",
+                            color: PRIMARY_BLUE_COLOR,
+                            fontFamily: FONT_FAMILY_SEMI_BOLD,
                           }}
                         >
-                          Capture The image
+                          {" "}
+                          {question?.data.score_range_from}
                         </Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {ssDropDown && (
-                      <Modal transparent={true}>
-                        <View
+                      </View>
+                      <Slider
+                        style={{ height: 40, flex: 5 }}
+                        minimumValue={question?.data.score_range_from}
+                        maximumValue={question?.data.score_range_to}
+                        minimumTrackTintColor={PRIMARY_BLUE_COLOR}
+                        maximumTrackTintColor="#000000"
+                        value={props.reviewValue}
+                        thumbTintColor={PRIMARY_BLUE_COLOR}
+                        step={1}
+                        onValueChange={(val) => _handleReivew(val)}
+                      />
+                      <View style={{ flex: 0.5 }}>
+                        <Text
                           style={{
-                            backgroundColor: "#fff",
-                            width: "100%",
-                            position: "absolute",
-                            bottom: 0,
-                            paddingVertical: 40,
+                            color: PRIMARY_BLUE_COLOR,
+                            fontFamily: FONT_FAMILY_SEMI_BOLD,
                           }}
                         >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              marginHorizontal: 10,
-                            }}
-                          >
-                            <Text
-                              style={{
-                                color: "#000",
-                                color: "#000",
-                                fontFamily: FONT_FAMILY_REGULAR,
-                                fontSize: normalize(SMALL_FONT_SIZE),
-                              }}
-                            >
-                              Choose from
-                            </Text>
-                            <TouchableOpacity
-                              onPress={() => setssDropDown(!ssDropDown)}
-                            >
-                              <Image source={CROSS} />
-                            </TouchableOpacity>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "space-evenly",
-                            }}
-                          >
-                            <TouchableOpacity
-                              style={{ alignItems: "center" }}
-                              onPress={() => OpenCamera()}
-                            >
-                              <Image
-                                source={CAMERA}
-                                style={{
-                                  width: 30,
-                                  height: 30,
-                                  resizeMode: "contain",
-                                  tintColor: PRIMARY_BLUE_COLOR,
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  color: "#000",
-                                  fontFamily: FONT_FAMILY_REGULAR,
-                                }}
-                              >
-                                Camera
-                              </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{ alignItems: "center" }}
-                              onPress={() => OpenGallery()}
-                            >
-                              <Image
-                                source={GALLERY}
-                                style={{
-                                  width: 30,
-                                  height: 30,
-                                  resizeMode: "contain",
-                                  tintColor: PRIMARY_BLUE_COLOR,
-                                }}
-                              />
-                              <Text
-                                style={{
-                                  color: "#000",
-                                  fontFamily: FONT_FAMILY_REGULAR,
-                                }}
-                              >
-                                Gallery
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        </View>
-                      </Modal>
-                    )}
-                  </View>
-                  <View style={styles.img_sec}>
-                    <View style={styles.d_sec_img}>
-                      <View style={{}}>
-                        <FlatList
-                          keyExtractor={(item, index) => index.toString()}
-                          data={props.camImg}
-                          horizontal={true}
-                          pagingEnabled={true}
-                          renderItem={({ item, index }) => {
-                            return renderImage(item, index);
-                          }}
-                        />
+                          {question?.data.score_range_to}
+                        </Text>
                       </View>
                     </View>
                   </View>
-                </>
-              )}
-
-              {question?.data?.question_type === "1" && (
-                <View style={styles.brnchmannme}>
-                  <Button
-                    buttonText={"Yes"}
-                    style={{
-                      paddingVertical: 5,
-                      backgroundColor:
-                        yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                    }}
-                    onPress={() => {
-                      props.setyesNo("YES");
-                      props.setrevActionable(0);
-                      handleRemark(question.data.remark_yes);
-                      props.handleShowActionable(false);
-                      if (question.data.score_range == 1)
-                        props.showSetRange(true);
-                    }}
-                  />
-                  <Button
-                    buttonText={"No"}
-                    style={{
-                      paddingVertical: 5,
-                      backgroundColor:
-                        yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                    }}
-                    onPress={() => {
-                      props.setyesNo("NO");
-                      props.setrevActionable(1);
-                      handleRemark(question.data.remark_no);
-                      props.handleShowActionable(true);
-                      if (question.data.score_range == 1)
-                        props.showSetRange(false);
-                      if (question.data.action_on_no == 3) {
-                        props.HandleActionable(0);
-                        props.setshowActionable(false);
-                      }
-                    }}
-                  />
-                  {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
-                </View>
-              )}
-              {question?.data?.question_type === "5" && (
-                <View style={styles.brnchmannme}>
-                  <Button
-                    buttonText={"Yes"}
-                    style={{
-                      paddingVertical: 5,
-                      backgroundColor:
-                        yesNo === "YES" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                    }}
-                    onPress={() => {
-                      props.setyesNo("YES");
-                      handleRemark(question.data.remark_yes);
-                      props.handleShowActionable(false);
-                      if (question.data.score_range == 1)
-                        props.showSetRange(true);
-                    }}
-                  />
-                  <Button
-                    buttonText={"No"}
-                    style={{
-                      paddingVertical: 5,
-                      backgroundColor:
-                        yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                    }}
-                    onPress={() => {
-                      props.setyesNo("NO");
-                      handleRemark(question.data.remark_no);
-                      props.handleShowActionable(true);
-                      if (question.data.score_range == 1)
-                        props.showSetRange(false);
-                      if (question.data.action_on_no == 3) {
-                        props.HandleActionable(0);
-                        props.setshowActionable(false);
-                      }
-                    }}
-                  />
-                  <Button
-                    buttonText={"NA"}
-                    style={{
-                      paddingVertical: 5,
-                      backgroundColor:
-                        yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                    }}
-                    onPress={() => {
-                      props.setyesNo("NA");
-                      setremark("");
-                      props.HandleActionable(0);
-                    }}
-                  />
-                </View>
-              )}
-              {question?.data?.question_type === "2" && (
-                <View style={styles.brnchmannme}>
-                  <TextInput
-                    placeholder="Enter the quantity"
-                    value={quality}
-                    onChangeText={(text) => {
-                      props.handleQuality(text);
-                    }}
-                    keyboardType={"numeric"}
-                    style={{
-                      padding: 10,
-                      backgroundColor: "#ecececec",
-                      width: "100%",
-                    }}
-                  />
-                </View>
-              )}
-              {question?.data?.check_box_type == 1 && (
-                <>
-                  <Text style={styles.branname}>
-                    Select Appropriate Creatives from List
-                  </Text>
-                  <View style={{ flexDirection: "column" }}>
-                    {props.questionList.map((list, index) => (
+                ) : null}
+                {props.showActionable ? (
+                  question?.data?.rmm_actionable_assignee === "1" ||
+                    question?.data?.bm_actionable_assignee === "1" ||
+                    question?.data?.admin_assignee === 1 ||
+                    question?.data?.atm_cordinator_assignee === 1 ? (
+                    <View style={{ marginTop: 20 }}>
+                      <Text style={styles.branname}>Actionable</Text>
                       <TouchableOpacity
-                        style={{ flexDirection: "row", marginBottom: 5 }}
-                        key={index}
-                        onPress={() => props.handleCheckList(index, list.name)}
-                      >
-                        <Image
-                          source={list.isSelected ? CHECKED_FILLED : UNCHECKED}
-                          style={{
-                            width: 20,
-                            height: 20,
-                            marginRight: 10,
-                            resizeMode: "contain",
-                          }}
-                        />
-                        <Text>{list.name}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </>
-              )}
-              {question?.data?.question_type === "4" && (
-                <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
-                  {/* <Text style={styles.txt}>Answer the following question</Text> */}
-                  {questionList &&
-                    questionList.map((question, index) => {
-                      return (
-                        <TouchableOpacity
-                          style={{ flexDirection: "row", marginBottom: 5 }}
-                          onPress={() => HandleAns(index, question)}
-                          key={index}
-                        >
-                          <Image
-                            source={
-                              showIndex === index
-                                ? CHECKED_FILLED
-                                : UNCHECKED_ICON
-                            }
-                            style={{ width: 20, height: 20, marginRight: 5 }}
-                          />
-                          <Text
-                            style={{
-                              fontSize: normalize(12),
-                              fontFamily: FONT_FAMILY_REGULAR,
-                              color:
-                                showIndex === index
-                                  ? PRIMARY_BLUE_COLOR
-                                  : "#000",
-                            }}
-                          >
-                            {question}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                </View>
-              )}
-              {question?.data.score_range_to > 1 ? (
-                <View style={{}}>
-                  <Text style={styles.branname}>Rating</Text>
-                  <View style={{ alignItems: "center" }}>
-                    <Text>
-                      Rating:{" "}
-                      <Text
+                        onPress={() => handleDropDown()}
                         style={{
-                          color: PRIMARY_BLUE_COLOR,
-                          fontFamily: FONT_FAMILY_SEMI_BOLD,
+                          backgroundColor: GREY_TEXT_COLOR,
+                          flexDirection: "row",
+                          alignItems: "center",
+                          borderRadius: 5,
+                          justifyContent: "space-between",
+                          paddingVertical: 10,
+                          paddingHorizontal: 10,
                         }}
                       >
-                        {props.reviewValue}
-                      </Text>
-                    </Text>
+                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
+                          {bmActionable
+                            ? "BM"
+                            : rmmactionable
+                              ? "RMM"
+                              : props.adminActionable
+                                ? "Admin"
+                                : props.atmActionable
+                                  ? "ATM Cordinator"
+                                  : "Assign to"}
+                        </Text>
+                        {dropDown ? (
+                          <Image
+                            source={DOWNARROW}
+                            style={{ transform: [{ rotateZ: "180deg" }] }}
+                          />
+                        ) : (
+                          <Image source={DOWNARROW} />
+                        )}
+                      </TouchableOpacity>
+                      {dropDown && (
+                        <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
+                          {props?.revActionable == 1 ? (
+                            <TouchableOpacity
+                              style={styles.drop_down_item}
+                              onPress={() => {
+                                HandleActionable(0);
+                                props.setdropDown(false);
+                              }}
+                            >
+                              <Text style={styles.drop_down_txt}>
+                                Remove actionable
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                          {question?.data.bm_actionable_assignee == "1" ? (
+                            <TouchableOpacity
+                              style={styles.drop_down_item}
+                              onPress={() => HandleActionable(1)}
+                            >
+                              <Text style={styles.drop_down_txt}>
+                                {/* {question?.branch_manager} */}
+                                BM
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                          {question?.data.rmm_actionable_assignee == "1" ? (
+                            <TouchableOpacity
+                              style={styles.drop_down_item}
+                              onPress={() => HandleActionable(2)}
+                            >
+                              <Text style={styles.drop_down_txt}>
+                                {/* {userData.name} */}
+                                RMM
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                          {question?.data.atm_cordinator_assignee == 1 ? (
+                            <TouchableOpacity
+                              style={styles.drop_down_item}
+                              onPress={() => HandleActionable(3)}
+                            >
+                              <Text style={styles.drop_down_txt}>
+                                {"ATM Cordinator"}
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                          {question?.data.admin_assignee == 1 ? (
+                            <TouchableOpacity
+                              style={styles.drop_down_item}
+                              onPress={() => HandleActionable(4)}
+                            >
+                              <Text style={styles.drop_down_txt}>
+                                {"Admin"}
+                              </Text>
+                            </TouchableOpacity>
+                          ) : null}
+                        </View>
+                      )}
+                    </View>
+                  ) : null
+                ) : null}
+                {question?.data?.remark === "1" && (
+                  <View style={{ marginTop: 10 }}>
+                    <Text style={styles.branname}>Actionable/ Remarks </Text>
+                    <TextInput
+                      placeholder="Remarks"
+                      multiline
+                      numberOfLines={3}
+                      style={styles.input}
+                      value={remark !== "undefined" ? remark : ""}
+                      onChangeText={(text) => handleRemark(text)}
+                    />
                   </View>
+                )}
+
+                <View
+                  style={{
+                    marginVertical: 20,
+                    flex: 1,
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      justifyContent: "space-evenly",
+                      width: "100%",
                     }}
                   >
-                    <View
-                      style={{
-                        flex: 0.5,
-                        justifyContent: "center",
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: PRIMARY_BLUE_COLOR,
-                          fontFamily: FONT_FAMILY_SEMI_BOLD,
-                        }}
-                      >
-                        {" "}
-                        {question?.data.score_range_from}
-                      </Text>
-                    </View>
-                    <Slider
-                      style={{ height: 40, flex: 5 }}
-                      minimumValue={question?.data.score_range_from}
-                      maximumValue={question?.data.score_range_to}
-                      minimumTrackTintColor={PRIMARY_BLUE_COLOR}
-                      maximumTrackTintColor="#000000"
-                      value={props.reviewValue}
-                      thumbTintColor={PRIMARY_BLUE_COLOR}
-                      step={1}
-                      onValueChange={(val) => _handleReivew(val)}
+                    <Button
+                      disabled={props.disableBtn == 0 ? true : false}
+                      buttonText={"Previous"}
+                      style={
+                        props.disableBtn == 0 && { backgroundColor: "gray" }
+                      }
+                      onPress={() => props.prevQuestion()}
                     />
-                    <View style={{ flex: 0.5 }}>
-                      <Text
-                        style={{
-                          color: PRIMARY_BLUE_COLOR,
-                          fontFamily: FONT_FAMILY_SEMI_BOLD,
-                        }}
-                      >
-                        {question?.data.score_range_to}
-                      </Text>
-                    </View>
+                    <Button
+                      disabled={props.disableBtn == 0 ? true : false}
+                      buttonText={"Next"}
+                      style={
+                        props.disableBtn == 0 && { backgroundColor: "gray" }
+                      }
+                      onPress={() => handleSubmit()}
+                    />
                   </View>
-                </View>
-              ) : null}
-              {props.showActionable ? (
-                question?.data?.rmm_actionable_assignee === "1" ||
-                question?.data?.bm_actionable_assignee === "1" ||
-                question?.data?.admin_assignee === 1 ||
-                question?.data?.atm_cordinator_assignee === 1 ? (
-                  <View style={{ marginTop: 20 }}>
-                    <Text style={styles.branname}>Actionable</Text>
-                    <TouchableOpacity
-                      onPress={() => handleDropDown()}
-                      style={{
-                        backgroundColor: GREY_TEXT_COLOR,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        borderRadius: 5,
-                        justifyContent: "space-between",
-                        paddingVertical: 10,
-                        paddingHorizontal: 10,
-                      }}
-                    >
-                      <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
-                        {bmActionable
-                          ? "BM"
-                          : rmmactionable
-                          ? "RMM"
-                          : props.adminActionable
-                          ? "Admin"
-                          : props.atmActionable
-                          ? "ATM Cordinator"
-                          : "Assign to"}
-                      </Text>
-                      {dropDown ? (
-                        <Image
-                          source={DOWNARROW}
-                          style={{ transform: [{ rotateZ: "180deg" }] }}
-                        />
-                      ) : (
-                        <Image source={DOWNARROW} />
-                      )}
-                    </TouchableOpacity>
-                    {dropDown && (
-                      <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
-                        {props?.revActionable == 1 ? (
-                          <TouchableOpacity
-                            style={styles.drop_down_item}
-                            onPress={() => {
-                              HandleActionable(0);
-                              props.setdropDown(false);
-                            }}
-                          >
-                            <Text style={styles.drop_down_txt}>
-                              Remove actionable
-                            </Text>
-                          </TouchableOpacity>
-                        ) : null}
-                        {question?.data.bm_actionable_assignee == "1" ? (
-                          <TouchableOpacity
-                            style={styles.drop_down_item}
-                            onPress={() => HandleActionable(1)}
-                          >
-                            <Text style={styles.drop_down_txt}>
-                              {/* {question?.branch_manager} */}
-                              BM
-                            </Text>
-                          </TouchableOpacity>
-                        ) : null}
-                        {question?.data.rmm_actionable_assignee == "1" ? (
-                          <TouchableOpacity
-                            style={styles.drop_down_item}
-                            onPress={() => HandleActionable(2)}
-                          >
-                            <Text style={styles.drop_down_txt}>
-                              {/* {userData.name} */}
-                              RMM
-                            </Text>
-                          </TouchableOpacity>
-                        ) : null}
-                        {question?.data.atm_cordinator_assignee == 1 ? (
-                          <TouchableOpacity
-                            style={styles.drop_down_item}
-                            onPress={() => HandleActionable(3)}
-                          >
-                            <Text style={styles.drop_down_txt}>
-                              {"ATM Cordinator"}
-                            </Text>
-                          </TouchableOpacity>
-                        ) : null}
-                        {question?.data.admin_assignee == 1 ? (
-                          <TouchableOpacity
-                            style={styles.drop_down_item}
-                            onPress={() => HandleActionable(4)}
-                          >
-                            <Text style={styles.drop_down_txt}>{"Admin"}</Text>
-                          </TouchableOpacity>
-                        ) : null}
-                      </View>
-                    )}
-                  </View>
-                ) : null
-              ) : null}
-              {question?.data?.remark === "1" && (
-                <View style={{ marginTop: 10 }}>
-                  <Text style={styles.branname}>Actionable/ Remarks </Text>
-                  <TextInput
-                    placeholder="Remarks"
-                    multiline
-                    numberOfLines={3}
-                    style={styles.input}
-                    value={remark !== "undefined" ? remark : ""}
-                    onChangeText={(text) => handleRemark(text)}
-                  />
-                </View>
-              )}
-
-              <View
-                style={{
-                  marginVertical: 20,
-                  flex: 1,
-                  justifyContent: "flex-end",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-evenly",
-                    width: "100%",
-                  }}
-                >
-                  <Button
-                    disabled={props.disableBtn == 0 ? true : false}
-                    buttonText={"Previous"}
-                    style={props.disableBtn == 0 && { backgroundColor: "gray" }}
-                    onPress={() => props.prevQuestion()}
-                  />
-                  <Button
-                    disabled={props.disableBtn == 0 ? true : false}
-                    buttonText={"Next"}
-                    style={props.disableBtn == 0 && { backgroundColor: "gray" }}
-                    onPress={() => handleSubmit()}
-                  />
                 </View>
               </View>
-            </View>
-          </ScrollView>
+          //   </ScrollView>
+          // </KeyboardAvoidingView>
         ) : startAudit === 2 ? (
           <Notify
             managerJoin={managerJoin}
@@ -926,6 +977,8 @@ const Question = (props) => {
         ) : startAudit === 3 ? (
           <AuditScoreScreen setstartAudit={setstartAudit} />
         ) : null}
+        </ScrollView>
+        </KeyboardAvoidingView>
       </View>
       {/* </ScrollView> */}
     </View>

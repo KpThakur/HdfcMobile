@@ -25,6 +25,7 @@ const Header = (props) => {
                     >
                         <Image
                             source={leftImg}
+                            style={{tintColor:"#fff",width:20,height:20}}
                         />
                     </TouchableOpacity>}
                     {/* {showAppIcon &&
