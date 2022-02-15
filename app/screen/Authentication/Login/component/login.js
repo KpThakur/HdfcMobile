@@ -29,7 +29,7 @@ const LoginScreen = (props) => {
                 <Text style={styles.header}>Login</Text>
                 <View style={{ width: '100%' }}>
                     <View>
-                        <TextInput placeholder="Email  Address / Employee ID" style={styles.text_field} 
+                        <TextInput placeholder="Email  Address" style={styles.text_field} 
                         placeholderTextColor={{color:"black"}} value={email} onChangeText={text=>setemail(text)}/>
                     </View>
                     <View>
