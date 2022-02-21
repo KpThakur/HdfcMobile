@@ -117,7 +117,6 @@ export default function index({ navigation, route }) {
       console.log(error);
     }
   };
-  console.log("data?.actionable",data?.actionable)
   return (
     <>
       {isLoading && <Loader />}

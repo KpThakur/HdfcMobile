@@ -55,7 +55,12 @@ const Question = ({ navigation, route }) => {
   useEffect(() => {
     if (question?.data?.yes_no == "NO" && question?.data?.action_on_no == 2) {
       setshowCapIMG(false);
-    } else {
+    }
+    else if(yesNo =="NA")
+    {
+      setshowCapIMG(false);
+    }
+    else {
       setshowCapIMG(true);
     }
   }, [question]);
@@ -368,6 +373,7 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
+        setyesNo(response.data.answer.yes_no)
         if (response.data.data.check_box_value) {
           setquestionList(response.data.data[0].check_box_value.split(","));
           var item = response.data.data[0].check_box_value.split(",");
@@ -600,7 +606,7 @@ const Question = ({ navigation, route }) => {
     itemsArray[index].isSelected = await !itemsArray[index].isSelected;
     setquestionList(itemsArray);
   };
-  console.log("QES:", question.data);
+  console.log("QES:", question);
   return (
     <>
       {isLoading && <Loader />}
