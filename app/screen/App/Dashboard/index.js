@@ -97,9 +97,14 @@ const DashboardScreen = ({ navigation }) => {
         apiEndPoints.GET_AUDIT_LIST,
         params
       );
-      if ((response.status = 200)) {
+      if (response.status === 200) {
         setauditArray(response.data.data);
         setauditList(response.data.data);
+      }
+      else if(response.status === 403)
+      {
+        AsyncStorage.removeItem('userToken')
+        navigation.navigate('Login')
       }
     } catch (error) {}
   };

@@ -66,7 +66,7 @@ function AppStack() {
             <App.Screen name="ReviewAduit" component={ReviewAuditScreen} />
             <App.Screen name="Actionable" component={ActionableScreen} />
             <App.Screen name="AuditSuccess" component={AuditSuccessScreen} />
-            
+            <App.Screen name="Login" component={LoginScreen} />
         </App.Navigator>
     )
 }
