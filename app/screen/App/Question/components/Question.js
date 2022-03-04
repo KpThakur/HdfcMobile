@@ -127,6 +127,7 @@ const Question = (props) => {
       height: windowHeight / 2,
       multiple: true,
       cropping: false,
+      compressImageQuality:0.5
     }).then((image) => {
       let combineImg = props.camImg == null ? [] : [...props.camImg];
       image.map((val) => {
@@ -144,6 +145,7 @@ const Question = (props) => {
       width: 300,
       height: 400,
       cropping: false,
+      compressImageQuality:0.5
     }).then((image) => {
       let combineImg = props.camImg == null ? [] : [...props.camImg];
       combineImg.push({

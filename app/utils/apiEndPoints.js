@@ -26,6 +26,7 @@ export default {
   GETAAUDITSHAREINFO:"/api/v1/audit/getaAuditshareinfo",
   ACTIONABLE_SUBMIT:'api/v1/question/actionableSubmit',
   GET_ACTIONABLE:'api/v1/question/getRmActionableAction',
-  REPO_STATUS:'api/v1/audit/getActionableReportStatus'
+  REPO_STATUS:'api/v1/audit/getActionableReportStatus',
+  APP_UPDATE:'api/v1/audit/updateApp'
 
 }

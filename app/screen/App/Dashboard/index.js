@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Modal,
   Image,
   ScrollView,
   FlatList,
@@ -13,18 +12,14 @@ import { styles } from "./component/style";
 import {
   CALENDAR,
   CLOCK,
-  PRIMARY_BLUE_COLOR,
   DASHBOARD_HEROIC,
-  CANCEL_ICON,
   ADD_ICON,
-  GREY_TEXT_COLOR,
   GREEN_COLOR,
   RED_COLOR,
   FONT_FAMILY_REGULAR,
   FONT_FAMILY_SEMI_BOLD,
   TINY_FONT_SIZE,
 } from "../../../utils/constant";
-import Button from "../../../component/Button";
 import Cancel from "../../../component/Cancel";
 import { normalize } from "../../../utils/scaleFontSize";
 import { apiCall } from "../../../utils/httpClient";
@@ -37,6 +32,8 @@ import { QuestionContext } from "../../../utils/QuestionContext";
 import { EditAuditContext } from "../../../utils/EditAuditContext";
 import { socket } from "../../../utils/Client";
 import _ from "lodash";
+
+import UpdateAlert from "../../../component/UpdateAlert";
 const DashboardScreen = ({ navigation }) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
@@ -47,7 +44,6 @@ const DashboardScreen = ({ navigation }) => {
   const [reason, setreason] = useState("");
   const [editAudit, seteditAudit] = useContext(EditAuditContext);
   const [auditArray, setauditArray] = useState([]);
-
   useFocusEffect(
     React.useCallback(() => {
       AuditList(tabBar);
@@ -100,11 +96,9 @@ const DashboardScreen = ({ navigation }) => {
       if (response.status === 200) {
         setauditArray(response.data.data);
         setauditList(response.data.data);
-      }
-      else if(response.status === 403)
-      {
-        AsyncStorage.removeItem('userToken')
-        navigation.navigate('Login')
+      } else if (response.status === 403) {
+        AsyncStorage.removeItem("userToken");
+        navigation.navigate("Login");
       }
     } catch (error) {}
   };
@@ -135,7 +129,6 @@ const DashboardScreen = ({ navigation }) => {
     branch_manager,
     time
   ) => {
-
     if (status == 1) QuestionList(id, branch_manager, questions_id);
     else {
       StartAudit(id);
@@ -200,8 +193,8 @@ const DashboardScreen = ({ navigation }) => {
     } else {
       setauditList(auditArray);
     }
-  }
-  
+  };
+
   const renderTodayAudit = ({ item, index }) => {
     return (
       <View style={{ backgroundColor: "#fff" }}>
@@ -443,18 +436,6 @@ const DashboardScreen = ({ navigation }) => {
                 data={auditList}
                 renderItem={({ item: audit }) => {
                   return (
-                    // <View style={styles.display_audit}>
-                    //     {
-                    //         audit.date ?
-                    //             <View style={{ paddingTop: 10 }}>
-                    //                 <Text style={styles.txt}>
-                    //                     {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                    //                 </Text>
-                    //             </View> : null
-                    //     }
-
-                    //     {
-                    //         audit?.items && audit?.items.map(item => (
                     <View style={styles.box}>
                       <Cancel
                         popup={popup}
@@ -624,14 +605,6 @@ const DashboardScreen = ({ navigation }) => {
                 data={auditList}
                 renderItem={({ item: audit }) => {
                   return (
-                    // <View style={styles.display_audit}>
-                    //     <View style={{ paddingTop: 10 }}>
-                    //         <Text style={styles.txt}>
-                    //             {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                    //         </Text>
-                    //     </View>
-                    //     {
-                    //         audit?.items && audit?.items.map(item => (
                     <View style={styles.box}>
                       <View
                         style={
@@ -783,13 +756,6 @@ const DashboardScreen = ({ navigation }) => {
                 data={auditList}
                 renderItem={({ item: audit }) => {
                   return (
-                    // audit?.items && audit?.items.map((item) => (
-                    //     <View style={styles.display_audit}>
-                    //         <View style={{ paddingTop: 10 }}>
-                    //             <Text style={styles.txt}>
-                    //                 {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                    //             </Text>
-                    //         </View>
                     <View style={styles.box}>
                       <View
                         style={
@@ -934,13 +900,6 @@ const DashboardScreen = ({ navigation }) => {
                 data={auditList}
                 renderItem={({ item: audit }) => {
                   return (
-                    // audit?.items && audit?.items.map((item) => (
-                    //     <View style={styles.display_audit}>
-                    //         <View style={{ paddingTop: 10 }}>
-                    //             <Text style={styles.txt}>
-                    //                 {moment(audit.date, 'DD-MM-YYYY').format('MMMM,YYYY')}
-                    //             </Text>
-                    //         </View>
                     <View style={styles.box}>
                       <View
                         style={
@@ -1082,17 +1041,20 @@ const DashboardScreen = ({ navigation }) => {
   };
 
   return (
-    <DashboardView
-      option={option}
-      tabBar={tabBar}
-      onPressSelectedTab={onPressSelectedTab}
-      renderTodayAudit={renderTodayAudit}
-      auditList={auditList}
-      setauditList={setauditList}
-      search={search}
-      setsearch={setsearch}
-      HandleSearch={HandleSearch}
-    />
+    <>
+      <UpdateAlert/>
+      <DashboardView
+        option={option}
+        tabBar={tabBar}
+        onPressSelectedTab={onPressSelectedTab}
+        renderTodayAudit={renderTodayAudit}
+        auditList={auditList}
+        setauditList={setauditList}
+        search={search}
+        setsearch={setsearch}
+        HandleSearch={HandleSearch}
+      />
+    </>
   );
 };
 export default DashboardScreen;

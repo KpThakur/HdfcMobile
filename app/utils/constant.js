@@ -54,6 +54,7 @@ export const GALLERY=require('../assets/images/image-gallery.png')
 export const MICON=require('../assets/images/voice-recording.png')
 export const MICOFF=require('../assets/images/mute.png')
 export const LEFT_ARROW=require('../assets/images/left-2.png')
+export const UPDATE_ICON=require('../assets/images/refresh-page-option.png')
 
 // FontSize
 export const TINY_FONT_SIZE = 10;
