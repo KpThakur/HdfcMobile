@@ -62,7 +62,7 @@ const Question = (props) => {
   const [userData, setUserData] = useContext(UserContext);
   const [maxIMG, setmaxIMG] = useState(false);
   const [showModalIMG, setshowModalIMG] = useState();
-  useEffect(() => { }, [props.camImg]);
+  useEffect(() => {}, [props.camImg]);
   const handleInfo = () => {
     setonInfo(!onInfo);
   };
@@ -122,31 +122,39 @@ const Question = (props) => {
     setcheckedAns(question);
   };
   const OpenGallery = () => {
-    ImagePicker.openPicker({
-      width: windowWidth,
-      height: windowHeight / 2,
-      multiple: true,
-      cropping: false,
-      compressImageQuality:0.5
-    }).then((image) => {
-      let combineImg = props.camImg == null ? [] : [...props.camImg];
-      image.map((val) => {
-        combineImg.push({
-          path: val.path,
-          type: "gallery",
+    try {
+      ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        multiple: true,
+        cropping: false,
+        mediaType:'photo',
+        compressImageQuality: 0.5,
+      }).then((image) => {
+      // console.log('imageGall: ', image);
+        let combineImg = props.camImg == null ? [] : [...props.camImg];
+        image.map((val) => {
+          combineImg.push({
+            path: val.path,
+            type: "gallery",
+          });
         });
+        props.setCamImg(combineImg);
+        setssDropDown(false);
       });
-      props.setCamImg(combineImg);
-      setssDropDown(false);
-    });
+    } catch (error) {
+    console.log('error: ', error);
+      
+    }
   };
   const OpenCamera = () => {
     ImagePicker.openCamera({
       width: 300,
       height: 400,
       cropping: false,
-      compressImageQuality:0.5
+      compressImageQuality: 0.5,
     }).then((image) => {
+    console.log('image: ', image);
       let combineImg = props.camImg == null ? [] : [...props.camImg];
       combineImg.push({
         path: image.path,
@@ -234,7 +242,7 @@ const Question = (props) => {
   const showModal = () => {
     setssDropDown(!ssDropDown);
   };
-  console.log("StartAudit;", startAudit);
+  // console.log("StartAudit;", startAudit);
   return (
     <View style={styles.container}>
       {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -246,14 +254,14 @@ const Question = (props) => {
           onPress={() => navigation.goBack()}
         />
       ) : //  : startAudit === 4 ? (
-        //   <Header
-        //     headerText={"Audit Actionable Review"}
-        //     onPress={() => {
-        //       navigation.openDrawer();
-        //     }}
-        //   />
-        // )
-        null}
+      //   <Header
+      //     headerText={"Audit Actionable Review"}
+      //     onPress={() => {
+      //       navigation.openDrawer();
+      //     }}
+      //   />
+      // )
+      null}
       <View style={styles.mainvwe}>
         {startAudit === 1 ? (
           <>
@@ -329,7 +337,7 @@ const Question = (props) => {
                 <Text
                   style={
                     ([styles.branname],
-                      { fontFamily: FONT_FAMILY_BOLD, color: "#000" })
+                    { fontFamily: FONT_FAMILY_BOLD, color: "#000" })
                   }
                 >
                   {question?.data?.question_title}
@@ -387,38 +395,41 @@ const Question = (props) => {
           </Modal>
         ) : null}
 
-<KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <ScrollView
+            keyboardShouldPersistTaps={"always"}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
           >
-            <ScrollView
-              keyboardShouldPersistTaps={"always"}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ flexGrow: 1 }}
-            >
-        {question?.audit_type == 0 ? null : (
-  <View style={{ height: 250 }}>
-    {
-      <JoinChannelVideo
-        handleManagerJoin={(data) => props.handleManagerJoin(data)}
-        token={props.token}
-        channelId={props.channelId}
-        setmanagerJoin={() => {}}
-        handleJoin={(data) => props.handleJoin(data)}
-      />
-    }
-  </View>
-)}
-        {startAudit === 1 ? (
-          // <KeyboardAvoidingView
-          //   behavior={Platform.OS === "ios" ? "padding" : "height"}
-          //   style={{ flex: 1 }}
-          // >
-          //   <ScrollView
-          //     keyboardShouldPersistTaps={"always"}
-          //     showsVerticalScrollIndicator={false}
-          //     contentContainerStyle={{ flexGrow: 1 }}
-          //   >
+            {question?.audit_type == 0 ? null : (
+              
+              <View style={{ height: 250 }}>
+                {console.log("🚀 ~ file: Question.js:408 ~ Question ~ question?.audit_type:", question?.audit_type)
+                  }
+                  {
+                    alert(props.token+"--------"+props.channelId)
+                  }
+                {
+
+                  
+                  
+                  <JoinChannelVideo
+                    handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                   /*  token={props.token}
+                    channelId={props.channelId} */
+                    token="006b13f7540466747e6a102327255673a59IAAKqV6kHwDel5jrgEFAIu5fQla/AGJILodDtU+ndeniAU408aQh39v0EABOtBKIlZt5ZAEAAQDt1Hlk"
+                    channelId="10792279510792M6391"
+                    setmanagerJoin={() => {}}
+                    handleJoin={(data) => props.handleJoin(data)}
+                  />
+                }
+              </View>
+            )}
+            {startAudit === 1 ? (
+             
               <View style={styles.body}>
                 {question?.data?.image_capture === "1" && (
                   <>
@@ -472,86 +483,95 @@ const Question = (props) => {
                         <Modal transparent={true}>
                           <View
                             style={{
-                              backgroundColor: "#fff",
-                              width: "100%",
-                              position: "absolute",
-                              bottom: 0,
-                              paddingVertical: 40,
+                              flex: 1,
+                              justifyContent: "center",
+                              alignItems: "center",
+                              backgroundColor: "#004c8f95",
                             }}
                           >
                             <View
                               style={{
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                marginHorizontal: 10,
+                                backgroundColor: "#fff",
+                                width: "100%",
+                                position: "absolute",
+                                bottom: 0,
+                                paddingVertical: 40,
                               }}
                             >
-                              <Text
+                              <View
                                 style={{
-                                  color: "#000",
-                                  color: "#000",
-                                  fontFamily: FONT_FAMILY_REGULAR,
-                                  fontSize: normalize(SMALL_FONT_SIZE),
+                                  flexDirection: "row",
+                                  justifyContent: "space-between",
+                                  marginHorizontal: 10,
                                 }}
                               >
-                                Choose from
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() => setssDropDown(!ssDropDown)}
-                              >
-                                <Image source={CROSS} />
-                              </TouchableOpacity>
-                            </View>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "space-evenly",
-                              }}
-                            >
-                              <TouchableOpacity
-                                style={{ alignItems: "center" }}
-                                onPress={() => OpenCamera()}
-                              >
-                                <Image
-                                  source={CAMERA}
-                                  style={{
-                                    width: 30,
-                                    height: 30,
-                                    resizeMode: "contain",
-                                    tintColor: PRIMARY_BLUE_COLOR,
-                                  }}
-                                />
                                 <Text
                                   style={{
                                     color: "#000",
-                                    fontFamily: FONT_FAMILY_REGULAR,
-                                  }}
-                                >
-                                  Camera
-                                </Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                                style={{ alignItems: "center" }}
-                                onPress={() => OpenGallery()}
-                              >
-                                <Image
-                                  source={GALLERY}
-                                  style={{
-                                    width: 30,
-                                    height: 30,
-                                    resizeMode: "contain",
-                                    tintColor: PRIMARY_BLUE_COLOR,
-                                  }}
-                                />
-                                <Text
-                                  style={{
                                     color: "#000",
                                     fontFamily: FONT_FAMILY_REGULAR,
+                                    fontSize: normalize(SMALL_FONT_SIZE),
                                   }}
                                 >
-                                  Gallery
+                                  Choose from
                                 </Text>
-                              </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={() => setssDropDown(!ssDropDown)}
+                                >
+                                  <Image source={CROSS} />
+                                </TouchableOpacity>
+                              </View>
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  justifyContent: "space-evenly",
+                                }}
+                              >
+                                <TouchableOpacity
+                                  style={{ alignItems: "center" }}
+                                  onPress={() => OpenCamera()}
+                                >
+                                  <Image
+                                    source={CAMERA}
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      resizeMode: "contain",
+                                      tintColor: PRIMARY_BLUE_COLOR,
+                                    }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: "#000",
+                                      fontFamily: FONT_FAMILY_REGULAR,
+                                    }}
+                                  >
+                                    Camera
+                                  </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  style={{ alignItems: "center" }}
+                                  onPress={() => OpenGallery()}
+                                >
+                                  <Image
+                                    source={GALLERY}
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      resizeMode: "contain",
+                                      tintColor: PRIMARY_BLUE_COLOR,
+                                    }}
+                                  />
+                                  <Text
+                                    style={{
+                                      color: "#000",
+                                      fontFamily: FONT_FAMILY_REGULAR,
+                                    }}
+                                  >
+                                    Gallery
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
                             </View>
                           </View>
                         </Modal>
@@ -756,7 +776,7 @@ const Question = (props) => {
                       })}
                   </View>
                 )}
-                {question?.data.score_range_to > 1 ? (
+                {question?.data?.score_range_to > 1 ? (
                   <View style={{}}>
                     <Text style={styles.branname}>Rating</Text>
                     <View style={{ alignItems: "center" }}>
@@ -814,7 +834,7 @@ const Question = (props) => {
                             fontFamily: FONT_FAMILY_SEMI_BOLD,
                           }}
                         >
-                          {question?.data.score_range_to}
+                          {question?.data?.score_range_to}
                         </Text>
                       </View>
                     </View>
@@ -822,9 +842,9 @@ const Question = (props) => {
                 ) : null}
                 {props.showActionable ? (
                   question?.data?.rmm_actionable_assignee === "1" ||
-                    question?.data?.bm_actionable_assignee === "1" ||
-                    question?.data?.admin_assignee === 1 ||
-                    question?.data?.atm_cordinator_assignee === 1 ? (
+                  question?.data?.bm_actionable_assignee === "1" ||
+                  question?.data?.admin_assignee === 1 ||
+                  question?.data?.atm_cordinator_assignee === 1 ? (
                     <View style={{ marginTop: 20 }}>
                       <Text style={styles.branname}>Actionable</Text>
                       <TouchableOpacity
@@ -843,12 +863,12 @@ const Question = (props) => {
                           {bmActionable
                             ? "BM"
                             : rmmactionable
-                              ? "RMM"
-                              : props.adminActionable
-                                ? "Admin"
-                                : props.atmActionable
-                                  ? "ATM Cordinator"
-                                  : "Assign to"}
+                            ? "RMM"
+                            : props.adminActionable
+                            ? "Admin"
+                            : props.atmActionable
+                            ? "ATM Cordinator"
+                            : "Assign to"}
                         </Text>
                         {dropDown ? (
                           <Image
@@ -968,19 +988,19 @@ const Question = (props) => {
                   </View>
                 </View>
               </View>
-          //   </ScrollView>
-          // </KeyboardAvoidingView>
-        ) : startAudit === 2 ? (
-          <Notify
-            managerJoin={managerJoin}
-            joined={joined}
-            setstartAudit={setstartAudit}
-            bmJoined={props.bmJoined}
-          />
-        ) : startAudit === 3 ? (
-          <AuditScoreScreen setstartAudit={setstartAudit} />
-        ) : null}
-        </ScrollView>
+            ) : //   </ScrollView>
+            // </KeyboardAvoidingView>
+            startAudit === 2 ? (
+              <Notify
+                managerJoin={managerJoin}
+                joined={joined}
+                setstartAudit={setstartAudit}
+                bmJoined={props.bmJoined}
+              />
+            ) : startAudit === 3 ? (
+              <AuditScoreScreen setstartAudit={setstartAudit} />
+            ) : null}
+          </ScrollView>
         </KeyboardAvoidingView>
       </View>
       {/* </ScrollView> */}

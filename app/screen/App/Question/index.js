@@ -38,6 +38,7 @@ const Question = ({ navigation, route }) => {
   const [disableBtn, setdisableBtn] = useState();
   const [revActionable, setrevActionable] = useState(0);
   useEffect(() => {
+    console.log("🚀 ~ file: index.js:42 ~ useEffect ~ question:", question)
     setstartAudit(question?.audit_type == 0 ? 1 : 2);
     unsubscribe;
     setremark(question?.data?.actionsble_remark);
@@ -55,12 +56,9 @@ const Question = ({ navigation, route }) => {
   useEffect(() => {
     if (question?.data?.yes_no == "NO" && question?.data?.action_on_no == 2) {
       setshowCapIMG(false);
-    }
-    else if(yesNo =="NA")
-    {
+    } else if (yesNo == "NA") {
       setshowCapIMG(false);
-    }
-    else {
+    } else {
       setshowCapIMG(true);
     }
   }, [question]);
@@ -86,7 +84,9 @@ const Question = ({ navigation, route }) => {
         question_id: question?.data?.question_id,
         audit_id: question?.audit_id,
       };
-      socket.emit("startAudit", params, async (data) => {});
+      socket.emit("startAudit", params, async (data) => {
+        // console.log("data: ", data);
+      });
     }
     socket.on("bmOnlineStatus", (data) => {
       if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
@@ -96,9 +96,9 @@ const Question = ({ navigation, route }) => {
         }
       }
     });
-      // if (!managerJoin && question?.audit_type == 1) {
-      //   alert(`BM is offline`);
-      // }
+    // if (!managerJoin && question?.audit_type == 1) {
+    //   alert(`BM is offline`);
+    // }
   }, [startAudit, managerJoin]);
 
   const unsubscribe = NetInfo.fetch().then((state) => {
@@ -120,6 +120,7 @@ const Question = ({ navigation, route }) => {
           mimeType: "multipart/form-data",
         }
       );
+      setisLoading(false);
       if (response.data.status === 200) {
         handleNext();
       } else if (response.data.status !== 500) {
@@ -214,7 +215,9 @@ const Question = ({ navigation, route }) => {
         if (response.status === 200) {
           // navigation.navigate("AuditScore")
           setstartAudit(3);
-        } else navigator.navigate("DashboardScreen");
+        } else {
+          navigator.navigate("DashboardScreen");
+        }
       }
     });
   };
@@ -235,6 +238,7 @@ const Question = ({ navigation, route }) => {
       emitRemark(data.data.actionsble_remark);
       //setshowActionable(data.data.count_actionable===1?true:false)
       setshowActionable(true);
+      // console.log('data.data: ', data.data);
       setquestion({
         data: data.data,
         audit_id: params.audit_id,
@@ -288,7 +292,9 @@ const Question = ({ navigation, route }) => {
       if (response.status === 200) {
         // navigation.navigate("AuditScore");
         setstartAudit(3);
-      } else navigator.navigate("DashboardScreen");
+      } else {
+        navigator.navigate("DashboardScreen");
+      }
     }
   };
 
@@ -328,6 +334,9 @@ const Question = ({ navigation, route }) => {
         });
       }
     });
+    setTimeout(() => {
+      setisLoading(false);
+    }, 2000);
   };
   const getIMG = async () => {
     setisLoading(true);
@@ -349,10 +358,12 @@ const Question = ({ navigation, route }) => {
     }
   };
   const handleManagerJoin = (data) => {
+     alert(data)
     setmanagerJoin(data);
   };
 
   const handleJoin = (data) => {
+    alert(data)
     setBmJoined(data);
   };
   const prevQuestion = async () => {
@@ -373,7 +384,7 @@ const Question = ({ navigation, route }) => {
       );
       setisLoading(false);
       if (response.status === 200) {
-        setyesNo(response.data.answer.yes_no)
+        setyesNo(response.data.answer.yes_no);
         if (response.data.data.check_box_value) {
           setquestionList(response.data.data[0].check_box_value.split(","));
           var item = response.data.data[0].check_box_value.split(",");
@@ -395,13 +406,14 @@ const Question = ({ navigation, route }) => {
           }
           setCamImg([...finalData]);
         }
+        //console.log("esponse.data.data[0]: ", esponse.data.data[0]);
         setquestion({
           data: response.data.data[0],
           audit_id: params.audit_id,
           audit_type: params.audit_type,
           branch_manager: params.branch_manager,
         });
-        console.log("RES:", response.data.answer.remark);
+        //console.log("RES:", response.data.answer.remark);
         setremark(response.data.answer.remark);
         setrmmactionable(response.data.answer.rmm_actionable_assignee);
         setbmActionable(response.data.answer.bm_actionable_assignee);
@@ -496,7 +508,7 @@ const Question = ({ navigation, route }) => {
       }
     }
     await socket.emit("CountQuestionType", params, (data) => {
-      console.log("data: ", data.data.actioanble);
+      // console.log("data: ", data.data.actioanble);
 
       if (question?.data?.count_previous_question_id != null) {
         if (data?.data?.set_range) {
@@ -606,7 +618,7 @@ const Question = ({ navigation, route }) => {
     itemsArray[index].isSelected = await !itemsArray[index].isSelected;
     setquestionList(itemsArray);
   };
-  console.log("QES:", question);
+  // console.log("QES:", question);
   return (
     <>
       {isLoading && <Loader />}
@@ -647,10 +659,10 @@ const Question = ({ navigation, route }) => {
         setmanagerJoin={setmanagerJoin}
         onCapture={onCapture}
         getIMG={getIMG}
-        handleManagerJoin={handleManagerJoin}
+        handleManagerJoin={(data) => handleManagerJoin(data)}
         token={route.params ? route.params.token : ""}
         channelId={route.params ? route.params.channelId : ""}
-        handleJoin={handleJoin}
+        handleJoin={(data) =>handleJoin(data)}
         prevQuestion={prevQuestion}
         handleDeleteIMG={handleDeleteIMG}
         deleteImage={deleteImage}

@@ -1,35 +1,49 @@
 import { View, Text, Modal, Image, Platform, Linking } from "react-native";
 import React, { useEffect, useState } from "react";
-import { FONT_FAMILY_REGULAR, LARGE_FONT_SIZE, PRIMARY_BLUE_COLOR,UPDATE_ICON } from "../utils/constant";
+import {
+  FONT_FAMILY_REGULAR,
+  LARGE_FONT_SIZE,
+  PRIMARY_BLUE_COLOR,
+  UPDATE_ICON,
+} from "../utils/constant";
 import { normalize } from "../utils/scaleFontSize";
 import Button from "./Button";
 import { apiCall } from "../utils/httpClient";
 import apiEndPoints from "../utils/apiEndPoints";
 import deviceInfoModule from "react-native-device-info";
 export default function UpdateAlert() {
-  const [updateNotify, setupdateNotify] = useState(false)
-  const [link, setlink] = useState()
+  const [updateNotify, setupdateNotify] = useState(false);
+  const [link, setlink] = useState();
   useEffect(() => {
-    checkAppVersion()
-  }, [])
-  
-  const checkAppVersion=async()=>{
-    console.log(deviceInfoModule.getVersion())
+    checkAppVersion();
+  }, []);
+
+  const checkAppVersion = async () => {
     try {
-      const {data}=await apiCall("GET",apiEndPoints.APP_UPDATE)
-      console.log("response",data)
-      if(Platform.OS==="ios")
-      {
-        setlink(data.data.ios_url)
-        setupdateNotify(data.data.ios_version==deviceInfoModule.getVersion()?flase:true)
-      }else{
-        setlink(data.data.android_url)
-        setupdateNotify(data.data.android_version==deviceInfoModule.getVersion()?flase:true)
+      const { data } = await apiCall("GET", apiEndPoints.APP_UPDATE);
+      console.log(
+        deviceInfoModule.getVersion(),
+        data.data?.android_version,
+        "data: ",
+        data
+      );
+      if (Platform.OS === "ios") {
+        setlink(data.data.ios_url);
+        setupdateNotify(
+          data.data?.ios_version > deviceInfoModule.getVersion() ? true : false
+        );
+      } else {
+        setlink(data.data.android_url);
+        setupdateNotify(
+          data.data?.android_version > deviceInfoModule.getVersion()
+            ? true
+            : false
+        );
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   return (
     <Modal visible={updateNotify} transparent animationType="slide">
       <View
@@ -76,9 +90,12 @@ export default function UpdateAlert() {
               justifyContent: "center",
             }}
           >
-            <Button buttonText={"Okay"} onPress={() => {
-                Linking.openURL(link)
-            }} />
+            <Button
+              buttonText={"Okay"}
+              onPress={() => {
+                Linking.openURL(link);
+              }}
+            />
           </View>
         </View>
       </View>

@@ -5,7 +5,7 @@ import apiEndPoints from '../../../utils/apiEndPoints'
 import { apiCall } from '../../../utils/httpClient'
 import ScheduleNewAudit from './component/ScheduleNewAudit'
 import Loader from '../../../utils/Loader'
-export default function index({ navigation }) {
+export default function Index({ navigation }) {
     const [date, setdate] = useState()
     const [time, settime] = useState()
     const [cityBranch, setcityBranch] = useState([])

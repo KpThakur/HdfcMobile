@@ -7,7 +7,7 @@ import { apiCall } from '../../../utils/httpClient'
 import RescheduleAudit from './component/RescheduleAudit'
 import Loader from '../.../../../../utils/Loader'
 
-export default function index({ navigation }) {
+export default function Index({ navigation }) {
     const [cityBranch, setcityBranch] = useState([])
     const [cityName, setCityName] = useState()
     const [branchDetail, setbranchDetail] = useState([])

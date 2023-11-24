@@ -6,7 +6,7 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../.../../../../utils/Loader";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/core";
-export default function index(props) {
+export default function Index(props) {
   const navigation = useNavigation();
   const [question, setquestion] = useContext(QuestionContext);
   const [isLoading, setisLoading] = useState(false);

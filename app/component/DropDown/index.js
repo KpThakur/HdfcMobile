@@ -55,7 +55,7 @@ export default function index({ data, data_name, title, renderItem, dropDown, se
                             onChangeText={(text) => handleSearch(text)}
                         />
                     </View>
-                    <FlatList data={filterData !== null ? filterData : data} style={{ backgroundColor: "#fff" }}
+                    <FlatList keyboardShouldPersistTaps='always' data={filterData !== null ? filterData : data} style={{ backgroundColor: "#fff" }}
                         keyExtractor={(item, index) => index.toString()} renderItem={renderItem}
                     />
                 </Modal>

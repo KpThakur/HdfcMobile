@@ -5,8 +5,8 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../../../utils/Loader";
 import { useNavigation } from "@react-navigation/core";
 import { UserContext } from "../../../utils/UserContext";
-export default function index({ route }) {
-  const params = route.params;
+export default function Index({ route }) {
+  const params = route.params ||{};
   const navigation = useNavigation();
   const [bmDropDown, setbmDropDown] = useState(false);
   const [rmDropDown, setrmDropDown] = useState(false);
@@ -18,7 +18,7 @@ export default function index({ route }) {
   const [repo, setrepo] = useState();
   const Details = async () => {
     const param = {
-      audit_id: params.audit_id,
+      audit_id: global?.params ?global?.params?.audit_id:params?.audit_id,
       type: 2,
     };
     const response = await apiCall(
@@ -26,18 +26,26 @@ export default function index({ route }) {
       apiEndPoints.GET_ACTIONABLE_DETAIL,
       param
     );
+    // console.log('response: ', response.data);
     setbaseURL(response.data.base_url);
     setBM(response.data.BM);
     setRM(response.data.RMM);
   };
   useEffect(() => {
-    Details();
-    getRepoStatus();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      global.params = params;
+      Details();
+      getRepoStatus();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
+  
   const handleSubmitReport = async () => {
     setislaoding(true);
     const param = {
-      audit_id: params.audit_id,
+      audit_id:global?.params ?global?.params?.audit_id:params?.audit_id,
       audit_status: 3,
     };
     const response = await apiCall("POST", apiEndPoints.CANCEL_AUDIT, param);
@@ -79,9 +87,12 @@ export default function index({ route }) {
     try {
       setislaoding(true);
       const param = {
-        audit_id: params.audit_id,
+        audit_id: global?.params ?global?.params?.audit_id:params?.audit_id,
       };
-      const { data } = await apiCall("POST", apiEndPoints.REPO_STATUS, param);
+      const result = await apiCall("POST", apiEndPoints.REPO_STATUS, param);
+      let data = result.data ||{}
+      console.log('data: ', data);
+      // console.log('result: ', result.config);
       if (data.status === 200) {
         setrepo(data);
       }

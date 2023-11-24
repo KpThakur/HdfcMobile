@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import DrawerTab from './DrawerTab'
@@ -25,6 +25,7 @@ import AuditSuccessScreen from '../screen/App/AuditSuccess';
 import ChangePasswordScreen from '../screen/App/ChangePassword'
 import RescheduleAuditScreen from '../screen/App/RescheduleAudit';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword'
+import Loader from '../utils/Loader';
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -173,6 +174,9 @@ export default function Routes({ navigation }) {
         }),
         []
     );
+    if (state.isLoading) {
+        return <Loader />;
+    }
     return (
         <NavigationContainer>
             <AuthContext.Provider value={authContext}>
@@ -182,7 +186,7 @@ export default function Routes({ navigation }) {
                         <Stack.Screen name="Login" component={AuthStack} />
                     </Stack.Navigator>
                 ) : (
-                    <Drawer.Navigator screenOptions={{ headerShown: false }} drawerContent={(props) => <DrawerTab {...props} />}>
+                    <Drawer.Navigator screenOptions={{ headerShown: false,drawerType:"slide" }} drawerContent={(props) => <DrawerTab {...props} />}>
                         <Drawer.Screen name="App" component={AppStack} />
                     </Drawer.Navigator>
                 )}

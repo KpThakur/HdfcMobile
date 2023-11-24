@@ -30,7 +30,7 @@ const WindowWidth = Dimensions.get("window").width;
 const WindowHeight = Dimensions.get("window").height;
 const config = require("./agora.config.json");
 
-interface State {
+/* interface State {
   channelId: string;
   isJoined: boolean;
   remoteUid: number[];
@@ -39,12 +39,10 @@ interface State {
   audio: boolean;
   pause:boolean;
   token: String;
-}
+} */
 
-export default class JoinChannelVideo extends Component<{}, State, any> {
-  _engine: RtcEngine | undefined;
-
-  constructor(props: {}) {
+export default class JoinChannelVideo extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       channelId: this.props.channelId,

@@ -34,7 +34,7 @@ const BranchName = (props) => {
                 </View>
                 <View style={styles.body}>
                     <View style={styles.teamcall}>
-                        <Text style={styles.calltxt}>Team ready for the call : </Text>
+                        <Text style={styles.calltxt}>Team ready for the call 123 : </Text>
                     </View>
                     <View style={styles.brnchmannme}>
                         <View style={styles.brnachnme}>

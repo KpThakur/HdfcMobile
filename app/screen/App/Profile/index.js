@@ -6,7 +6,7 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../../../utils/Loader";
 import AsyncStorage from "@react-native-community/async-storage";
 
-export default function index() {
+export default function Index() {
   const [userData, setUserData] = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({

@@ -5,7 +5,7 @@ import apiEndPoints from '../../../utils/apiEndPoints'
 import { apiCall, setDefaultHeader } from '../../../utils/httpClient'
 import ForgetPassword from './component/ForgetPassword'
 
-export default function index() {
+export default function Index() {
     const [email, setemail] = useState()
     const [otp, setotp] = useState()
     const [password, setpassword] = useState()

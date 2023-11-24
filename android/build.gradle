@@ -22,6 +22,18 @@ buildscript {
 
 allprojects {
     repositories {
+
+        exclusiveContent {
+           filter {
+               includeGroup "com.facebook.react"
+           }
+           forRepository {
+               maven {
+                   url "$rootDir/../node_modules/react-native/android"
+               }
+           }
+       }
+       
         mavenCentral()
         mavenLocal()
         maven {
@@ -35,5 +47,26 @@ allprojects {
 
         google()
         maven { url 'https://www.jitpack.io' }
+        
     }
 }
+
+subprojects {
+    afterEvaluate {project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion 30     // have to match with build.gradle and app/build.gradle ones
+                buildToolsVersion '30.0.2'  // have to match with build.gradle and app/build.gradle ones
+                variantFilter { variant ->
+                    def names = variant.flavors*.name
+                    // To check for a certain build type, use variant.buildType.name == "<buildType>"
+                    if (names.contains("reactNative51") || names.contains("reactNative55") || names.contains("reactNative56")) {
+                        // Gradle ignores any variants that satisfy the conditions above.
+                        setIgnore(true)
+                    }
+                }
+            }
+        }
+    }
+}
+

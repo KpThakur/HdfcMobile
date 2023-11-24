@@ -13,7 +13,6 @@ export const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: Platform.OS == "ios" ? 15 : 0,
         backgroundColor: "#fff",
-        paddingVertical: 10,
         borderRadius: 5,
         shadowColor: "#000",
         shadowOffset: {
@@ -23,7 +22,8 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.18,
         shadowRadius: 1.00,
         elevation: 1,
-        marginTop: Platform.OS == "ios" ? 15 : 5
+        marginTop: Platform.OS == "ios" ? 15 : 5,
+        height:40
     },
     display_audit: {
         paddingHorizontal: 10,

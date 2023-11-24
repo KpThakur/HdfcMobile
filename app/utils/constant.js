@@ -7,7 +7,7 @@ export const FONT_FAMILY_SEMI_BOLD = 'Poppins-SemiBold';
 //Color
 export const DARK_BLUE_COLOR="#004c8f"
 export const PRIMARY_BLUE_COLOR="#1b7dec"
-export const STATUS_BAR_COLOR="#064b96"
+export const STATUS_BAR_COLOR="#1b7dec"
 export const MAIN_BG_GREY_COLOR="#f5f5f5"
 export const WHITE_BG_COLOR="#ffffff"
 export const GREEN_COLOR="#11ad2b"
@@ -67,5 +67,5 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
-// export const BASEURL = 'https://audits.kreate.co.in:3000';
 export const BASEURL = 'https://easycalls.in:3000';
+//export const BASEURL = 'https://dev.easycalls.in:3036';

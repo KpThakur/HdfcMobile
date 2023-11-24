@@ -96,7 +96,7 @@ export default function ScheduleNewAudit(props) {
       {isLoading ? (
         <Text> Loading...</Text>
       ) : (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='always' >
           <View style={styles.contianer}>
             <Header
               headerText={"Schedule New Audit"}

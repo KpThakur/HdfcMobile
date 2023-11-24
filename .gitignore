@@ -60,3 +60,6 @@ buck-out/
 /ios/Pods/
 /ios/Podfile.lock
 package-lock.json
+__MACOSX/
+*.zip
+
