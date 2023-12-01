@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* HDFCTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HDFCTests.m */; };
 		04CAD4D4AFB04121835EDC50 /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB1C63968A9A44F19FD22822 /* Poppins-ThinItalic.ttf */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
+		0C80B921A6F3F58F76C31292 /* libPods-AUDIT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-AUDIT.a */; };
+		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		17149E06622855F3D80F3ABB /* libPods-HDFC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E86B6F5066764E1735E1F07D /* libPods-HDFC.a */; };
@@ -31,6 +32,7 @@
 		BE5A11E111A44022B46CD983 /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 247FD959224B40AF85D313DD /* Poppins-ExtraLight.ttf */; };
 		DC3AAA1C14F5430F90E7E1EC /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DB30306805145E18977073A /* Poppins-Thin.ttf */; };
 		F1294A5E802A4B42A9002629 /* Poppins-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CBECFD831BD4F46BA95FF07 /* Poppins-BoldItalic.ttf */; };
+		7699B88040F8A987B510C191 /* libPods-AUDIT-AUDITTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-AUDIT-AUDITTests.a */; };
 		F36FE48B37274ACBA0BC9F2F /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 69DFA4347AD545088AB9B680 /* Poppins-ExtraBoldItalic.ttf */; };
 /* End PBXBuildFile section */
 
