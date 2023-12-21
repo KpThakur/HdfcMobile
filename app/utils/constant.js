@@ -16,6 +16,8 @@ export const GREY_TEXT_COLOR="#ececec"
 export const PRIMARY_TEXT_COLOR="#ffffff"
 export const PRIMARY_BTN_COLOR="#1b7dec"
 export const BORDER_COLOR="#d1e5fb"
+export const BLACK_COLOR="#000000"
+
 
 //Images
 export const BRAND_ICON=require('../assets/images/auditor.png')
@@ -67,5 +69,8 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
-export const BASEURL = 'https://easycalls.in:3000';
-//export const BASEURL = 'https://dev.easycalls.in:3036';
+// export const BASEURL = 'https://easycalls.in:3000';
+export const BASEURL = 'https://dev.easycalls.in:3036';
+
+//Google API key
+export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';

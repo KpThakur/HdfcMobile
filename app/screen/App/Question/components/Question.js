@@ -19,6 +19,9 @@ import AuditScoreScreen from "../../AuditScore";
 import ReviewAuditScreen from "../../ReviewAudit";
 import ActionableScreen from "../../Actionable";
 import ImagePicker from "react-native-image-crop-picker";
+import ImageMarker, { Position, TextBackgroundType } from 'react-native-image-marker';
+import RNFS from 'react-native-fs';
+
 import {
   STAR,
   UNSTAR,
@@ -40,6 +43,10 @@ import {
   SMALL_FONT_SIZE,
   FONT_FAMILY_BOLD,
   FONT_FAMILY_SEMI_BOLD,
+  HOME_ICON,
+  BLACK_COLOR,
+  MAP_KEY,
+  FONT_FAMILY_THIN,
 } from "../../../../utils/constant";
 import DropDown from "../../../../component/DropDown";
 import { useNavigation } from "@react-navigation/native";
@@ -50,7 +57,10 @@ import { UserContext } from "../../../../utils/UserContext";
 import JoinChannelVideo from "../../../../component/Streaming/App_agora";
 import Notify from "../../Notify";
 import apiEndPoints from "../../../../utils/apiEndPoints";
-import { apiCall } from "../../../../utils/httpClient";
+import { apiCall, getLocation } from "../../../../utils/httpClient";
+import Geolocation from 'react-native-geolocation-service';
+import axios from "axios";
+
 const Question = (props) => {
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
@@ -62,6 +72,7 @@ const Question = (props) => {
   const [userData, setUserData] = useContext(UserContext);
   const [maxIMG, setmaxIMG] = useState(false);
   const [showModalIMG, setshowModalIMG] = useState();
+  const [data, setData] = useState();
   useEffect(() => {}, [props.camImg]);
   const handleInfo = () => {
     setonInfo(!onInfo);
@@ -121,49 +132,210 @@ const Question = (props) => {
     setshowIndex(index);
     setcheckedAns(question);
   };
+
   const OpenGallery = () => {
-    try {
-      ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-        multiple: true,
-        cropping: false,
-        mediaType:'photo',
-        compressImageQuality: 0.5,
-      }).then((image) => {
-      // console.log('imageGall: ', image);
-        let combineImg = props.camImg == null ? [] : [...props.camImg];
-        image.map((val) => {
-          combineImg.push({
-            path: val.path,
-            type: "gallery",
+    Geolocation.getCurrentPosition(
+    async  position => {
+        const {latitude, longitude} = position.coords;
+        const res = await getLocation(latitude, longitude);
+        console.log("LocationName --->> ", res);
+        console.log("Postion ----->>>",position);
+     const currentTime = new Date();
+     const year = currentTime.getFullYear();
+     const month = currentTime.getMonth()+1;
+     const day = currentTime.getDate();
+     
+     const hours = currentTime.getHours();
+     const minutes = currentTime.getMinutes();
+     const seconds = currentTime.getSeconds();
+
+     const amPm = hours>=12 ? 'p.m.' : 'a.m.';
+     hours = hours%12 || hours;
+
+     const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
+     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds}${amPm}`;
+   
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: false,
+      compressImageQuality: 0.5,
+    }) 
+    .then((image) => {
+    console.log('image: ', image?.path);
+  
+        const originalPath = val?.path;
+        const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
+        // const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
+        console.log("The original path --->",originalImageDirectory);
+        const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
+        const destinationImagePath = originalImageDirectory+ '/' + fileName;
+
+        const options = {
+          backgroundImage: {
+            src : {uri : val?.path},
+            scale: 1,
+          },
+          watermarkTexts: [{
+            text:  `${res} \n Time: ${formattedDate} ${formattedTime}`,
+            positionOptions: {
+              position: Position.bottomCenter,
+            },
+            style: {
+              color: BLACK_COLOR,
+              fontSize: 10,
+              fontName: FONT_FAMILY_REGULAR,
+            },
+          }],
+          scale: 1,
+          quality: 100,
+          filename: 'test',
+          maxSize: 1000,
+        }; 
+
+       ImageMarker.markText(options
+        ).then((markedImagePath)=> {
+          console.log('Marked image path: ', markedImagePath);
+        RNFS.moveFile(markedImagePath, destinationImagePath)
+         .then(() => {
+           console.log('Marked image saved at: ', destinationImagePath);
+           const imageWithMetaData = {
+            path : destinationImagePath,
+            type : 'gallery',
+            location : {latitude, longitude},
+            time : currentTime.toString()
+          }
+          let combineImg = props.camImg == null ? [] : [...props.camImg];
+            combineImg.push(imageWithMetaData);
+            props.setCamImg(combineImg);
+            setssDropDown(false);
+       }).catch((moveError) => {
+           console.error('Error moving file:', moveError);
+       });
+          }).catch((error) => {
+              console.error("Error handling the marker text on image :-", error);
           });
-        });
-        props.setCamImg(combineImg);
-        setssDropDown(false);
-      });
-    } catch (error) {
-    console.log('error: ', error);
-      
-    }
+      setssDropDown(false);
+    });
+   },  error => {
+       console.log("This is the error",error);
+        }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+   
   };
-  const OpenCamera = () => {
+  // const getData = async (latitude, longitude) => {
+  //   try{
+  //     const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAP_KEY}`);
+  //      if (response.data.results.length > 0)
+  //      {
+  //        const locationName = response.data.results[0].formatted_address;
+  //       //  setData(locationName);
+  //        console.log("Resposne ------>>>",locationName);
+  //        return locationName;
+  //      }
+     
+  //   }catch(error)
+  //   {
+  //      console.error("Error in getting data :- ", error);
+  //   }
+  // };
+  const OpenCamera = async () => {
+    Geolocation.getCurrentPosition(
+     async position => {
+        const {latitude, longitude} = position.coords;
+       const res = await getLocation(latitude, longitude);
+       console.log("LocationName --->> ", res);
+       console.log("Postion ----->>>",position);
+        
+     const currentTime = new Date();
+     const year = currentTime.getFullYear();
+     const month = currentTime.getMonth()+1;
+     const day = currentTime.getDate();
+     
+     const hours = currentTime.getHours();
+     const minutes = currentTime.getMinutes();
+     const seconds = currentTime.getSeconds();
+
+     const amPm = hours >=12 ? 'p.m.': 'a.m.';
+     hours = hours%12 || 12;
+
+     const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
+     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds}${amPm}`;
+   
     ImagePicker.openCamera({
       width: 300,
       height: 400,
       cropping: false,
       compressImageQuality: 0.5,
-    }).then((image) => {
-    console.log('image: ', image);
-      let combineImg = props.camImg == null ? [] : [...props.camImg];
-      combineImg.push({
-        path: image.path,
-        type: "camera",
-      });
-      props.setCamImg(combineImg);
+    }) 
+    .then((image) => {
+    console.log('image: ', image?.path);
+
+    const originalPath = image?.path;
+    const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
+    console.log("The original path --->",originalImageDirectory);
+    const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
+    const destinationImagePath = originalImageDirectory+ '/' + fileName;
       setssDropDown(false);
+
+      const options = {
+        backgroundImage: {
+          // source : require(image?.path),
+          src : {uri : image?.path},
+          // src : require('../../../../assets/images/Audit.png'),
+          scale: 1,
+        },
+        watermarkTexts: [{
+          text:  `${res} \n ${formattedDate} ${formattedTime}`,
+          positionOptions: {
+            position: Position.bottomCenter,
+          },
+          style: {
+            color: BLACK_COLOR,
+            fontSize: 10,
+            fontName: FONT_FAMILY_THIN,
+            marginBottom: 5
+          },
+        }],
+        scale: 1,
+        quality: 100,
+        filename: 'test',
+        // saveFormat: ImageFormat.png,
+        maxSize: 1000,
+      };
+
+    ImageMarker.markText(options
+    ).then((markedImagePath)=> {
+        console.log('Marked image path: ', markedImagePath);
+      RNFS.moveFile(markedImagePath, destinationImagePath)
+       .then(() => {
+         console.log('Marked image saved at: ', destinationImagePath);
+         const imageWithMetaData = {
+          path : destinationImagePath,
+          type : 'camera',
+          location : {latitude, longitude},
+          time : currentTime.toString()
+        }
+          let combineImg = props.camImg == null ? [] : [...props.camImg];
+          combineImg.push(imageWithMetaData);
+          props.setCamImg(combineImg);
+          setssDropDown(false);
+  })
+  .catch((moveError) => {
+    console.error('Error moving file:', moveError);
+  });
+    }).catch((error) => {
+         console.error("Error handling the marker text on image :-", error);
     });
+ 
+  });
+     //Adding details to image   
+  }, error => {
+    console.log("This is the error",error);
+  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
   };
+
   const renderImage = (item, index) => {
     return question.audit_type === 0 ? (
       <TouchableOpacity
