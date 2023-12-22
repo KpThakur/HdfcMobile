@@ -4,8 +4,8 @@ buildscript {
     ext {
         buildToolsVersion = "31.0.0"
         minSdkVersion = 21
-        compileSdkVersion = 32
-        targetSdkVersion = 32
+        compileSdkVersion = 33
+        targetSdkVersion = 33
         ndkVersion = "23.1.7779620"
         androidXCore = "1.7.0"
     }
@@ -53,7 +53,7 @@ subprojects {
     afterEvaluate {project ->
         if (project.hasProperty("android")) {
             android {
-                compileSdkVersion 32     // have to match with build.gradle and app/build.gradle ones
+                compileSdkVersion 33     // have to match with build.gradle and app/build.gradle ones
                 buildToolsVersion '31.0.0'  // have to match with build.gradle and app/build.gradle ones
                 variantFilter { variant ->
                     def names = variant.flavors*.name

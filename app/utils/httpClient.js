@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { BASEURL } from "./constant";
+import { BASEURL, MAP_KEY } from "./constant";
 import AsyncStorage from "@react-native-community/async-storage";
 //import { AuthContext } from '../Components/AuthContext';
 // import NetInfo from "@react-native-community/netinfo";
@@ -147,5 +147,23 @@ export async function apiCallAgora() {
     }
     // just comment for internal server error (*)
     return { data: { status: 500, message: "Internal server error" } };
+  }
+}
+
+export async function getLocation(latitude, longitude)
+{
+  try{
+    const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAP_KEY}`);
+     if (response.data.results.length > 0)
+     {
+       const locationName = response.data.results[0].formatted_address;
+      //  setData(locationName);
+       console.log("Resposne ------>>>",locationName);
+       return locationName;
+     }
+   
+  }catch(error)
+  {
+     console.error("Error in getting data :- ", error);
   }
 }
