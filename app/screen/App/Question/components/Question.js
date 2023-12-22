@@ -19,7 +19,7 @@ import AuditScoreScreen from "../../AuditScore";
 import ReviewAuditScreen from "../../ReviewAudit";
 import ActionableScreen from "../../Actionable";
 import ImagePicker from "react-native-image-crop-picker";
-import ImageMarker, { Position, TextBackgroundType } from 'react-native-image-marker';
+import ImageMarker, { Position, TextBackgroundType  } from 'react-native-image-marker';
 import RNFS from 'react-native-fs';
 
 import {
@@ -145,15 +145,15 @@ const Question = (props) => {
      const month = currentTime.getMonth()+1;
      const day = currentTime.getDate();
      
-     const hours = currentTime.getHours();
+     const hours = currentTime.getHours()%12 || currentTime.getHours();
      const minutes = currentTime.getMinutes();
      const seconds = currentTime.getSeconds();
 
-     const amPm = hours>=12 ? 'p.m.' : 'a.m.';
-     hours = hours%12 || hours;
+     const amPm = hours>=12 ? 'P.M.' : 'A.M.';
+    
 
      const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
-     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds}${amPm}`;
+     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds} ${amPm}`;
    
     ImagePicker.openPicker({
       width: 300,
@@ -164,27 +164,36 @@ const Question = (props) => {
     .then((image) => {
     console.log('image: ', image?.path);
   
-        const originalPath = val?.path;
-        const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
-        // const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
+        // const originalPath = image?.path;
+        // const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
+        const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
         console.log("The original path --->",originalImageDirectory);
         const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
         const destinationImagePath = originalImageDirectory+ '/' + fileName;
 
         const options = {
           backgroundImage: {
-            src : {uri : val?.path},
+            src : {uri : image?.path},
             scale: 1,
           },
           watermarkTexts: [{
             text:  `${res} \n Time: ${formattedDate} ${formattedTime}`,
             positionOptions: {
+              //  X : 0,
+              // Y : 400
               position: Position.bottomCenter,
             },
             style: {
               color: BLACK_COLOR,
-              fontSize: 10,
-              fontName: FONT_FAMILY_REGULAR,
+              fontSize: 8,
+              fontName: FONT_FAMILY_THIN,
+              marginBottom: 5
+            },
+            textBackgroundStyle: {
+              padding: '10% 20%',
+              type: TextBackgroundType.stretchX,
+              marginHorizontal: 10
+              // color: '#0FFF00',
             },
           }],
           scale: 1,
@@ -223,22 +232,7 @@ const Question = (props) => {
     );
    
   };
-  // const getData = async (latitude, longitude) => {
-  //   try{
-  //     const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${MAP_KEY}`);
-  //      if (response.data.results.length > 0)
-  //      {
-  //        const locationName = response.data.results[0].formatted_address;
-  //       //  setData(locationName);
-  //        console.log("Resposne ------>>>",locationName);
-  //        return locationName;
-  //      }
-     
-  //   }catch(error)
-  //   {
-  //      console.error("Error in getting data :- ", error);
-  //   }
-  // };
+ 
   const OpenCamera = async () => {
     Geolocation.getCurrentPosition(
      async position => {
@@ -252,15 +246,14 @@ const Question = (props) => {
      const month = currentTime.getMonth()+1;
      const day = currentTime.getDate();
      
-     const hours = currentTime.getHours();
+     const hours = currentTime.getHours()%12 || currentTime.getHours();
      const minutes = currentTime.getMinutes();
      const seconds = currentTime.getSeconds();
 
-     const amPm = hours >=12 ? 'p.m.': 'a.m.';
-     hours = hours%12 || 12;
+     const amPm = hours >=12 ? 'P.M.': 'A.M.';
 
      const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
-     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds}${amPm}`;
+     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds} ${amPm}`;
    
     ImagePicker.openCamera({
       width: 300,
@@ -280,21 +273,27 @@ const Question = (props) => {
 
       const options = {
         backgroundImage: {
-          // source : require(image?.path),
           src : {uri : image?.path},
-          // src : require('../../../../assets/images/Audit.png'),
           scale: 1,
         },
         watermarkTexts: [{
           text:  `${res} \n ${formattedDate} ${formattedTime}`,
           positionOptions: {
+            // X: 10,
+            // Y: 10,
             position: Position.bottomCenter,
           },
           style: {
             color: BLACK_COLOR,
-            fontSize: 10,
+            fontSize: 8,
             fontName: FONT_FAMILY_THIN,
-            marginBottom: 5
+            marginBottom: 5,
+          },
+          textBackgroundStyle: {
+            padding: '10%',
+            type: TextBackgroundType.stretchX,
+            // color: '#0FFF00',
+            // backgroundColor: 'blue'
           },
         }],
         scale: 1,

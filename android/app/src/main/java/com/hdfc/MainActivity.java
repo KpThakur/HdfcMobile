@@ -5,6 +5,7 @@ import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+// import com.rnfs.RNFSPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -39,4 +40,12 @@ public class MainActivity extends ReactActivity {
         DefaultNewArchitectureEntryPoint.getConcurrentReactEnabled() // concurrentRootEnabled
         );
   }
+  // @Override
+  //  protected List<ReactPackage> getPackages() {
+  //    return Arrays.<ReactPackage>asList(
+  //      new MainReactPackage(), // <---- add comma
+  //      new RNFSPackage() // <---------- add package
+  //    );
+  //  }
+
 }
