@@ -67,5 +67,5 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
-export const BASEURL = 'https://easycalls.in:3000';
-//export const BASEURL = 'https://dev.easycalls.in:3036';
+// export const BASEURL = 'https://easycalls.in:3000';
+export const BASEURL = 'https://dev.easycalls.in:3036';
