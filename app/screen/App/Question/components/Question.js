@@ -164,9 +164,9 @@ const Question = (props) => {
     .then((image) => {
     console.log('image: ', image?.path);
   
-        // const originalPath = image?.path;
-        // const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
-        const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
+        const originalPath = image?.path;
+        const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
+        // const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
         console.log("The original path --->",originalImageDirectory);
         const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
         const destinationImagePath = originalImageDirectory+ '/' + fileName;

@@ -183,7 +183,9 @@ const DashboardScreen = ({ navigation }) => {
         type: 1,
       };
       const response = await apiCall("POST", apiEndPoints.QUESTION, params);
+      console.log("The question data --->>>>",response?.data?.data?.audit_question);
       if (response.status === 200) {
+
         setquestion({
           data: response.data.data,
           audit_id: id,
@@ -191,6 +193,7 @@ const DashboardScreen = ({ navigation }) => {
           audit_type: 0,
         });
         navigation.navigate("QuestionScreen");
+        //  navigation.navigate("VideoScreen");
       } else {
         if (response.status === 404) {
           Alert.alert("", response?.data?.message);
