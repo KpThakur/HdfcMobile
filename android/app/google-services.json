@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584140971407",
+    "project_id": "audit-95140",
+    "storage_bucket": "audit-95140.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584140971407:android:293b06ff87428112f7fffa",
+        "android_client_info": {
+          "package_name": "com.audit.Kreate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTH5uG5dRhQwUe40IXRzBM6o5X-knwEEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
