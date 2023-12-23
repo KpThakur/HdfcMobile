@@ -1,15 +1,17 @@
-import React, { useEffect } from "react";
-import { View, PermissionsAndroid } from "react-native";
-import Navigation from "./app/navigation";
-import { EditAuditProvider } from "./app/utils/EditAuditContext";
-import { QuestionProvider } from "./app/utils/QuestionContext";
-import { UserProvider } from "./app/utils/UserContext";
+import React, {useEffect} from 'react';
+import {View, PermissionsAndroid} from 'react-native';
+import Navigation from './app/navigation';
+import {EditAuditProvider} from './app/utils/EditAuditContext';
+import {QuestionProvider} from './app/utils/QuestionContext';
+import {UserProvider} from './app/utils/UserContext';
 import NoNetworkBar from './app/component/NoNetworkBar';
+import { Camera } from 'react-native-vision-camera';
 
 function App() {
-  useEffect(()=> {
+  useEffect(() => {
     requestCameraPermission();
-  },[]);
+    permission();
+  }, []);
   const requestCameraPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -36,8 +38,14 @@ function App() {
 
  
   
+  const permission = async () => {
+    const newCameraPermission = await Camera.requestCameraPermission();
+    const newMicrophonePermission = await Camera.requestMicrophonePermission();
+    console.log(newCameraPermission);
+    console.log(newMicrophonePermission);
+  };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <UserProvider>
         <QuestionProvider>
           <EditAuditProvider>

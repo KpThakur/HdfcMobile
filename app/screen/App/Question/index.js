@@ -52,6 +52,7 @@ const Question = ({ navigation, route }) => {
       });
       setquestionList(copy);
     }
+    
   }, []);
   useEffect(() => {
     if (question?.data?.yes_no == "NO" && question?.data?.action_on_no == 2) {

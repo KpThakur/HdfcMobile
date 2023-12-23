@@ -26,6 +26,7 @@ import ChangePasswordScreen from '../screen/App/ChangePassword'
 import RescheduleAuditScreen from '../screen/App/RescheduleAudit';
 import ForgetPasswordScreen from '../screen/App/ForgetPassword'
 import Loader from '../utils/Loader';
+import Video from '../screen/App/Video/component/VideoComponent';
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +61,7 @@ function AppStack() {
             <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
             <App.Screen name="RescheduleAudit" component={RescheduleAuditScreen}/>
             <App.Screen name="QuestionScreen" component={QuestionScreen} />
+            <App.Screen name="VideoScreen" component={Video}/>
             <App.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
             <App.Screen name="NotifyScreen" component={NotifyScreen} />
             <App.Screen name="Profile" component={ProfileScreen} />
