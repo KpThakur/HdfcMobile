@@ -33,6 +33,9 @@ export default function Index(props) {
   const onBackPress = () => {
     navigation.navigate("Profile");
   };
+  const startvideo = () => {
+    navigation.navigate("VideoScreen");
+  };
 
   const handleViewActionable = async () => {
     setisLoading(true);
@@ -58,6 +61,7 @@ export default function Index(props) {
         handleViewActionable={handleViewActionable}
         type={question?.audit_type}
         totalScore={totalScore}
+        startvideo={startvideo}
       />
     </>
   );
