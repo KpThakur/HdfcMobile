@@ -60,6 +60,7 @@ import apiEndPoints from "../../../../utils/apiEndPoints";
 import { apiCall, getLocation } from "../../../../utils/httpClient";
 import Geolocation from 'react-native-geolocation-service';
 import axios from "axios";
+import moment from "moment";
 
 const Question = (props) => {
   const windowWidth = Dimensions.get("window").width;
@@ -141,19 +142,11 @@ const Question = (props) => {
         console.log("LocationName --->> ", res);
         console.log("Postion ----->>>",position);
      const currentTime = new Date();
-     const year = currentTime.getFullYear();
-     const month = currentTime.getMonth()+1;
-     const day = currentTime.getDate();
-     
-     const hours = currentTime.getHours()%12 || currentTime.getHours();
-     const minutes = currentTime.getMinutes();
-     const seconds = currentTime.getSeconds();
-
-     const amPm = hours>=12 ? 'P.M.' : 'A.M.';
+    
     
 
-     const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
-     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds} ${amPm}`;
+     const formattedDate = moment(currentTime).format('DD-MM-YYYY');
+     const formattedTime = moment(currentTime).format('hh:mm:ss A');
    
     ImagePicker.openPicker({
       width: 300,
@@ -170,60 +163,70 @@ const Question = (props) => {
         console.log("The original path --->",originalImageDirectory);
         const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
         const destinationImagePath = originalImageDirectory+ '/' + fileName;
+        const imageWithMetaData = {
+          path : image?.path,
+          type : 'gallery',
+          location : {latitude, longitude},
+          time : currentTime.toString()
+        }
+        let combineImg = props.camImg == null ? [] : [...props.camImg];
+          combineImg.push(imageWithMetaData);
+          props.setCamImg(combineImg);
+          setssDropDown(false);
 
-        const options = {
-          backgroundImage: {
-            src : {uri : image?.path},
-            scale: 1,
-          },
-          watermarkTexts: [{
-            text:  `${res} \n Time: ${formattedDate} ${formattedTime}`,
-            positionOptions: {
-              //  X : 0,
-              // Y : 400
-              position: Position.bottomCenter,
-            },
-            style: {
-              color: BLACK_COLOR,
-              fontSize: 8,
-              fontName: FONT_FAMILY_THIN,
-              marginBottom: 5
-            },
-            textBackgroundStyle: {
-              padding: '10% 20%',
-              type: TextBackgroundType.stretchX,
-              marginHorizontal: 10
-              // color: '#0FFF00',
-            },
-          }],
-          scale: 1,
-          quality: 100,
-          filename: 'test',
-          maxSize: 1000,
-        }; 
+      //   const options = {
+      //     backgroundImage: {
+      //       src : {uri : image?.path},
+      //       scale: 1,
+      //     },
+      //     watermarkTexts: [{
+      //       text:  `${res} \n Time: ${formattedDate} ${formattedTime}`,
+      //       positionOptions: {
+      //         //  X : 0,
+      //         // Y : 400
+      //         position: Position.bottomCenter,
+      //       },
+      //       style: {
+      //         color: BLACK_COLOR,
+      //         fontSize: 8,
+      //         fontName: FONT_FAMILY_THIN,
+      //         marginBottom: 5
+      //       },
+      //       textBackgroundStyle: {
+      //         padding: '10% 20%',
+      //         type: TextBackgroundType.stretchX,
+      //         marginHorizontal: 10
+      //         // color: '#0FFF00',
+      //       },
+      //     }],
+      //     scale: 1,
+      //     quality: 100,
+      //     filename: 'test',
+      //     maxSize: 1000,
+      //   }; 
 
-       ImageMarker.markText(options
-        ).then((markedImagePath)=> {
-          console.log('Marked image path: ', markedImagePath);
-        RNFS.moveFile(markedImagePath, destinationImagePath)
-         .then(() => {
-           console.log('Marked image saved at: ', destinationImagePath);
-           const imageWithMetaData = {
-            path : destinationImagePath,
-            type : 'gallery',
-            location : {latitude, longitude},
-            time : currentTime.toString()
-          }
-          let combineImg = props.camImg == null ? [] : [...props.camImg];
-            combineImg.push(imageWithMetaData);
-            props.setCamImg(combineImg);
-            setssDropDown(false);
-       }).catch((moveError) => {
-           console.error('Error moving file:', moveError);
-       });
-          }).catch((error) => {
-              console.error("Error handling the marker text on image :-", error);
-          });
+      //  ImageMarker.markText(options
+      //   ).then((markedImagePath)=> {
+      //     console.log('Marked image path: ', markedImagePath);
+      //   RNFS.moveFile(markedImagePath, destinationImagePath)
+      //    .then(() => {
+      //      console.log('Marked image saved at: ', destinationImagePath);
+      //      const imageWithMetaData = {
+      //       path : destinationImagePath,
+      //       type : 'gallery',
+      //       location : {latitude, longitude},
+      //       time : currentTime.toString()
+      //     }
+      //     let combineImg = props.camImg == null ? [] : [...props.camImg];
+      //       combineImg.push(imageWithMetaData);
+      //       props.setCamImg(combineImg);
+      //       setssDropDown(false);
+      //  }).catch((moveError) => {
+      //      console.error('Error moving file:', moveError);
+      //  });
+      //     }).catch((error) => {
+      //         console.error("Error handling the marker text on image :-", error);
+      //     });
       setssDropDown(false);
     });
    },  error => {
@@ -242,18 +245,9 @@ const Question = (props) => {
        console.log("Postion ----->>>",position);
         
      const currentTime = new Date();
-     const year = currentTime.getFullYear();
-     const month = currentTime.getMonth()+1;
-     const day = currentTime.getDate();
-     
-     const hours = currentTime.getHours()%12 || currentTime.getHours();
-     const minutes = currentTime.getMinutes();
-     const seconds = currentTime.getSeconds();
 
-     const amPm = hours >=12 ? 'P.M.': 'A.M.';
-
-     const formattedDate = `${day<10 ? '0': ''}${day}-${month<10 ? '0': ''}${month}-${year}`;
-     const formattedTime = `${hours <10 ? '0': ''}${hours}:${minutes<10 ? '0': ''}${minutes}:${seconds<10 ? '0': ''}${seconds} ${amPm}`;
+     const formattedDate = moment(currentTime).format('DD-MM-YYYY');
+     const formattedTime = moment(currentTime).format('hh:mm:ss A');
    
     ImagePicker.openCamera({
       width: 300,
@@ -270,6 +264,16 @@ const Question = (props) => {
     const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
     const destinationImagePath = originalImageDirectory+ '/' + fileName;
       setssDropDown(false);
+      // const imageWithMetaData = {
+      //   path : image?.path,
+      //   type : 'camera',
+      //   location : {latitude, longitude},
+      //   time : currentTime.toString()
+      // }
+      //   let combineImg = props.camImg == null ? [] : [...props.camImg];
+      //   combineImg.push(imageWithMetaData);
+      //   props.setCamImg(combineImg);
+      //   setssDropDown(false);
 
       const options = {
         backgroundImage: {
@@ -580,19 +584,17 @@ const Question = (props) => {
               <View style={{ height: 250 }}>
                 {console.log("🚀 ~ file: Question.js:408 ~ Question ~ question?.audit_type:", question?.audit_type)
                   }
-                  {
-                    alert(props.token+"--------"+props.channelId)
-                  }
+                 
                 {
 
                   
                   
                   <JoinChannelVideo
                     handleManagerJoin={(data) => props.handleManagerJoin(data)}
-                   /*  token={props.token}
-                    channelId={props.channelId} */
-                    token="006b13f7540466747e6a102327255673a59IAAKqV6kHwDel5jrgEFAIu5fQla/AGJILodDtU+ndeniAU408aQh39v0EABOtBKIlZt5ZAEAAQDt1Hlk"
-                    channelId="10792279510792M6391"
+                    token={props.token}
+                    channelId={props.channelId} 
+                    //token="006b13f7540466747e6a102327255673a59IAAKqV6kHwDel5jrgEFAIu5fQla/AGJILodDtU+ndeniAU408aQh39v0EABOtBKIlZt5ZAEAAQDt1Hlk"
+                    //channelId="10792279510792M6391"
                     setmanagerJoin={() => {}}
                     handleJoin={(data) => props.handleJoin(data)}
                   />

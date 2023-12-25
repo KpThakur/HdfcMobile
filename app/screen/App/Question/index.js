@@ -359,7 +359,7 @@ const Question = ({ navigation, route }) => {
     }
   };
   const handleManagerJoin = (data) => {
-     alert(data)
+     //alert(data)
     setmanagerJoin(data);
   };
 
