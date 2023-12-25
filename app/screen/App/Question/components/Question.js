@@ -19,7 +19,7 @@ import AuditScoreScreen from "../../AuditScore";
 import ReviewAuditScreen from "../../ReviewAudit";
 import ActionableScreen from "../../Actionable";
 import ImagePicker from "react-native-image-crop-picker";
-import ImageMarker, { Position, TextBackgroundType  } from 'react-native-image-marker';
+// import ImageMarker, { Position, TextBackgroundType  } from 'react-native-image-marker';
 import RNFS from 'react-native-fs';
 
 import {
@@ -264,72 +264,72 @@ const Question = (props) => {
     const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
     const destinationImagePath = originalImageDirectory+ '/' + fileName;
       setssDropDown(false);
-      // const imageWithMetaData = {
-      //   path : image?.path,
-      //   type : 'camera',
-      //   location : {latitude, longitude},
-      //   time : currentTime.toString()
-      // }
-      //   let combineImg = props.camImg == null ? [] : [...props.camImg];
-      //   combineImg.push(imageWithMetaData);
-      //   props.setCamImg(combineImg);
-      //   setssDropDown(false);
+      const imageWithMetaData = {
+        path : image?.path,
+        type : 'camera',
+        location : {latitude, longitude},
+        time : currentTime.toString()
+      }
+        let combineImg = props.camImg == null ? [] : [...props.camImg];
+        combineImg.push(imageWithMetaData);
+        props.setCamImg(combineImg);
+        setssDropDown(false);
 
-      const options = {
-        backgroundImage: {
-          src : {uri : image?.path},
-          scale: 1,
-        },
-        watermarkTexts: [{
-          text:  `${res} \n ${formattedDate} ${formattedTime}`,
-          positionOptions: {
-            // X: 10,
-            // Y: 10,
-            position: Position.bottomCenter,
-          },
-          style: {
-            color: BLACK_COLOR,
-            fontSize: 8,
-            fontName: FONT_FAMILY_THIN,
-            marginBottom: 5,
-          },
-          textBackgroundStyle: {
-            padding: '10%',
-            type: TextBackgroundType.stretchX,
-            // color: '#0FFF00',
-            // backgroundColor: 'blue'
-          },
-        }],
-        scale: 1,
-        quality: 100,
-        filename: 'test',
-        // saveFormat: ImageFormat.png,
-        maxSize: 1000,
-      };
+  //     const options = {
+  //       backgroundImage: {
+  //         src : {uri : image?.path},
+  //         scale: 1,
+  //       },
+  //       watermarkTexts: [{
+  //         text:  `${res} \n ${formattedDate} ${formattedTime}`,
+  //         positionOptions: {
+  //           // X: 10,
+  //           // Y: 10,
+  //           position: Position.bottomCenter,
+  //         },
+  //         style: {
+  //           color: BLACK_COLOR,
+  //           fontSize: 8,
+  //           fontName: FONT_FAMILY_THIN,
+  //           marginBottom: 5,
+  //         },
+  //         textBackgroundStyle: {
+  //           padding: '10%',
+  //           type: TextBackgroundType.stretchX,
+  //           // color: '#0FFF00',
+  //           // backgroundColor: 'blue'
+  //         },
+  //       }],
+  //       scale: 1,
+  //       quality: 100,
+  //       filename: 'test',
+  //       // saveFormat: ImageFormat.png,
+  //       maxSize: 1000,
+  //     };
 
-    ImageMarker.markText(options
-    ).then((markedImagePath)=> {
-        console.log('Marked image path: ', markedImagePath);
-      RNFS.moveFile(markedImagePath, destinationImagePath)
-       .then(() => {
-         console.log('Marked image saved at: ', destinationImagePath);
-         const imageWithMetaData = {
-          path : destinationImagePath,
-          type : 'camera',
-          location : {latitude, longitude},
-          time : currentTime.toString()
-        }
-          let combineImg = props.camImg == null ? [] : [...props.camImg];
-          combineImg.push(imageWithMetaData);
-          props.setCamImg(combineImg);
-          setssDropDown(false);
-  })
-  .catch((moveError) => {
-    console.error('Error moving file:', moveError);
-  });
-    }).catch((error) => {
-         console.error("Error handling the marker text on image :-", error);
-    });
+  //   ImageMarker.markText(options
+  //   ).then((markedImagePath)=> {
+  //       console.log('Marked image path: ', markedImagePath);
+  //     RNFS.moveFile(markedImagePath, destinationImagePath)
+  //      .then(() => {
+  //        console.log('Marked image saved at: ', destinationImagePath);
+  //        const imageWithMetaData = {
+  //         path : destinationImagePath,
+  //         type : 'camera',
+  //         location : {latitude, longitude},
+  //         time : currentTime.toString()
+  //       }
+  //         let combineImg = props.camImg == null ? [] : [...props.camImg];
+  //         combineImg.push(imageWithMetaData);
+  //         props.setCamImg(combineImg);
+  //         setssDropDown(false);
+  // })
+  // .catch((moveError) => {
+  //   console.error('Error moving file:', moveError);
+  // });
+  //   }).catch((error) => {
+  //        console.error("Error handling the marker text on image :-", error);
+  //   });
  
   });
      //Adding details to image   
