@@ -4,12 +4,15 @@ import apiEndPoints from '../../../utils/apiEndPoints';
 import {apiCall} from '../../../utils/httpClient';
 import LoginScreen from './component/login';
 import {AuthContext, UserContext} from '../../../utils/UserContext';
-import {Alert} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 import Loader from '../../../utils/Loader';
 import Geolocation from 'react-native-geolocation-service';
 import messaging from '@react-native-firebase/messaging';
 import {Platform} from 'react-native';
-
+import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {STATUS_BAR_COLOR} from '../../../utils/constant';
+import {styles} from './component/styles';
+import {View, Text, Button} from 'react-native';
 const Login = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
@@ -17,6 +20,7 @@ const Login = ({navigation}) => {
   const [isLoading, setisLoading] = useState(false);
   const [isChecked, setisChecked] = useState(false);
   const [location, setLocation] = useState({latitude: null, longitude: null});
+
   const {signIn} = React.useContext(AuthContext);
 
   const validationFrom = () => {
@@ -37,7 +41,7 @@ const Login = ({navigation}) => {
       position => {
         const {latitude, longitude} = position.coords;
         setLocation({latitude, longitude});
-        // console.log('setLocation: ', setLocation);
+        // console.log('setLocation: ', location);
       },
       error => {
         console.log('Error getting location: ', error);
@@ -58,7 +62,7 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     getCurrentLocation();
-   // CheckToken();
+    // CheckToken();
     requestPermission();
   }, []);
 
@@ -68,7 +72,26 @@ const Login = ({navigation}) => {
     const deviceType = Platform.OS;
     console.log('deviceType: ', deviceType);
   };
-  
+
+  function showFlashMessage() {
+    showMessage({
+      message:
+        'The user is logged in from another device. For a device reset, please reach out to ',
+      position: 'bottom',
+      type: 'danger',
+      style: styles.flashMessage,
+      titleStyle: styles.textStyle,
+      icon: 'auto',
+      renderAfterContent: () => (
+        <View>
+          <TouchableOpacity style={styles.touch}>
+            <Text style={styles.touchText}>Click here</Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    });
+  }
+
   const handleLogin = async () => {
     const vaild = validationFrom();
     if (vaild) {
@@ -94,6 +117,11 @@ const Login = ({navigation}) => {
         } else {
           setisLoading(false);
           ShowAlert(response.data.message);
+        }
+        if (response.status === 202) {
+          showFlashMessage();
+          setisLoading(false);
+          console.log('Flashmessage: ', response.data);
         }
       } catch (error) {
         setisLoading(false);

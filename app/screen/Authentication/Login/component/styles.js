@@ -1,5 +1,5 @@
 import { StyleSheet,Dimensions } from "react-native"
-import { DARK_BLUE_COLOR,PRIMARY_BLUE_COLOR,LARGE_FONT_SIZE,TINY_FONT_SIZE, FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, FONT_FAMILY_SEMI_BOLD } from "../../../../utils/constant"
+import { DARK_BLUE_COLOR,PRIMARY_BLUE_COLOR,LARGE_FONT_SIZE,TINY_FONT_SIZE, FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, FONT_FAMILY_SEMI_BOLD, WHITE_BG_COLOR } from "../../../../utils/constant"
 import {normalize} from '../../../../utils/scaleFontSize'
 const WindowWidth=Dimensions.get('window').width
 const WindowHeight=Dimensions.get('window').height
@@ -66,5 +66,30 @@ export const styles = StyleSheet.create({
         height: 20,
         // resizeMode:"contain",
         marginRight:5
-    }
+    },
+    flashMessage: {
+        borderRadius: 12,
+        height: normalize(100),
+        marginBottom: -4 
+      },
+      textStyle:{
+        fontFamily: FONT_FAMILY_SEMI_BOLD,
+        fontSize: normalize(14),
+        color: WHITE_BG_COLOR,
+      },
+      touch:{
+        marginLeft: 170,
+        marginTop:5,
+        backgroundColor:WHITE_BG_COLOR,
+        width: normalize(70),
+        borderRadius: normalize(12)
+
+      },
+      touchText:{
+        color: DARK_BLUE_COLOR,
+        fontSize: normalize(12),
+        fontFamily: FONT_FAMILY_SEMI_BOLD,
+        textAlign:'center',
+        padding:5
+      }
 })
