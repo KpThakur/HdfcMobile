@@ -76,10 +76,14 @@ function App() {
   };
 
   const permission = async () => {
-    const newCameraPermission = await Camera.requestCameraPermission();
-    const newMicrophonePermission = await Camera.requestMicrophonePermission();
-    console.log(newCameraPermission);
-    console.log(newMicrophonePermission);
+    const newCameraPermission = Camera.getCameraPermissionStatus();
+    const newMicrophonePermission = Camera.getMicrophonePermissionStatus();
+    const CameraPermission = await Camera.requestCameraPermission();
+    const MicrophonePermission = await Camera.requestMicrophonePermission();
+    console.log('Camera --> ', CameraPermission);
+    console.log('Microphone ---->', MicrophonePermission);
+    console.log('Camera permission --> ', newCameraPermission);
+    console.log('Microphone permission ---->', newMicrophonePermission);
   };
   return (
     <View style={{flex: 1}}>
