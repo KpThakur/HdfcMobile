@@ -192,8 +192,8 @@ const DashboardScreen = ({ navigation }) => {
           branch_manager: branch_manager,
           audit_type: 0,
         });
-        navigation.navigate("QuestionScreen");
-        //  navigation.navigate("VideoScreen");
+        // navigation.navigate("QuestionScreen");
+         navigation.navigate("VideoScreen");
       } else {
         if (response.status === 404) {
           Alert.alert("", response?.data?.message);
