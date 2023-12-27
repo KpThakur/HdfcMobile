@@ -4,12 +4,18 @@ import apiEndPoints from '../../../utils/apiEndPoints';
 import {apiCall} from '../../../utils/httpClient';
 import LoginScreen from './component/login';
 import {AuthContext, UserContext} from '../../../utils/UserContext';
-import {Alert} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 import Loader from '../../../utils/Loader';
 import Geolocation from 'react-native-geolocation-service';
 import messaging from '@react-native-firebase/messaging';
 import {Platform} from 'react-native';
-
+import FlashMessage, {
+  showMessage,
+  hideMessage,
+} from 'react-native-flash-message';
+import {STATUS_BAR_COLOR} from '../../../utils/constant';
+import {styles} from './component/styles';
+import {View, Text, Button} from 'react-native';
 const Login = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
@@ -17,6 +23,7 @@ const Login = ({navigation}) => {
   const [isLoading, setisLoading] = useState(false);
   const [isChecked, setisChecked] = useState(false);
   const [location, setLocation] = useState({latitude: null, longitude: null});
+
   const {signIn} = React.useContext(AuthContext);
 
   const validationFrom = () => {
@@ -37,7 +44,7 @@ const Login = ({navigation}) => {
       position => {
         const {latitude, longitude} = position.coords;
         setLocation({latitude, longitude});
-        // console.log('setLocation: ', setLocation);
+        // console.log('setLocation: ', location);
       },
       error => {
         console.log('Error getting location: ', error);
@@ -58,7 +65,7 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     getCurrentLocation();
-   // CheckToken();
+    // CheckToken();
     requestPermission();
   }, []);
 
@@ -68,7 +75,64 @@ const Login = ({navigation}) => {
     const deviceType = Platform.OS;
     console.log('deviceType: ', deviceType);
   };
-  
+
+  function showFlashMessage(responce) {
+    showMessage({
+      message: responce.data.message,
+      position: 'bottom',
+      type:
+        responce.status === 200
+          ? 'success'
+          : responce.status === 202
+          ? 'warning'
+          : 'danger',
+      style: styles.flashMessage,
+      titleStyle: styles.textStyle,
+      duration: responce.status === 202 ? 10000 : 3000,
+      renderAfterContent: () =>
+        responce.status === 202 ? (
+          <>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={styles.touch}
+                onPress={data => sendClientRequest(responce.data.data)}>
+                <Text style={styles.touchText}>Send Request</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.touch}
+                onPress={() => hideMessage()}>
+                <Text style={styles.touchText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : null,
+    });
+  }
+
+  const sendClientRequest = async data => {
+    try {
+      setisLoading(true);
+      const params = {
+        email: data?.email,
+        employee_name: data?.name,
+      };
+      console.log(params);
+      const response = await apiCall('POST', apiEndPoints.RESET_DEVICE, params);
+      console.log('response: ', response);
+      if (response.status === 200) {
+        showFlashMessage(response);
+        setisLoading(false);
+        console.log('response: ', response.data);
+      } else {
+        setisLoading(false);
+        showFlashMessage(response);
+      }
+    } catch (error) {
+      setisLoading(false);
+      showFlashMessage(response);
+    }
+  };
+
   const handleLogin = async () => {
     const vaild = validationFrom();
     if (vaild) {
@@ -91,13 +155,19 @@ const Login = ({navigation}) => {
           AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
           setisLoading(false);
           console.log('response: ', response.data);
+        } else if (response.status === 202) {
+          showFlashMessage(response);
+          setisLoading(false);
+          console.log('status 202: ', response.data);
         } else {
           setisLoading(false);
-          ShowAlert(response.data.message);
+          showFlashMessage(response);
+          //ShowAlert(response.data.message);
         }
       } catch (error) {
         setisLoading(false);
-        ShowAlert('Something Went Worng!');
+        showFlashMessage(response);
+        //ShowAlert('Something Went Worng!');
       }
     }
   };

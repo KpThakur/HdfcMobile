@@ -6,18 +6,19 @@ import moment from "moment";
 import { FONT_FAMILY_REGULAR } from "../../../../utils/constant";
 
 export default function AuditScore(props) {
-  const { handleViewActionable, totalScore } = props;
+  console.log("🚀 ~ file: AuditScore.js:9 ~ AuditScore ~ props:", props)
+  const { handleViewActionable, totalScore,startvideo } = props;
   return (
     // <View style={styles.container}>
     <ScrollView contentContainerStyle={{ flexGrow: 1, marginLeft: 10 }}>
       <View style={styles.main}>
         <View style={{ alignItems: "center" }}>
-          <Text style={styles.heroic_txt}>Total Branch</Text>
-          <Text style={styles.heroic_txt}>Merchandising Audit Score</Text>
+          <Text style={styles.heroic_txt}>Audit Questions Completed</Text>
+         {/*  <Text style={styles.heroic_txt}>Merchandising Audit Score</Text>
           <View style={styles.score_board}>
             <Text style={styles.hsn_txt}>{totalScore?.score}</Text>
             <Text style={styles.hs_txt}>Audit Score</Text>
-          </View>
+          </View> */}
         </View>
         {totalScore?.previous[0].previous_score > 0 && (
           <View style={styles.prev_audit}>
@@ -33,9 +34,13 @@ export default function AuditScore(props) {
             Note: Live streaming will be stopped after click on view actionable.
           </Text>
         ) : null}
-          <Button
-            buttonText={"Complete Audit"}
+           <Button
+            buttonText={"Complete Audit Remi"}
             onPress={() => handleViewActionable()}
+          /> 
+          <Button
+            buttonText={"Start Your Video Upload"}
+            onPress={() => startvideo()}
           />
       </View>
     </ScrollView>
@@ -49,7 +54,7 @@ const displayScoreAudit = ({ item }) => {
   );
   return (
     <View style={styles.display_score}>
-      <Text style={styles.s_txt}>Score : {item.previous_score}%</Text>
+      <Text style={styles.s_txt}>Score tt : {item.previous_score}%</Text>
       <Text style={styles.txt}>{orderDate}</Text>
     </View>
   );
