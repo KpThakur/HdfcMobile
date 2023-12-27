@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import RNFS from 'react-native-fs';
 import {Camera, getCameraFormat} from 'react-native-vision-camera';
-import 'react-native-reanimated';
+// import 'react-native-reanimated';
 // import {RNCam}
 // import {RNCamera} from 'react-native-camera';
 import {
