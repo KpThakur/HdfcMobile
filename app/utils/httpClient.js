@@ -18,7 +18,7 @@ export const httpClientMultipart = axios.create({
 });
 export function setDefaultHeader(header, value) {
   httpClient.defaults.headers.common[header] = value;
-  httpClientMultipart.defaults.headers.common[header] = value;
+  //httpClientMultipart.defaults.headers.common[header] = value;
 }
 export async function apiCall(
   method,
@@ -26,7 +26,7 @@ export async function apiCall(
   data,
   header = { "Content-Type": "application/json" }
 ) {
-  // console.log('url: ', url);
+   console.log('headerheader: ', header);
   try {
     // if (Platform.OS === "android") {
     //     NetInfo.fetch().then(async (isConnected) => {
