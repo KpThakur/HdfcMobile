@@ -27,6 +27,6 @@ export default {
   ACTIONABLE_SUBMIT:'api/v1/question/actionableSubmit',
   GET_ACTIONABLE:'api/v1/question/getRmActionableAction',
   REPO_STATUS:'api/v1/audit/getActionableReportStatus',
-  APP_UPDATE:'api/v1/audit/updateApp'
-
+  APP_UPDATE:'api/v1/audit/updateApp',
+  RESET_DEVICE: '/api/v1/userAuth/sendEmailresetDevice'
 }

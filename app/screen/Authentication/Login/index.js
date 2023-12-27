@@ -9,7 +9,10 @@ import Loader from '../../../utils/Loader';
 import Geolocation from 'react-native-geolocation-service';
 import messaging from '@react-native-firebase/messaging';
 import {Platform} from 'react-native';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import FlashMessage, {
+  showMessage,
+  hideMessage,
+} from 'react-native-flash-message';
 import {STATUS_BAR_COLOR} from '../../../utils/constant';
 import {styles} from './component/styles';
 import {View, Text, Button} from 'react-native';
@@ -73,24 +76,62 @@ const Login = ({navigation}) => {
     console.log('deviceType: ', deviceType);
   };
 
-  function showFlashMessage() {
+  function showFlashMessage(responce) {
     showMessage({
-      message:
-        'The user is logged in from another device. For a device reset, please reach out to ',
+      message: responce.data.message,
       position: 'bottom',
-      type: 'danger',
+      type:
+        responce.status === 200
+          ? 'success'
+          : responce.status === 202
+          ? 'warning'
+          : 'danger',
       style: styles.flashMessage,
       titleStyle: styles.textStyle,
-      icon: 'auto',
-      renderAfterContent: () => (
-        <View>
-          <TouchableOpacity style={styles.touch}>
-            <Text style={styles.touchText}>Click here</Text>
-          </TouchableOpacity>
-        </View>
-      ),
+      duration: responce.status === 202 ? 10000 : 3000,
+      renderAfterContent: () =>
+        responce.status === 202 ? (
+          <>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={styles.touch}
+                onPress={data => sendClientRequest(responce.data.data)}>
+                <Text style={styles.touchText}>Send Request</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.touch}
+                onPress={() => hideMessage()}>
+                <Text style={styles.touchText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : null,
     });
   }
+
+  const sendClientRequest = async data => {
+    try {
+      setisLoading(true);
+      const params = {
+        email: data?.email,
+        employee_name: data?.name,
+      };
+      console.log(params);
+      const response = await apiCall('POST', apiEndPoints.RESET_DEVICE, params);
+      console.log('response: ', response);
+      if (response.status === 200) {
+        showFlashMessage(response);
+        setisLoading(false);
+        console.log('response: ', response.data);
+      } else {
+        setisLoading(false);
+        showFlashMessage(response);
+      }
+    } catch (error) {
+      setisLoading(false);
+      showFlashMessage(response);
+    }
+  };
 
   const handleLogin = async () => {
     const vaild = validationFrom();
@@ -114,18 +155,19 @@ const Login = ({navigation}) => {
           AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
           setisLoading(false);
           console.log('response: ', response.data);
+        } else if (response.status === 202) {
+          showFlashMessage(response);
+          setisLoading(false);
+          console.log('status 202: ', response.data);
         } else {
           setisLoading(false);
-          ShowAlert(response.data.message);
-        }
-        if (response.status === 202) {
-          showFlashMessage();
-          setisLoading(false);
-          console.log('Flashmessage: ', response.data);
+          showFlashMessage(response);
+          //ShowAlert(response.data.message);
         }
       } catch (error) {
         setisLoading(false);
-        ShowAlert('Something Went Worng!');
+        showFlashMessage(response);
+        //ShowAlert('Something Went Worng!');
       }
     }
   };

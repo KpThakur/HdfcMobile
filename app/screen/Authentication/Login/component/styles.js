@@ -68,9 +68,10 @@ export const styles = StyleSheet.create({
         marginRight:5
     },
     flashMessage: {
-        borderRadius: 12,
-        height: normalize(100),
-        marginBottom: -4 
+        borderRadius: normalize(12),
+         //height: normalize(120),
+        width:'100%',
+        //marginBottom: -4 
       },
       textStyle:{
         fontFamily: FONT_FAMILY_SEMI_BOLD,
@@ -78,12 +79,11 @@ export const styles = StyleSheet.create({
         color: WHITE_BG_COLOR,
       },
       touch:{
-        marginLeft: 170,
-        marginTop:5,
+        marginLeft: normalize(18),
+        marginTop: normalize(20),
         backgroundColor:WHITE_BG_COLOR,
-        width: normalize(70),
-        borderRadius: normalize(12)
-
+        width: normalize(90),
+        borderRadius: normalize(12),
       },
       touchText:{
         color: DARK_BLUE_COLOR,
