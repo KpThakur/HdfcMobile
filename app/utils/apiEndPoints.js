@@ -28,6 +28,6 @@ export default {
   GET_ACTIONABLE:'api/v1/question/getRmActionableAction',
   REPO_STATUS:'api/v1/audit/getActionableReportStatus',
   APP_UPDATE:'api/v1/audit/updateApp',
-  UPLOAD_VIDEO: 'api/v1/question/uploadAuditVideo',
+  UPLOAD_VIDEO: 'api/v1/audit/uploadAuditVideo',
   RESET_DEVICE: '/api/v1/userAuth/sendEmailresetDevice'
 }

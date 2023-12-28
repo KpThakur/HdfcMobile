@@ -406,10 +406,11 @@ const DashboardScreen = ({ navigation }) => {
                     <TouchableOpacity
                       style={styles.prim_btn}
                       onPress={() => {
-                        navigation.navigate("ReviewAduit", {
-                          audit_id: audit.audit_id,
-                          branch_manager: audit.branch_manager,
-                        });
+                        // navigation.navigate("ReviewAduit", {
+                        //   audit_id: audit.audit_id,
+                        //   branch_manager: audit.branch_manager,
+                        // });
+                        navigation.navigate("VideoScreen",{auditId : audit?.audit_id});
                       }}
                     >
                       <Text
