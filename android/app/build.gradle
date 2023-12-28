@@ -153,6 +153,9 @@ android {
 }
 
 dependencies {
+    // implementation project(':react-native-video-processing')
+    //  implementation "androidx.appcompat:appcompat:1.0.0"
+    // implementation 'com.yqritc:android-scalablevideoview:1.0.4'
     implementation project(':react-native-fs')
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-native")
