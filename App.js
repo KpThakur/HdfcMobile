@@ -87,9 +87,7 @@ function App() {
     const newCameraPermission = Camera.getCameraPermissionStatus();
     const CameraPermission = await Camera.requestCameraPermission();
     console.log('Camera --> ', CameraPermission);
-    console.log('Microphone ---->', MicrophonePermission);
     console.log('Camera permission --> ', newCameraPermission);
-    console.log('Microphone permission ---->', newMicrophonePermission);
   };
   return (
     <View style={{flex: 1}}>
