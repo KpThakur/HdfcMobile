@@ -395,7 +395,6 @@ const DashboardScreen = ({navigation}) => {
                     <TouchableOpacity
                       style={styles.prim_btn}
                       onPress={() => {
-<<<<<<< HEAD
                         // navigation.navigate("ReviewAduit", {
                         //   audit_id: audit.audit_id,
                         //   branch_manager: audit.branch_manager,
@@ -403,13 +402,6 @@ const DashboardScreen = ({navigation}) => {
                         navigation.navigate("VideoScreen",{auditId : audit?.audit_id});
                       }}
                     >
-=======
-                        navigation.navigate('ReviewAduit', {
-                          audit_id: audit.audit_id,
-                          branch_manager: audit.branch_manager,
-                        });
-                      }}>
->>>>>>> 5df37da063ec7fe7fe118a2e88f6a52b40481a3c
                       <Text
                         style={{
                           color: '#fff',
