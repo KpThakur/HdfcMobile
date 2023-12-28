@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import RNFS from 'react-native-fs';
-import {Camera, useCameraDevices} from 'react-native-vision-camera';
+import {RNCamera} from 'react-native-camera';
 import {
   View,
   StyleSheet,
@@ -22,60 +22,92 @@ import {
 } from '../../../../utils/constant';
 import Header from '../../../../component/Header';
 import Loader from '../../../../utils/Loader';
+import {QuestionContext} from '../../../../utils/QuestionContext';
+import {apiCall} from '../../../../utils/httpClient';
+import apiEndPoints from '../../../../utils/apiEndPoints';
 
 const VideoComponent = ({navigation}) => {
   const [indicator, setIndicator] = useState(true);
-  const [videoData, setVideoData] = useState();
-  const [videoPath, setVideoPath] = useState();
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState(null);
+  const [videoData, setVideoData] = useState([]);
+  const [loading, setIsLoading] = useState(false);
+  const [question, setquestion] = useContext(QuestionContext);
   const currentTime = new Date();
-  const devices = useCameraDevices('back');
+
   const camera = useRef(null);
-  // const device = devices.back;
-  // if (device == null) return <Loader/>;
-  useEffect(() => {
-    if (devices) {
-      setSelectedDevice(devices);
-    } else {
-      console.log('No camera device available.');
-    }
-  }, [devices]);
-  const handleRecording = () => {
+
+  const handleRecording = async () => {
     setIndicator(false);
     try {
       if (camera.current) {
-        camera.current.startRecording({
-          flash: 'on',
-          videoCodec: 'h265',
-          onRecordingFinished: async video => {
-            setVideoPath(video?.path);
-            console.log(video?.path);
-            const originalPath =
-              'file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures';
-            const fileName = '_recordedVideo' + new Date().getTime() + '.mp4';
-            const destinationImagePath = originalPath + '/' + fileName;
+        /*  setTimeout(async () => {
+          await stopRecording();
+        }, 30000); */
 
-            // Moving video file to another location
-
-            RNFS.moveFile(video?.path, destinationImagePath)
-              .then(() => {
-                console.log('Video saved at -->>', destinationImagePath);
-                const videoWithData = {
-                  path: destinationImagePath,
-                  type: 'camera',
-                  time: currentTime.toString(),
-                };
-                let camVid = videoData == null ? [] : [videoData];
-                camVid.push(videoWithData);
-                setVideoData(camVid);
-              })
-              .catch(error => {
-                console.log(error);
-              });
-          },
-          onRecordingError: error => console.error(error),
+        const options = {
+          quality: RNCamera.Constants.VideoQuality['720p'],
+          orientation: 'portrait',
+          fixOrientation: true,
+          forceUpOrientation: true,
+        };
+        const data = await camera.current.recordAsync(options);
+        console.log('video recoding ---->>>', data);
+        setIsLoading(true);
+        const formdata = new FormData();
+         
+        formdata.append('audit_id', question?.audit_id);
+        formdata.append('audit_video', {
+          uri: data?.uri,
+          type: 'video/mp4',
+          name: 'demo.mp4',
         });
+
+        console.log('ttttt=======', formdata);
+
+        const response = await apiCall(
+          'POST',
+          apiEndPoints.UPLOAD_VIDEO,
+          formdata,
+          {
+            'Content-Type': 'multipart/form-data',
+            'cache-control': 'no-cache',
+            processData: false,
+            contentType: false,
+            mimeType: 'multipart/form-data',
+          },
+        );
+        console.log('The response of Video Record ====>>> ', response.data);
+        if (response.status === 200) {
+          setIsLoading(false);
+          navigation.navigate('DashboardScreen');
+          // setstartAudit(3);
+        } else {
+          setIsLoading(false);
+          navigator.navigate('DashboardScreen');
+        }
+
+        /*   const fileName = '_recordedVideo_' + new Date().getTime() + '.mp4';
+        const destinationImagePath =
+          RNFS.ExternalDirectoryPath + '/' + fileName;
+
+         RNFS.moveFile(data?.uri, destinationImagePath)
+          .then(async () => {
+            console.log('Video saved at -->>', destinationImagePath);
+            const videoWithData = {
+              path: destinationImagePath,
+              type: 'camera',
+              time: currentTime.toString(),
+            };
+
+           
+            let camVid = videoData == null ? [...videoWithData]: [...videoData] ;
+            camVid.push(videoWithData);
+            setVideoData(camVid);
+            
+            
+          })
+          .catch(error => {
+            console.log(error);
+          }); */
       } else {
         console.error('Camera ref is null');
       }
@@ -84,46 +116,43 @@ const VideoComponent = ({navigation}) => {
     }
   };
   const stopRecording = async () => {
+    // setIsLoading(true);
+    setIndicator(true);
     try {
-      await camera.current.stopRecording();
+      if (camera.current) {
+        camera.current.stopRecording();
+        //const videoPath = videoData[videoData.length - 1].path;
+        //console.log("The videoPath ==>>", videoPath);
+        /*  const formdata = new FormData();  
+        formdata.append('audit_id', question?.audit_id);
+        formdata.append('audit_video', videoPath);
+        console.log("The form data ===>", formdata); */
+
+        /* const header = {
+          {
+            "Content-Type": "multipart/form-data",
+            "cache-control": "no-cache",
+            processData: false,
+            contentType: false,
+            mimeType: "multipart/form-data",
+          }
+        };  */
+
+        /* const response = await apiCall("POST", apiEndPoints.UPLOAD_VIDEO, formdata,header);
+        console.log("The response of Video Record ====>>> ", response) */
+        // if(response.status ===200)
+        // {
+        //   // setIsLoading(false);
+        // }
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  const renderCameraView = () => {
-    return (
-      <View style={styles.bodyView}>
-        <SafeAreaView>
-          {/* <Header
-            leftImg={LEFT_ARROW}
-            onPress={() => navigation.goBack()}
-          /> */}
-        </SafeAreaView>
-        <Camera
-          ref={ref => (camera.current = ref)}
-          style={StyleSheet.absoluteFill}
-          device={devices}
-          isAcitve={true}
-          video={true}
-          audio={true}
-        />
-        <TouchableOpacity style={styles.buttonView} onPress={handleRecording}>
-          <Text>{indicator ? 'Start' : 'Stop'}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
-  const openCamera = () => {
-    if (selectedDevice) {
-      setIsCameraOpen(true);
-      console.log('The open camera is running !!');
-    } else {
-      console.error('Cannot open camera, no valid device selected.');
-    }
-  };
   return (
     <>
+      {loading && <Loader />}
       <SafeAreaView>
         <Header
           leftImg={LEFT_ARROW}
@@ -131,20 +160,29 @@ const VideoComponent = ({navigation}) => {
           onPress={() => navigation.goBack()}
         />
       </SafeAreaView>
-      <View style={styles.mainView}>
-        <View style={styles.innerView}>
-          <Text style={styles.textStyle}> Upload your video</Text>
-          <TouchableOpacity style={styles.buttonView} onPress={openCamera}>
-            <Text style={styles.buttonText}>Start</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.bodyView}>
+        <RNCamera
+          style={StyleSheet.absoluteFill}
+          type={RNCamera.Constants.Type.back}
+          captureAudio={true}
+          ref={camera}></RNCamera>
+        <TouchableOpacity
+          style={styles.buttonView}
+          onPress={indicator ? () => handleRecording() : () => stopRecording()}>
+          <Text>{indicator ? 'Start' : 'Stop'}</Text>
+        </TouchableOpacity>
       </View>
-      {isCameraOpen && renderCameraView()}
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  bodyView: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   mainView: {
     flex: 1,
     justifyContent: 'center',
@@ -159,12 +197,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonView: {
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 50,
+    height: 70,
+    width: 70,
+    padding: 5,
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 30,
-    backgroundColor: PRIMARY_BTN_COLOR,
+    marginBottom: 30,
+    backgroundColor: 'red',
+    // backgroundColor: PRIMARY_BTN_COLOR,
   },
   buttonText: {
     color: WHITE_BG_COLOR,
@@ -178,3 +220,108 @@ const styles = StyleSheet.create({
   },
 });
 export default VideoComponent;
+
+// import React, { useState, useRef } from 'react';
+// import {
+//   View,
+//   TouchableOpacity,
+//   Text,
+//   StyleSheet
+// } from 'react-native';
+// import { Camera, FileSystem, Permissions } from 'react-native-vision-camera';
+// import Video from 'react-native-video';
+
+// const VideoComponent = () => {
+//   const [isRecording, setIsRecording] = useState(false);
+//   const [videoPath, setVideoPath] = useState('');
+//   const cameraRef = useRef();
+//   const devices = Camera.getAvailableCameraDevices();
+//   const device = devices.find(d => d.position === 'back');
+
+//   const startRecording = async () => {
+//     // const hasPermission = await requestCameraPermission();
+//     // if (!hasPermission) return;
+
+//     setIsRecording(true);
+
+//     const videoPath = `${FileSystem.cacheDirectory}/video.mp4`;
+//     setVideoPath(videoPath);
+
+//     cameraRef.current.startRecording({
+//       quality: '720p',
+//       videoBitrate: 2000000,
+//       maxDuration: 10, // Set the maximum duration in seconds (optional)
+//       maxFileSize: 100 * 1024 * 1024, // Set the maximum file size in bytes (optional)
+//       outputPath: videoPath,
+//     });
+//   };
+
+//   const stopRecording = async () => {
+//     setIsRecording(false);
+//     await cameraRef.current.stopRecording();
+//   };
+
+//   const requestCameraPermission = async () => {
+//     const { status } = await Permissions.requestMultiple([
+//       Permissions.PERMISSIONS.ANDROID.CAMERA,
+//       Permissions.PERMISSIONS.ANDROID.RECORD_AUDIO,
+//       Permissions.PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+//     ]);
+//     return (
+//       status[Permissions.PERMISSIONS.ANDROID.CAMERA] === 'granted' &&
+//       status[Permissions.PERMISSIONS.ANDROID.RECORD_AUDIO] === 'granted' &&
+//       status[Permissions.PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE] === 'granted'
+//     );
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <Camera style={styles.camera} ref={cameraRef} device={device}/>
+
+//       {isRecording ? (
+//         <TouchableOpacity style={styles.recordButton} onPress={stopRecording}>
+//           <Text style={styles.recordButtonText}>Stop Recording</Text>
+//         </TouchableOpacity>
+//       ) : (
+//         <TouchableOpacity style={styles.recordButton} onPress={startRecording}>
+//           <Text style={styles.recordButtonText}>Start Recording</Text>
+//         </TouchableOpacity>
+//       )}
+
+//       {videoPath !== '' && (
+//         <View style={styles.videoPlayer}>
+//           <Video source={{ uri: videoPath }} style={styles.videoPlayer} controls />
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#000',
+//   },
+//   camera: {
+//     flex: 1,
+//   },
+//   recordButton: {
+//     position: 'absolute',
+//     bottom: 20,
+//     left: 20,
+//     right: 20,
+//     backgroundColor: 'red',
+//     padding: 20,
+//     alignItems: 'center',
+//   },
+//   recordButtonText: {
+//     fontSize: 18,
+//     color: '#fff',
+//   },
+//   videoPlayer: {
+//     flex: 1,
+//     marginTop: 20,
+//   },
+// });
+
+// export default VideoComponent;
