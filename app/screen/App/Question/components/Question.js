@@ -108,6 +108,7 @@ const Question = props => {
     setstartAudit,
     getIMG,
     onCapture,
+    branchDetailData
   } = props;
 
   const handleRating = async item => {
@@ -243,10 +244,10 @@ const Question = props => {
         const formattedTime = moment(currentTime).format('hh:mm:ss A');
 
         ImagePicker.openCamera({
-          width: 300,
-          height: 400,
-          cropping: false,
-          compressImageQuality: 0.5,
+          width: 350,
+          height: 350,
+          cropping: true,
+          compressImageQuality: 1,
         }).then(image => {
           console.log('image: ', image?.path);
 
@@ -276,16 +277,18 @@ const Question = props => {
             },
             watermarkTexts: [
               {
-                text: `${res} \n ${formattedDate} ${formattedTime}`,
+                text: `${branchDetailData?.branch_name}\n ${res} \n Lat : ${latitude} \n Long : ${longitude} \n${formattedDate} ${formattedTime}`,
                 positionOptions: {
-                  position: Position.bottomCenter,
+                  position: Position.bottomRight,
                 },
                 style: {
                   color: '#000',
-                  fontSize: 8,
+                  fontSize: 5,
                   fontName: FONT_FAMILY_THIN,
+                  fontWeight: 'bold',
                   textBackgroundStyle: {
-                    padding: '5% 3%',
+                    padding: '5%',
+                    //marginRight : '50%',
                     // type: TextBackgroundType.stretchX,
                     color: '#c9c9c9',
                   },
@@ -517,7 +520,7 @@ const Question = props => {
                   fontSize: normalize(SMALL_FONT_SIZE),
                 },
               ]}>
-              {question?.data?.audit_question}
+              {`${question?.data?.audit_question} : ${branchDetailData?.insurance_com}`}
             </Text>
           </>
         ) : null}
@@ -595,9 +598,9 @@ const Question = props => {
                             }}
                             style={{
                               width: '100%',
-                              height: 400,
+                              height: 300,
                               borderRadius: 10,
-                              // resizeMode: 'contain',
+                              resizeMode: 'contain',
                             }}
                           />
                         ) : null}
@@ -692,7 +695,7 @@ const Question = props => {
                                     Camera
                                   </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                   style={{alignItems: 'center'}}
                                   onPress={() => OpenGallery()}>
                                   <Image
@@ -711,7 +714,7 @@ const Question = props => {
                                     }}>
                                     Gallery
                                   </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                               </View>
                             </View>
                           </View>
