@@ -103,8 +103,7 @@ const LoginScreen = props => {
           </View>
           <View style={styles.btn_view}>
             <Button buttonText="Log in" onPress={handleLogin} />
-             <FlashMessage/>
-            
+             
           </View>
         </View>
       </KeyboardAvoidingView>

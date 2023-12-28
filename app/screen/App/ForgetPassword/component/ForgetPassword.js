@@ -15,7 +15,7 @@ export default function ForgetPassword(props) {
       <ScrollView contentContainerStyle={Styles.scrollViewStyle}>
         <View
           style={{
-            elevation: 0.8,
+            elevation: 1,
             flex: 1,
             marginBottom: 25,
             paddingBottom: 20,
