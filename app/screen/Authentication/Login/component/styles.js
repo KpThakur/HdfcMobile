@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   flashMessage: {
     borderRadius: normalize(12),
     //height: normalize(120),
-    width: '100%',
+    marginHorizontal: normalize(30),
     marginBottom: normalize(3),
   },
   textStyle: {

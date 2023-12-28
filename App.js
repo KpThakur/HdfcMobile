@@ -7,16 +7,22 @@ import {UserProvider} from './app/utils/UserContext';
 import NoNetworkBar from './app/component/NoNetworkBar';
 import {Camera} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS, check} from 'react-native-permissions';
+import FlashMessage from 'react-native-flash-message';
 
 function App() {
   useEffect(() => {
-    checkLocation()
-      .then(() => requestLocationPermission())
-      .then(() => requestCameraPermission())
-      .then(() => permission())
-      .catch(error => {
+    const requestPermissions = async () => {
+      try {
+        await requestLocationPermission();
+        await checkLocation();
+        await requestCameraPermission();
+        await permission();
+      } catch (error) {
         console.log('Error:', error);
-      });
+      }
+    };
+
+    requestPermissions();
   }, []);
 
   const requestCameraPermission = async () => {
@@ -26,6 +32,8 @@ function App() {
           ? PERMISSIONS.IOS.CAMERA
           : PERMISSIONS.ANDROID.CAMERA,
         {
+          message:
+            'App needs access to your camera ' + 'so you can take pictures.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -77,13 +85,9 @@ function App() {
 
   const permission = async () => {
     const newCameraPermission = Camera.getCameraPermissionStatus();
-    const newMicrophonePermission = Camera.getMicrophonePermissionStatus();
     const CameraPermission = await Camera.requestCameraPermission();
-    const MicrophonePermission = await Camera.requestMicrophonePermission();
     console.log('Camera --> ', CameraPermission);
-    console.log('Microphone ---->', MicrophonePermission);
     console.log('Camera permission --> ', newCameraPermission);
-    console.log('Microphone permission ---->', newMicrophonePermission);
   };
   return (
     <View style={{flex: 1}}>
@@ -95,6 +99,7 @@ function App() {
           </EditAuditProvider>
         </QuestionProvider>
       </UserProvider>
+      <FlashMessage />
     </View>
   );
 }
