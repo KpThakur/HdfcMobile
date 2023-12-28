@@ -286,7 +286,7 @@ const Question = props => {
                   fontName: FONT_FAMILY_THIN,
                   textBackgroundStyle: {
                     padding: '5% 3%',
-                    type: TextBackgroundType.stretchX,
+                    // type: TextBackgroundType.stretchX,
                     color: '#c9c9c9',
                   },
                 },
@@ -595,9 +595,9 @@ const Question = props => {
                             }}
                             style={{
                               width: '100%',
-                              height: 300,
+                              height: 400,
                               borderRadius: 10,
-                              resizeMode: 'contain',
+                              // resizeMode: 'contain',
                             }}
                           />
                         ) : null}
