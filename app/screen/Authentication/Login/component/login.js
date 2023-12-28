@@ -39,7 +39,6 @@ const LoginScreen = props => {
     isChecked,
     setisChecked,
     handleForgetPassword,
-    
   } = props;
   const [isSecure, setisSecure] = useState(true);
   const handlePassword = () => {
@@ -103,7 +102,6 @@ const LoginScreen = props => {
           </View>
           <View style={styles.btn_view}>
             <Button buttonText="Log in" onPress={handleLogin} />
-             
           </View>
         </View>
       </KeyboardAvoidingView>

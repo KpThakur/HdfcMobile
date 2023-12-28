@@ -17,7 +17,6 @@ function App() {
         await checkLocation();
         await requestCameraPermission();
         await permission();
-        
       } catch (error) {
         console.log('Error:', error);
       }
@@ -26,8 +25,6 @@ function App() {
     requestPermissions();
   }, []);
 
- 
-
   const requestCameraPermission = async () => {
     try {
       const cameraPermissionStatus = await request(
@@ -35,8 +32,8 @@ function App() {
           ? PERMISSIONS.IOS.CAMERA
           : PERMISSIONS.ANDROID.CAMERA,
         {
-          message: 'App needs access to your camera ' +
-          'so you can take pictures.',
+          message:
+            'App needs access to your camera ' + 'so you can take pictures.',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -88,9 +85,9 @@ function App() {
 
   const permission = async () => {
     const newCameraPermission = await Camera.requestCameraPermission();
-   // const newMicrophonePermission = await Camera.requestMicrophonePermission();
+    // const newMicrophonePermission = await Camera.requestMicrophonePermission();
     console.log(newCameraPermission);
-   // console.log(newMicrophonePermission);
+    // console.log(newMicrophonePermission);
   };
   return (
     <View style={{flex: 1}}>
@@ -102,7 +99,7 @@ function App() {
           </EditAuditProvider>
         </QuestionProvider>
       </UserProvider>
-      <FlashMessage/>
+      <FlashMessage />
     </View>
   );
 }
