@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -11,15 +11,18 @@ import {
   Dimensions,
   FlatList,
   KeyboardAvoidingView,
-} from "react-native";
-import Header from "../../../../component/Header";
-import Button from "../../../../component/Button";
-import { styles } from "./styles";
-import AuditScoreScreen from "../../AuditScore";
-import ReviewAuditScreen from "../../ReviewAudit";
-import ActionableScreen from "../../Actionable";
-import ImagePicker from "react-native-image-crop-picker";
-// import ImageMarker, { Position, TextBackgroundType  } from 'react-native-image-marker';
+} from 'react-native';
+import Header from '../../../../component/Header';
+import Button from '../../../../component/Button';
+import {styles} from './styles';
+import AuditScoreScreen from '../../AuditScore';
+import ReviewAuditScreen from '../../ReviewAudit';
+import ActionableScreen from '../../Actionable';
+import ImagePicker from 'react-native-image-crop-picker';
+import ImageMarker, {
+  Position,
+  TextBackgroundType,
+} from 'react-native-image-marker';
 import RNFS from 'react-native-fs';
 
 import {
@@ -47,24 +50,24 @@ import {
   BLACK_COLOR,
   MAP_KEY,
   FONT_FAMILY_THIN,
-} from "../../../../utils/constant";
-import DropDown from "../../../../component/DropDown";
-import { useNavigation } from "@react-navigation/native";
-import { normalize } from "../../../../component/scaleFontSize";
-import Slider from "@react-native-community/slider";
-import AsyncStorage from "@react-native-community/async-storage";
-import { UserContext } from "../../../../utils/UserContext";
-import JoinChannelVideo from "../../../../component/Streaming/App_agora";
-import Notify from "../../Notify";
-import apiEndPoints from "../../../../utils/apiEndPoints";
-import { apiCall, getLocation } from "../../../../utils/httpClient";
+} from '../../../../utils/constant';
+import DropDown from '../../../../component/DropDown';
+import {useNavigation} from '@react-navigation/native';
+import {normalize} from '../../../../component/scaleFontSize';
+import Slider from '@react-native-community/slider';
+import AsyncStorage from '@react-native-community/async-storage';
+import {UserContext} from '../../../../utils/UserContext';
+import JoinChannelVideo from '../../../../component/Streaming/App_agora';
+import Notify from '../../Notify';
+import apiEndPoints from '../../../../utils/apiEndPoints';
+import {apiCall, getLocation} from '../../../../utils/httpClient';
 import Geolocation from 'react-native-geolocation-service';
-import axios from "axios";
-import moment from "moment";
+import axios from 'axios';
+import moment from 'moment';
 
-const Question = (props) => {
-  const windowWidth = Dimensions.get("window").width;
-  const windowHeight = Dimensions.get("window").height;
+const Question = props => {
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
   const [onInfo, setonInfo] = useState(false);
   const [defaultRating, setdefaultRating] = useState(0);
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
@@ -105,9 +108,10 @@ const Question = (props) => {
     setstartAudit,
     getIMG,
     onCapture,
+    branchDetailData
   } = props;
 
-  const handleRating = async (item) => {
+  const handleRating = async item => {
     await setdefaultRating(item);
     await setrating(item);
   };
@@ -121,7 +125,7 @@ const Question = (props) => {
       props.setshowActionable(true);
     }
   }
-  const handleRemark = (val) => {
+  const handleRemark = val => {
     setremark(val);
     props.emitRemark(val);
   };
@@ -136,230 +140,225 @@ const Question = (props) => {
 
   const OpenGallery = () => {
     Geolocation.getCurrentPosition(
-    async  position => {
+      async position => {
         const {latitude, longitude} = position.coords;
         const res = await getLocation(latitude, longitude);
-        console.log("LocationName --->> ", res);
-        console.log("Postion ----->>>",position);
-     const currentTime = new Date();
-    
-    
+        console.log('LocationName --->> ', res);
+        console.log('Postion ----->>>', position);
+        const currentTime = new Date();
 
-     const formattedDate = moment(currentTime).format('DD-MM-YYYY');
-     const formattedTime = moment(currentTime).format('hh:mm:ss A');
-   
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: false,
-      compressImageQuality: 0.5,
-    }) 
-    .then((image) => {
-    console.log('image: ', image?.path);
-  
-        const originalPath = image?.path;
-        const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
-        // const originalImageDirectory = "file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures";
-        console.log("The original path --->",originalImageDirectory);
-        const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
-        const destinationImagePath = originalImageDirectory+ '/' + fileName;
-        const imageWithMetaData = {
-          path : image?.path,
-          type : 'gallery',
-          location : {latitude, longitude},
-          time : currentTime.toString()
-        }
-        let combineImg = props.camImg == null ? [] : [...props.camImg];
+        const formattedDate = moment(currentTime).format('DD-MM-YYYY');
+        const formattedTime = moment(currentTime).format('hh:mm:ss A');
+
+        ImagePicker.openPicker({
+          width: 300,
+          height: 400,
+          cropping: false,
+          compressImageQuality: 0.5,
+        }).then(image => {
+          const originalPath = image?.path;
+          const originalImageDirectory = originalPath.substring(
+            0,
+            originalPath.lastIndexOf('/'),
+          );
+          const fileName = 'markedImage_' + new Date().getTime() + '.jpg';
+          const destinationImagePath = originalImageDirectory + '/' + fileName;
+          const options = {
+            backgroundImage: {
+              src: {uri: image?.path},
+              scale: 1,
+            },
+            watermarkTexts: [
+              {
+                text: `${res} \n Time: ${formattedDate} ${formattedTime}`,
+                positionOptions: {
+                  position: Position.bottomCenter,
+                },
+                style: {
+                  color: '#000',
+                  fontSize: 8,
+                  fontName: FONT_FAMILY_THIN,
+                  textBackgroundStyle: {
+                    padding: '5% 5%',
+                    type: TextBackgroundType.stretchX,
+                    color: '#c9c9c9',
+                  },
+                },
+              },
+            ],
+            scale: 1,
+            quality: 100,
+            filename: 'test',
+            maxSize: 1000,
+          };
+
+          ImageMarker.markText(options)
+            .then(markedImagePath => {
+              console.log('Marked image path: ', markedImagePath);
+              RNFS.moveFile(markedImagePath, destinationImagePath)
+                .then(() => {
+                  console.log('Marked image saved at: ', destinationImagePath);
+                  const imageWithMetaData = {
+                    path: destinationImagePath,
+                    type: 'gallery',
+                    location: {latitude, longitude},
+                    time: currentTime.toString(),
+                  };
+                  let combineImg =
+                    props.camImg == null ? [] : [...props.camImg];
+                  combineImg.push(imageWithMetaData);
+                  props.setCamImg(combineImg);
+                  setssDropDown(false);
+                })
+                .catch(moveError => {
+                  console.error('Error moving file:', moveError);
+                });
+            })
+            .catch(error => {
+              console.error(
+                'Error handling the marker text on image :-',
+                error,
+              );
+            });
+          setssDropDown(false);
+        });
+      },
+      error => {
+        console.log('This is the error', error);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  };
+
+  const OpenCamera = async () => {
+    Geolocation.getCurrentPosition(
+      async position => {
+        const {latitude, longitude} = position.coords;
+        const res = await getLocation(latitude, longitude);
+        console.log('LocationName --->> ', res);
+        console.log('Postion ----->>>', position);
+
+        const currentTime = new Date();
+
+        const formattedDate = moment(currentTime).format('DD-MM-YYYY');
+        const formattedTime = moment(currentTime).format('hh:mm:ss A');
+
+        ImagePicker.openCamera({
+          width: 350,
+          height: 350,
+          cropping: true,
+          compressImageQuality: 1,
+        }).then(image => {
+          console.log('image: ', image?.path);
+
+          const originalPath = image?.path;
+          const originalImageDirectory = originalPath.substring(
+            0,
+            originalPath.lastIndexOf('/'),
+          );
+          const fileName = 'markedImage_' + new Date().getTime() + '.jpg';
+          const destinationImagePath = originalImageDirectory + '/' + fileName;
+          setssDropDown(false);
+          const imageWithMetaData = {
+            path: image?.path,
+            type: 'camera',
+            location: {latitude, longitude},
+            time: currentTime.toString(),
+          };
+          let combineImg = props.camImg == null ? [] : [...props.camImg];
           combineImg.push(imageWithMetaData);
           props.setCamImg(combineImg);
           setssDropDown(false);
 
-      //   const options = {
-      //     backgroundImage: {
-      //       src : {uri : image?.path},
-      //       scale: 1,
-      //     },
-      //     watermarkTexts: [{
-      //       text:  `${res} \n Time: ${formattedDate} ${formattedTime}`,
-      //       positionOptions: {
-      //         //  X : 0,
-      //         // Y : 400
-      //         position: Position.bottomCenter,
-      //       },
-      //       style: {
-      //         color: BLACK_COLOR,
-      //         fontSize: 8,
-      //         fontName: FONT_FAMILY_THIN,
-      //         marginBottom: 5
-      //       },
-      //       textBackgroundStyle: {
-      //         padding: '10% 20%',
-      //         type: TextBackgroundType.stretchX,
-      //         marginHorizontal: 10
-      //         // color: '#0FFF00',
-      //       },
-      //     }],
-      //     scale: 1,
-      //     quality: 100,
-      //     filename: 'test',
-      //     maxSize: 1000,
-      //   }; 
+          const options = {
+            backgroundImage: {
+              src: {uri: image?.path},
+              scale: 1,
+            },
+            watermarkTexts: [
+              {
+                text: `${branchDetailData?.branch_name}\n ${res} \n Lat : ${latitude} \n Long : ${longitude} \n${formattedDate} ${formattedTime}`,
+                positionOptions: {
+                  position: Position.bottomRight,
+                },
+                style: {
+                  color: '#000',
+                  fontSize: 5,
+                  fontName: FONT_FAMILY_THIN,
+                  fontWeight: 'bold',
+                  textBackgroundStyle: {
+                    padding: '5%',
+                    //marginRight : '50%',
+                    // type: TextBackgroundType.stretchX,
+                    color: '#c9c9c9',
+                  },
+                },
+              },
+            ],
+            scale: 1,
+            quality: 100,
+            filename: 'test',
+            // saveFormat: ImageFormat.png,
+            maxSize: 500,
+          };
 
-      //  ImageMarker.markText(options
-      //   ).then((markedImagePath)=> {
-      //     console.log('Marked image path: ', markedImagePath);
-      //   RNFS.moveFile(markedImagePath, destinationImagePath)
-      //    .then(() => {
-      //      console.log('Marked image saved at: ', destinationImagePath);
-      //      const imageWithMetaData = {
-      //       path : destinationImagePath,
-      //       type : 'gallery',
-      //       location : {latitude, longitude},
-      //       time : currentTime.toString()
-      //     }
-      //     let combineImg = props.camImg == null ? [] : [...props.camImg];
-      //       combineImg.push(imageWithMetaData);
-      //       props.setCamImg(combineImg);
-      //       setssDropDown(false);
-      //  }).catch((moveError) => {
-      //      console.error('Error moving file:', moveError);
-      //  });
-      //     }).catch((error) => {
-      //         console.error("Error handling the marker text on image :-", error);
-      //     });
-      setssDropDown(false);
-    });
-   },  error => {
-       console.log("This is the error",error);
-        }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-   
-  };
- 
-  const OpenCamera = async () => {
-    Geolocation.getCurrentPosition(
-     async position => {
-        const {latitude, longitude} = position.coords;
-       const res = await getLocation(latitude, longitude);
-       console.log("LocationName --->> ", res);
-       console.log("Postion ----->>>",position);
-        
-     const currentTime = new Date();
-
-     const formattedDate = moment(currentTime).format('DD-MM-YYYY');
-     const formattedTime = moment(currentTime).format('hh:mm:ss A');
-   
-    ImagePicker.openCamera({
-      width: 300,
-      height: 400,
-      cropping: false,
-      compressImageQuality: 0.5,
-    }) 
-    .then((image) => {
-    console.log('image: ', image?.path);
-
-    const originalPath = image?.path;
-    const originalImageDirectory = originalPath.substring(0, originalPath.lastIndexOf('/'));
-    console.log("The original path --->",originalImageDirectory);
-    const fileName = 'markedImage_'+ new Date().getTime() + '.jpg';
-    const destinationImagePath = originalImageDirectory+ '/' + fileName;
-      setssDropDown(false);
-      const imageWithMetaData = {
-        path : image?.path,
-        type : 'camera',
-        location : {latitude, longitude},
-        time : currentTime.toString()
-      }
-        let combineImg = props.camImg == null ? [] : [...props.camImg];
-        combineImg.push(imageWithMetaData);
-        props.setCamImg(combineImg);
-        setssDropDown(false);
-
-  //     const options = {
-  //       backgroundImage: {
-  //         src : {uri : image?.path},
-  //         scale: 1,
-  //       },
-  //       watermarkTexts: [{
-  //         text:  `${res} \n ${formattedDate} ${formattedTime}`,
-  //         positionOptions: {
-  //           // X: 10,
-  //           // Y: 10,
-  //           position: Position.bottomCenter,
-  //         },
-  //         style: {
-  //           color: BLACK_COLOR,
-  //           fontSize: 8,
-  //           fontName: FONT_FAMILY_THIN,
-  //           marginBottom: 5,
-  //         },
-  //         textBackgroundStyle: {
-  //           padding: '10%',
-  //           type: TextBackgroundType.stretchX,
-  //           // color: '#0FFF00',
-  //           // backgroundColor: 'blue'
-  //         },
-  //       }],
-  //       scale: 1,
-  //       quality: 100,
-  //       filename: 'test',
-  //       // saveFormat: ImageFormat.png,
-  //       maxSize: 1000,
-  //     };
-
-  //   ImageMarker.markText(options
-  //   ).then((markedImagePath)=> {
-  //       console.log('Marked image path: ', markedImagePath);
-  //     RNFS.moveFile(markedImagePath, destinationImagePath)
-  //      .then(() => {
-  //        console.log('Marked image saved at: ', destinationImagePath);
-  //        const imageWithMetaData = {
-  //         path : destinationImagePath,
-  //         type : 'camera',
-  //         location : {latitude, longitude},
-  //         time : currentTime.toString()
-  //       }
-  //         let combineImg = props.camImg == null ? [] : [...props.camImg];
-  //         combineImg.push(imageWithMetaData);
-  //         props.setCamImg(combineImg);
-  //         setssDropDown(false);
-  // })
-  // .catch((moveError) => {
-  //   console.error('Error moving file:', moveError);
-  // });
-  //   }).catch((error) => {
-  //        console.error("Error handling the marker text on image :-", error);
-  //   });
- 
-  });
-     //Adding details to image   
-  }, error => {
-    console.log("This is the error",error);
-  }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+          ImageMarker.markText(options)
+            .then(markedImagePath => {
+              console.log('Marked image path: ', markedImagePath);
+              RNFS.moveFile(markedImagePath, destinationImagePath)
+                .then(() => {
+                  console.log('Marked image saved at: ', destinationImagePath);
+                  const imageWithMetaData = {
+                    path: destinationImagePath,
+                    type: 'camera',
+                    location: {latitude, longitude},
+                    time: currentTime.toString(),
+                  };
+                  let combineImg =
+                    props.camImg == null ? [] : [...props.camImg];
+                  combineImg.push(imageWithMetaData);
+                  props.setCamImg(combineImg);
+                  setssDropDown(false);
+                })
+                .catch(moveError => {
+                  console.error('Error moving file:', moveError);
+                });
+            })
+            .catch(error => {
+              console.error(
+                'Error handling the marker text on image :-',
+                error,
+              );
+            });
+        });
+        //Adding details to image
+      },
+      error => {
+        console.log('This is the error', error);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
   const renderImage = (item, index) => {
     return question.audit_type === 0 ? (
       <TouchableOpacity
-        style={{ width: 60, height: 65, marginHorizontal: 5 }}
-        onPress={() => showMaxIMG(index)}
-      >
+        style={{width: 60, height: 65, marginHorizontal: 5}}
+        onPress={() => showMaxIMG(index)}>
         <TouchableOpacity
           style={{
             width: 20,
             height: 20,
             borderRadius: 20,
-            position: "absolute",
+            position: 'absolute',
             zIndex: 9,
-            backgroundColor: "#fff",
+            backgroundColor: '#fff',
             right: 0,
             top: 0,
           }}
-          onPress={() => props.confirmDelete(index)}
-        >
+          onPress={() => props.confirmDelete(index)}>
           <Image
-            source={require("../../../../assets/images/add-alt.png")}
+            source={require('../../../../assets/images/add-alt.png')}
             style={{
               width: 20,
               height: 20,
@@ -369,31 +368,29 @@ const Question = (props) => {
         </TouchableOpacity>
         <View>
           <Image
-            source={{ uri: item.path }}
-            style={{ width: "100%", height: "100%", borderRadius: 10 }}
+            source={{uri: item.path}}
+            style={{width: '100%', height: '100%', borderRadius: 10}}
           />
         </View>
       </TouchableOpacity>
     ) : (
       <TouchableOpacity
-        style={{ width: 60, height: 65, marginHorizontal: 5 }}
-        onPress={() => showMaxIMG(index)}
-      >
+        style={{width: 60, height: 65, marginHorizontal: 5}}
+        onPress={() => showMaxIMG(index)}>
         <TouchableOpacity
           style={{
             width: 20,
             height: 20,
             borderRadius: 20,
-            position: "absolute",
+            position: 'absolute',
             zIndex: 9,
-            backgroundColor: "#fff",
+            backgroundColor: '#fff',
             right: 0,
             top: 0,
           }}
-          onPress={() => props.confirmDelete(index)}
-        >
+          onPress={() => props.confirmDelete(index)}>
           <Image
-            source={require("../../../../assets/images/add-alt.png")}
+            source={require('../../../../assets/images/add-alt.png')}
             style={{
               width: 20,
               height: 20,
@@ -403,14 +400,14 @@ const Question = (props) => {
         </TouchableOpacity>
         <View>
           <Image
-            source={{ uri: props.baseUrl + item.image_data }}
-            style={{ width: "100%", height: "100%", borderRadius: 10 }}
+            source={{uri: props.baseUrl + item.image_data}}
+            style={{width: '100%', height: '100%', borderRadius: 10}}
           />
         </View>
       </TouchableOpacity>
     );
   };
-  const showMaxIMG = (index) => {
+  const showMaxIMG = index => {
     setshowModalIMG(props.camImg[index]);
     setmaxIMG(!maxIMG);
   };
@@ -425,7 +422,7 @@ const Question = (props) => {
       {startAudit === 2 ? (
         <Header
           leftImg={LEFT_ARROW}
-          headerText={"Start Audit"}
+          headerText={'Start Audit'}
           onPress={() => navigation.goBack()}
         />
       ) : //  : startAudit === 4 ? (
@@ -442,24 +439,22 @@ const Question = (props) => {
           <>
             <TouchableOpacity
               style={{
-                position: "absolute",
+                position: 'absolute',
                 right: 1,
                 zIndex: 10,
                 padding: 10,
               }}
-              onPress={() => handleInfo()}
-            >
-              <Image source={INFO_ICON} style={{ width: 20, height: 20 }} />
+              onPress={() => handleInfo()}>
+              <Image source={INFO_ICON} style={{width: 20, height: 20}} />
             </TouchableOpacity>
             {onInfo && (
               <View style={styles.info}>
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
                   <Text style={styles.info_txt}>More information</Text>
                   <TouchableOpacity onPress={() => handleInfo()}>
                     <Image
@@ -485,36 +480,33 @@ const Question = (props) => {
                 </Text>
               </View>
             )}
-            <View style={{ flexDirection: "row" }}>
+            <View style={{flexDirection: 'row'}}>
               <TouchableOpacity
                 onPress={() => {
                   navigation.goBack();
-                }}
-              >
+                }}>
                 <Image
                   source={LEFT_ARROW}
                   style={{
                     tintColor: PRIMARY_BLUE_COLOR,
                     width: 20,
                     height: 20,
-                    justifyContent: "flex-start",
+                    justifyContent: 'flex-start',
                   }}
                 />
               </TouchableOpacity>
               <View
                 style={{
                   flex: 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                }}
-              >
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'row',
+                }}>
                 <Text
                   style={
                     ([styles.branname],
-                    { fontFamily: FONT_FAMILY_BOLD, color: "#000" })
-                  }
-                >
+                    {fontFamily: FONT_FAMILY_BOLD, color: '#000'})
+                  }>
                   {question?.data?.question_title}
                 </Text>
               </View>
@@ -524,32 +516,30 @@ const Question = (props) => {
                 styles.txt,
                 {
                   marginTop: 10,
-                  fontWeight: "600",
+                  fontWeight: '600',
                   fontSize: normalize(SMALL_FONT_SIZE),
                 },
-              ]}
-            >
-              {question?.data?.audit_question}
+              ]}>
+              {`${question?.data?.audit_question} : ${branchDetailData?.insurance_com}`}
             </Text>
           </>
         ) : null}
         {managerJoin && maxIMG ? (
           <Modal>
-            <View style={{ flex: 1, backgroundColor: "#171717" }}>
+            <View style={{flex: 1, backgroundColor: '#171717'}}>
               <TouchableOpacity
                 style={{
                   padding: 20,
                   borderRadius: 100,
-                  position: "absolute",
+                  position: 'absolute',
                   zIndex: 9,
-                  backgroundColor: "#fff",
+                  backgroundColor: '#fff',
                   right: 0,
                   top: 0,
                 }}
-                onPress={() => showMaxIMG()}
-              >
+                onPress={() => showMaxIMG()}>
                 <Image
-                  source={require("../../../../assets/images/add-alt.png")}
+                  source={require('../../../../assets/images/add-alt.png')}
                   style={{
                     width: 20,
                     height: 20,
@@ -557,13 +547,11 @@ const Question = (props) => {
                   }}
                 />
               </TouchableOpacity>
-              <View
-                style={{ alignItems: "center", marginTop: 150, padding: 10 }}
-              >
-                {console.log("showModalIMG.path", showModalIMG)}
+              <View style={{alignItems: 'center', marginTop: 150, padding: 10}}>
+                {console.log('showModalIMG.path', showModalIMG)}
                 <Image
-                  source={{ uri: props.baseUrl + showModalIMG.image_data }}
-                  style={{ width: "100%", height: 300, resizeMode: "contain" }}
+                  source={{uri: props.baseUrl + showModalIMG.image_data}}
+                  style={{width: '100%', height: 300, resizeMode: 'contain'}}
                 />
               </View>
             </View>
@@ -571,53 +559,48 @@ const Question = (props) => {
         ) : null}
 
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
-        >
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
           <ScrollView
-            keyboardShouldPersistTaps={"always"}
+            keyboardShouldPersistTaps={'always'}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
-          >
+            contentContainerStyle={{flexGrow: 1}}>
             {question?.audit_type == 0 ? null : (
-              
-              <View style={{ height: 250 }}>
-                {console.log("🚀 ~ file: Question.js:408 ~ Question ~ question?.audit_type:", question?.audit_type)
-                  }
-                 
-                {
+              <View style={{height: 250}}>
+                {console.log(
+                  '🚀 ~ file: Question.js:408 ~ Question ~ question?.audit_type:',
+                  question?.audit_type,
+                )}
 
-                  
-                  
+                {
                   <JoinChannelVideo
-                    handleManagerJoin={(data) => props.handleManagerJoin(data)}
+                    handleManagerJoin={data => props.handleManagerJoin(data)}
                     token={props.token}
-                    channelId={props.channelId} 
+                    channelId={props.channelId}
                     //token="006b13f7540466747e6a102327255673a59IAAKqV6kHwDel5jrgEFAIu5fQla/AGJILodDtU+ndeniAU408aQh39v0EABOtBKIlZt5ZAEAAQDt1Hlk"
                     //channelId="10792279510792M6391"
                     setmanagerJoin={() => {}}
-                    handleJoin={(data) => props.handleJoin(data)}
+                    handleJoin={data => props.handleJoin(data)}
                   />
                 }
               </View>
             )}
             {startAudit === 1 ? (
-             
               <View style={styles.body}>
-                {question?.data?.image_capture === "1" && (
+                {question?.data?.image_capture === '1' && (
                   <>
                     {props?.camImg && !props.managerJoin ? (
-                      <View style={{ alignItems: "center", marginTop: 10 }}>
+                      <View style={{alignItems: 'center', marginTop: 10}}>
                         {props.camImg.length > 0 ? (
                           <Image
                             source={{
                               uri: props.camImg[props.camImg.length - 1].path,
                             }}
                             style={{
-                              width: "100%",
+                              width: '100%',
                               height: 300,
                               borderRadius: 10,
-                              resizeMode: "contain",
+                              resizeMode: 'contain',
                             }}
                           />
                         ) : null}
@@ -633,21 +616,19 @@ const Question = (props) => {
                               : onCapture();
                           }}
                           style={{
-                            backgroundColor: "#1b7dec",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            backgroundColor: '#1b7dec',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             borderRadius: 20,
                             paddingVertical: 10,
                             paddingHorizontal: 15,
-                          }}
-                        >
+                          }}>
                           <Text
                             style={{
                               fontSize: 14,
-                              fontWeight: "700",
-                              color: "#ffffff",
-                            }}
-                          >
+                              fontWeight: '700',
+                              color: '#ffffff',
+                            }}>
                             Capture The image
                           </Text>
                         </TouchableOpacity>
@@ -657,93 +638,83 @@ const Question = (props) => {
                           <View
                             style={{
                               flex: 1,
-                              justifyContent: "center",
-                              alignItems: "center",
-                              backgroundColor: "#004c8f95",
-                            }}
-                          >
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: '#004c8f95',
+                            }}>
                             <View
                               style={{
-                                backgroundColor: "#fff",
-                                width: "100%",
-                                position: "absolute",
+                                backgroundColor: '#fff',
+                                width: '100%',
+                                position: 'absolute',
                                 bottom: 0,
                                 paddingVertical: 40,
-                              }}
-                            >
+                              }}>
                               <View
                                 style={{
-                                  flexDirection: "row",
-                                  justifyContent: "space-between",
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
                                   marginHorizontal: 10,
-                                }}
-                              >
+                                }}>
                                 <Text
                                   style={{
-                                    color: "#000",
-                                    color: "#000",
+                                    color: '#000',
+                                    color: '#000',
                                     fontFamily: FONT_FAMILY_REGULAR,
                                     fontSize: normalize(SMALL_FONT_SIZE),
-                                  }}
-                                >
+                                  }}>
                                   Choose from
                                 </Text>
                                 <TouchableOpacity
-                                  onPress={() => setssDropDown(!ssDropDown)}
-                                >
+                                  onPress={() => setssDropDown(!ssDropDown)}>
                                   <Image source={CROSS} />
                                 </TouchableOpacity>
                               </View>
                               <View
                                 style={{
-                                  flexDirection: "row",
-                                  justifyContent: "space-evenly",
-                                }}
-                              >
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-evenly',
+                                }}>
                                 <TouchableOpacity
-                                  style={{ alignItems: "center" }}
-                                  onPress={() => OpenCamera()}
-                                >
+                                  style={{alignItems: 'center'}}
+                                  onPress={() => OpenCamera()}>
                                   <Image
                                     source={CAMERA}
                                     style={{
                                       width: 30,
                                       height: 30,
-                                      resizeMode: "contain",
+                                      resizeMode: 'contain',
                                       tintColor: PRIMARY_BLUE_COLOR,
                                     }}
                                   />
                                   <Text
                                     style={{
-                                      color: "#000",
+                                      color: '#000',
                                       fontFamily: FONT_FAMILY_REGULAR,
-                                    }}
-                                  >
+                                    }}>
                                     Camera
                                   </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                  style={{ alignItems: "center" }}
-                                  onPress={() => OpenGallery()}
-                                >
+                                {/* <TouchableOpacity
+                                  style={{alignItems: 'center'}}
+                                  onPress={() => OpenGallery()}>
                                   <Image
                                     source={GALLERY}
                                     style={{
                                       width: 30,
                                       height: 30,
-                                      resizeMode: "contain",
+                                      resizeMode: 'contain',
                                       tintColor: PRIMARY_BLUE_COLOR,
                                     }}
                                   />
                                   <Text
                                     style={{
-                                      color: "#000",
+                                      color: '#000',
                                       fontFamily: FONT_FAMILY_REGULAR,
-                                    }}
-                                  >
+                                    }}>
                                     Gallery
                                   </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                               </View>
                             </View>
                           </View>
@@ -758,7 +729,7 @@ const Question = (props) => {
                             data={props.camImg}
                             horizontal={true}
                             pagingEnabled={true}
-                            renderItem={({ item, index }) => {
+                            renderItem={({item, index}) => {
                               return renderImage(item, index);
                             }}
                           />
@@ -768,19 +739,19 @@ const Question = (props) => {
                   </>
                 )}
 
-                {question?.data?.question_type === "1" && (
+                {question?.data?.question_type === '1' && (
                   <View style={styles.brnchmannme}>
                     <Button
-                      buttonText={"Yes"}
+                      buttonText={'Yes'}
                       style={{
                         paddingVertical: 5,
                         backgroundColor:
-                          yesNo === "YES"
+                          yesNo === 'YES'
                             ? DARK_BLUE_COLOR
                             : PRIMARY_BLUE_COLOR,
                       }}
                       onPress={() => {
-                        props.setyesNo("YES");
+                        props.setyesNo('YES');
                         props.setrevActionable(0);
                         handleRemark(question.data.remark_yes);
                         props.handleShowActionable(false);
@@ -789,14 +760,14 @@ const Question = (props) => {
                       }}
                     />
                     <Button
-                      buttonText={"No"}
+                      buttonText={'No'}
                       style={{
                         paddingVertical: 5,
                         backgroundColor:
-                          yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                          yesNo === 'NO' ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
                       }}
                       onPress={() => {
-                        props.setyesNo("NO");
+                        props.setyesNo('NO');
                         props.setrevActionable(1);
                         handleRemark(question.data.remark_no);
                         props.handleShowActionable(true);
@@ -811,19 +782,19 @@ const Question = (props) => {
                     {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
                   </View>
                 )}
-                {question?.data?.question_type === "5" && (
+                {question?.data?.question_type === '5' && (
                   <View style={styles.brnchmannme}>
                     <Button
-                      buttonText={"Yes"}
+                      buttonText={'Yes'}
                       style={{
                         paddingVertical: 5,
                         backgroundColor:
-                          yesNo === "YES"
+                          yesNo === 'YES'
                             ? DARK_BLUE_COLOR
                             : PRIMARY_BLUE_COLOR,
                       }}
                       onPress={() => {
-                        props.setyesNo("YES");
+                        props.setyesNo('YES');
                         handleRemark(question.data.remark_yes);
                         props.handleShowActionable(false);
                         if (question.data.score_range == 1)
@@ -831,14 +802,14 @@ const Question = (props) => {
                       }}
                     />
                     <Button
-                      buttonText={"No"}
+                      buttonText={'No'}
                       style={{
                         paddingVertical: 5,
                         backgroundColor:
-                          yesNo === "NO" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                          yesNo === 'NO' ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
                       }}
                       onPress={() => {
-                        props.setyesNo("NO");
+                        props.setyesNo('NO');
                         handleRemark(question.data.remark_no);
                         props.handleShowActionable(true);
                         if (question.data.score_range == 1)
@@ -850,34 +821,34 @@ const Question = (props) => {
                       }}
                     />
                     <Button
-                      buttonText={"NA"}
+                      buttonText={'NA'}
                       style={{
                         paddingVertical: 5,
                         backgroundColor:
-                          yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
+                          yesNo === 'NA' ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
                       }}
                       onPress={() => {
                         props.setshowActionable(false);
-                        props.setyesNo("NA");
-                        setremark("");
+                        props.setyesNo('NA');
+                        setremark('');
                         props.HandleActionable(0);
                       }}
                     />
                   </View>
                 )}
-                {question?.data?.question_type === "2" && (
+                {question?.data?.question_type === '2' && (
                   <View style={styles.brnchmannme}>
                     <TextInput
                       placeholder="Enter the quantity"
                       value={quality}
-                      onChangeText={(text) => {
+                      onChangeText={text => {
                         props.handleQuality(text);
                       }}
-                      keyboardType={"numeric"}
+                      keyboardType={'numeric'}
                       style={{
                         padding: 10,
-                        backgroundColor: "#ecececec",
-                        width: "100%",
+                        backgroundColor: '#ecececec',
+                        width: '100%',
                       }}
                     />
                   </View>
@@ -887,15 +858,14 @@ const Question = (props) => {
                     <Text style={styles.branname}>
                       Select Appropriate Creatives from List
                     </Text>
-                    <View style={{ flexDirection: "column" }}>
+                    <View style={{flexDirection: 'column'}}>
                       {props.questionList.map((list, index) => (
                         <TouchableOpacity
-                          style={{ flexDirection: "row", marginBottom: 5 }}
+                          style={{flexDirection: 'row', marginBottom: 5}}
                           key={index}
                           onPress={() =>
                             props.handleCheckList(index, list.name)
-                          }
-                        >
+                          }>
                           <Image
                             source={
                               list.isSelected ? CHECKED_FILLED : UNCHECKED
@@ -904,7 +874,7 @@ const Question = (props) => {
                               width: 20,
                               height: 20,
                               marginRight: 10,
-                              resizeMode: "contain",
+                              resizeMode: 'contain',
                             }}
                           />
                           <Text>{list.name}</Text>
@@ -913,24 +883,23 @@ const Question = (props) => {
                     </View>
                   </>
                 )}
-                {question?.data?.question_type === "4" && (
-                  <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+                {question?.data?.question_type === '4' && (
+                  <View style={{paddingHorizontal: 10, paddingVertical: 10}}>
                     {/* <Text style={styles.txt}>Answer the following question</Text> */}
                     {questionList &&
                       questionList.map((question, index) => {
                         return (
                           <TouchableOpacity
-                            style={{ flexDirection: "row", marginBottom: 5 }}
+                            style={{flexDirection: 'row', marginBottom: 5}}
                             onPress={() => HandleAns(index, question)}
-                            key={index}
-                          >
+                            key={index}>
                             <Image
                               source={
                                 showIndex === index
                                   ? CHECKED_FILLED
                                   : UNCHECKED_ICON
                               }
-                              style={{ width: 20, height: 20, marginRight: 5 }}
+                              style={{width: 20, height: 20, marginRight: 5}}
                             />
                             <Text
                               style={{
@@ -939,9 +908,8 @@ const Question = (props) => {
                                 color:
                                   showIndex === index
                                     ? PRIMARY_BLUE_COLOR
-                                    : "#000",
-                              }}
-                            >
+                                    : '#000',
+                              }}>
                               {question}
                             </Text>
                           </TouchableOpacity>
@@ -952,45 +920,41 @@ const Question = (props) => {
                 {question?.data?.score_range_to > 1 ? (
                   <View style={{}}>
                     <Text style={styles.branname}>Rating</Text>
-                    <View style={{ alignItems: "center" }}>
+                    <View style={{alignItems: 'center'}}>
                       <Text>
-                        Rating:{" "}
+                        Rating:{' '}
                         <Text
                           style={{
                             color: PRIMARY_BLUE_COLOR,
                             fontFamily: FONT_FAMILY_SEMI_BOLD,
-                          }}
-                        >
+                          }}>
                           {props.reviewValue}
                         </Text>
                       </Text>
                     </View>
                     <View
                       style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}>
                       <View
                         style={{
                           flex: 0.5,
-                          justifyContent: "center",
-                          alignItems: "flex-end",
-                        }}
-                      >
+                          justifyContent: 'center',
+                          alignItems: 'flex-end',
+                        }}>
                         <Text
                           style={{
                             color: PRIMARY_BLUE_COLOR,
                             fontFamily: FONT_FAMILY_SEMI_BOLD,
-                          }}
-                        >
-                          {" "}
+                          }}>
+                          {' '}
                           {question?.data.score_range_from}
                         </Text>
                       </View>
                       <Slider
-                        style={{ height: 40, flex: 5 }}
+                        style={{height: 40, flex: 5}}
                         minimumValue={question?.data.score_range_from}
                         maximumValue={question?.data.score_range_to}
                         minimumTrackTintColor={PRIMARY_BLUE_COLOR}
@@ -998,15 +962,14 @@ const Question = (props) => {
                         value={props.reviewValue}
                         thumbTintColor={PRIMARY_BLUE_COLOR}
                         step={1}
-                        onValueChange={(val) => _handleReivew(val)}
+                        onValueChange={val => _handleReivew(val)}
                       />
-                      <View style={{ flex: 0.5 }}>
+                      <View style={{flex: 0.5}}>
                         <Text
                           style={{
                             color: PRIMARY_BLUE_COLOR,
                             fontFamily: FONT_FAMILY_SEMI_BOLD,
-                          }}
-                        >
+                          }}>
                           {question?.data?.score_range_to}
                         </Text>
                       </View>
@@ -1014,75 +977,71 @@ const Question = (props) => {
                   </View>
                 ) : null}
                 {props.showActionable ? (
-                  question?.data?.rmm_actionable_assignee === "1" ||
-                  question?.data?.bm_actionable_assignee === "1" ||
+                  question?.data?.rmm_actionable_assignee === '1' ||
+                  question?.data?.bm_actionable_assignee === '1' ||
                   question?.data?.admin_assignee === 1 ||
                   question?.data?.atm_cordinator_assignee === 1 ? (
-                    <View style={{ marginTop: 20 }}>
+                    <View style={{marginTop: 20}}>
                       <Text style={styles.branname}>Actionable</Text>
                       <TouchableOpacity
                         onPress={() => handleDropDown()}
                         style={{
                           backgroundColor: GREY_TEXT_COLOR,
-                          flexDirection: "row",
-                          alignItems: "center",
+                          flexDirection: 'row',
+                          alignItems: 'center',
                           borderRadius: 5,
-                          justifyContent: "space-between",
+                          justifyContent: 'space-between',
                           paddingVertical: 10,
                           paddingHorizontal: 10,
-                        }}
-                      >
-                        <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
+                        }}>
+                        <Text style={{fontFamily: FONT_FAMILY_REGULAR}}>
                           {bmActionable
-                            ? "BM"
+                            ? 'BM'
                             : rmmactionable
-                            ? "RMM"
+                            ? 'RMM'
                             : props.adminActionable
-                            ? "Admin"
+                            ? 'Admin'
                             : props.atmActionable
-                            ? "ATM Cordinator"
-                            : "Assign to"}
+                            ? 'ATM Cordinator'
+                            : 'Assign to'}
                         </Text>
                         {dropDown ? (
                           <Image
                             source={DOWNARROW}
-                            style={{ transform: [{ rotateZ: "180deg" }] }}
+                            style={{transform: [{rotateZ: '180deg'}]}}
                           />
                         ) : (
                           <Image source={DOWNARROW} />
                         )}
                       </TouchableOpacity>
                       {dropDown && (
-                        <View style={{ backgroundColor: GREY_TEXT_COLOR }}>
+                        <View style={{backgroundColor: GREY_TEXT_COLOR}}>
                           {props?.revActionable == 1 ? (
                             <TouchableOpacity
                               style={styles.drop_down_item}
                               onPress={() => {
                                 HandleActionable(0);
                                 props.setdropDown(false);
-                              }}
-                            >
+                              }}>
                               <Text style={styles.drop_down_txt}>
                                 Remove actionable
                               </Text>
                             </TouchableOpacity>
                           ) : null}
-                          {question?.data.bm_actionable_assignee == "1" ? (
+                          {question?.data.bm_actionable_assignee == '1' ? (
                             <TouchableOpacity
                               style={styles.drop_down_item}
-                              onPress={() => HandleActionable(1)}
-                            >
+                              onPress={() => HandleActionable(1)}>
                               <Text style={styles.drop_down_txt}>
                                 {/* {question?.branch_manager} */}
                                 BM
                               </Text>
                             </TouchableOpacity>
                           ) : null}
-                          {question?.data.rmm_actionable_assignee == "1" ? (
+                          {question?.data.rmm_actionable_assignee == '1' ? (
                             <TouchableOpacity
                               style={styles.drop_down_item}
-                              onPress={() => HandleActionable(2)}
-                            >
+                              onPress={() => HandleActionable(2)}>
                               <Text style={styles.drop_down_txt}>
                                 {/* {userData.name} */}
                                 RMM
@@ -1092,20 +1051,18 @@ const Question = (props) => {
                           {question?.data.atm_cordinator_assignee == 1 ? (
                             <TouchableOpacity
                               style={styles.drop_down_item}
-                              onPress={() => HandleActionable(3)}
-                            >
+                              onPress={() => HandleActionable(3)}>
                               <Text style={styles.drop_down_txt}>
-                                {"ATM Cordinator"}
+                                {'ATM Cordinator'}
                               </Text>
                             </TouchableOpacity>
                           ) : null}
                           {question?.data.admin_assignee == 1 ? (
                             <TouchableOpacity
                               style={styles.drop_down_item}
-                              onPress={() => HandleActionable(4)}
-                            >
+                              onPress={() => HandleActionable(4)}>
                               <Text style={styles.drop_down_txt}>
-                                {"Admin"}
+                                {'Admin'}
                               </Text>
                             </TouchableOpacity>
                           ) : null}
@@ -1114,16 +1071,16 @@ const Question = (props) => {
                     </View>
                   ) : null
                 ) : null}
-                {question?.data?.remark === "1" && (
-                  <View style={{ marginTop: 10 }}>
+                {question?.data?.remark === '1' && (
+                  <View style={{marginTop: 10}}>
                     <Text style={styles.branname}>Actionable/ Remarks </Text>
                     <TextInput
                       placeholder="Remarks"
                       multiline
                       numberOfLines={3}
                       style={styles.input}
-                      value={remark !== "undefined" ? remark : ""}
-                      onChangeText={(text) => handleRemark(text)}
+                      value={remark !== 'undefined' ? remark : ''}
+                      onChangeText={text => handleRemark(text)}
                     />
                   </View>
                 )}
@@ -1132,30 +1089,24 @@ const Question = (props) => {
                   style={{
                     marginVertical: 20,
                     flex: 1,
-                    justifyContent: "flex-end",
-                  }}
-                >
+                    justifyContent: 'flex-end',
+                  }}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-evenly",
-                      width: "100%",
-                    }}
-                  >
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                      width: '100%',
+                    }}>
                     <Button
                       disabled={props.disableBtn == 0 ? true : false}
-                      buttonText={"Previous"}
-                      style={
-                        props.disableBtn == 0 && { backgroundColor: "gray" }
-                      }
+                      buttonText={'Previous'}
+                      style={props.disableBtn == 0 && {backgroundColor: 'gray'}}
                       onPress={() => props.prevQuestion()}
                     />
                     <Button
                       disabled={props.disableBtn == 0 ? true : false}
-                      buttonText={"Next"}
-                      style={
-                        props.disableBtn == 0 && { backgroundColor: "gray" }
-                      }
+                      buttonText={'Next'}
+                      style={props.disableBtn == 0 && {backgroundColor: 'gray'}}
                       onPress={() => handleSubmit()}
                     />
                   </View>

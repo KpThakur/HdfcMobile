@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import RNFS from 'react-native-fs';
-// import {Camera, getCameraFormat} from 'react-native-vision-camera';
 import {RNCamera} from 'react-native-camera';
 import {
   View,

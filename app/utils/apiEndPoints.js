@@ -15,6 +15,7 @@ export default {
   GET_AUDIT_LIST:"/api/v1/audit/getAuditList",
   CANCEL_AUDIT:"/api/v1/audit/auditStatusUpdate",
   QUESTION:'/api/v1/question/getQuestionList',
+  GETBRANCHDETAIL:'/api/v1/service/getBranchDetailsbyauditId',
   SUBMIT_QUESTION:'/api/v1/question/submitQuestion',
   AUDIT_SCORE:'/api/v1/question/auditScore',
   EDIT_AUDIT:'/api/v1/audit/editaudit',
