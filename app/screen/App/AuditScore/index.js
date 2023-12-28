@@ -34,7 +34,7 @@ export default function Index(props) {
     navigation.navigate("Profile");
   };
   const startvideo = () => {
-    navigation.navigate("VideoScreen");
+    navigation.navigate("VideoScreen", {auditId : question?.audit_id});
   };
 
   const handleViewActionable = async () => {
