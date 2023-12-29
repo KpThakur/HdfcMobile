@@ -7,6 +7,8 @@ import {
   Image,
   ScrollView,
   FlatList,
+  Pressable,
+  Linking,
 } from 'react-native';
 import {styles} from './component/style';
 import {
@@ -34,6 +36,7 @@ import {socket} from '../../../utils/Client';
 import _ from 'lodash';
 
 import UpdateAlert from '../../../component/UpdateAlert';
+import Loader from '../../../utils/Loader';
 const DashboardScreen = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
@@ -45,6 +48,10 @@ const DashboardScreen = ({navigation}) => {
   const [editAudit, seteditAudit] = useContext(EditAuditContext);
   const [auditArray, setauditArray] = useState([]);
   const [onRefresh, setOnRefresh] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [baseUrl, setBaseUrl] = useState('');
+  
+  const [repo, setRepo] = useState();
   useFocusEffect(
     React.useCallback(() => {
       AuditList(tabBar);
@@ -101,11 +108,12 @@ const DashboardScreen = ({navigation}) => {
         apiEndPoints.GET_AUDIT_LIST,
         params,
       );
-      // console.log(response.config?.data, " :response: ", response?.data);
+      console.log(response.config?.data, " :response: ", response?.data);
       if (response.status === 200) {
         setOnRefresh(false);
         setauditArray(response.data.data);
         setauditList(response.data.data);
+        setBaseUrl(response?.data.base_url)
       } else if (response.status === 403) {
         setOnRefresh(false);
         AsyncStorage.removeItem('userToken');
@@ -129,9 +137,12 @@ const DashboardScreen = ({navigation}) => {
         params,
       );
       if (response.status === 200) {
+        console.log('---',response.data.data)
+        console.log("Repor URL -->",response.data.base_url);
+        setReportUrl(response?.data?.base_url);
         setOnRefresh(false);
-        setauditArray(response.data.data);
-        setauditList(response.data.data);
+        setauditArray(response?.data?.data);
+        setauditList(response?.data?.data);
       } else if (response.status === 403) {
         setOnRefresh(false);
         AsyncStorage.removeItem('userToken');
@@ -248,6 +259,13 @@ const DashboardScreen = ({navigation}) => {
     }
   };
 
+  const handleReport = async (auditreport) => {
+   
+    console.log("The report URL ==> ", auditreport);
+    await Linking.openURL(auditreport);
+    // await Linking.openURL(props.repo?.reporturl);
+  };
+  
   const renderAudit = ({item: audit, index}) => {
     return (
       <View
@@ -399,9 +417,10 @@ const DashboardScreen = ({navigation}) => {
                         //   audit_id: audit.audit_id,
                         //   branch_manager: audit.branch_manager,
                         // });
-                        navigation.navigate("VideoScreen",{auditId : audit?.audit_id});
-                      }}
-                    >
+                        navigation.navigate('VideoScreen', {
+                          auditId: audit?.audit_id,
+                        });
+                      }}>
                       <Text
                         style={{
                           color: '#fff',
@@ -413,14 +432,29 @@ const DashboardScreen = ({navigation}) => {
                     </TouchableOpacity>
                   ) : null}
                   {tabBar === 4 || tabBar === 5 ? (
-                    <Text
+                    <View
                       style={{
-                        color:
-                          audit.audit_status === 3 ? GREEN_COLOR : RED_COLOR,
-                        fontFamily: FONT_FAMILY_REGULAR,
+                        marginTop: 20,
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                       }}>
-                      {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
-                    </Text>
+                      <Text
+                        style={{
+                          color:
+                            audit.audit_status === 3 ? GREEN_COLOR : RED_COLOR,
+                          fontFamily: FONT_FAMILY_REGULAR,
+                        }}>
+                        {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
+                      </Text>
+                      {audit.audit_status === 3 ? (
+                        <Pressable onPress={() => handleReport(baseUrl+''+audit.report)}>
+                          <Text style={styles.download_text}>
+                            Download Report
+                          </Text>
+                        </Pressable>
+                      ) : null}
+                    </View>
                   ) : null}
                 </View>
               </View>
@@ -523,6 +557,7 @@ const DashboardScreen = ({navigation}) => {
 
   return (
     <>
+      {isLoading && <Loader/>}
       <UpdateAlert />
       <DashboardView
         option={option}

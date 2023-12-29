@@ -108,6 +108,10 @@ export const styles = StyleSheet.create({
         borderRadius: normalize(20),
         paddingHorizontal: normalize(15),
         alignItems: "center",
+    },
+    download_text:{
+        color:PRIMARY_BLUE_COLOR,
+        fontFamily:FONT_FAMILY_REGULAR
     }
 })
 

@@ -69,7 +69,7 @@ const VideoComponent = ({navigation, route}) => {
         console.log('video recoding ---->>>', data);
         setIsLoading(true);
 
-        //Compressing the video
+        // Compressing the video
         // const compressedVideo = await VideoProcessing.compress(data?.uri, {
         //   quality : 'low',
         //   bitrateMultiplier: '0.8'
