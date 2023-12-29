@@ -69,7 +69,7 @@ export default function Index() {
       }
     } catch (error) {
       showMessage({
-        message: responce.data.message,
+        message: error.message,
         type: 'danger',
         duration: 3000,
       });
@@ -155,7 +155,7 @@ export default function Index() {
         }
       } catch (error) {
         showMessage({
-          message: responce.data.message,
+          message: error.message,
           type: 'danger',
           duration: 3000,
         });
