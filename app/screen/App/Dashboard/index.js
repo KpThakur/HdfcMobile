@@ -139,7 +139,6 @@ const DashboardScreen = ({navigation}) => {
       if (response.status === 200) {
         console.log('---',response.data.data)
         console.log("Repor URL -->",response.data.base_url);
-        setReportUrl(response?.data?.base_url);
         setOnRefresh(false);
         setauditArray(response?.data?.data);
         setauditList(response?.data?.data);

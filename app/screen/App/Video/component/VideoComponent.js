@@ -33,6 +33,7 @@ import {QuestionContext} from '../../../../utils/QuestionContext';
 import {apiCall} from '../../../../utils/httpClient';
 import apiEndPoints from '../../../../utils/apiEndPoints';
 // import VideoProcessing from 'react-native-video-processing';
+import {Video} from 'react-native-compressor';
 
 const VideoComponent = ({navigation, route}) => {
   const {params} = route;
@@ -70,18 +71,21 @@ const VideoComponent = ({navigation, route}) => {
         setIsLoading(true);
 
         // Compressing the video
+        const compressedVideo = await Video.compress(data?.uri,{},(progress)=>{
+          console.log('Compression Progress: ', progress);
+        });
         // const compressedVideo = await VideoProcessing.compress(data?.uri, {
         //   quality : 'low',
         //   bitrateMultiplier: '0.8'
         // });
-        // console.log("The compressed Video ===>>",compressedVideo);
+        console.log("The compressed Video ===>>",compressedVideo);
         const formdata = new FormData();
 
         // formdata.append('audit_id', question?.audit_id);
         formdata.append('audit_id', params?.auditId);
         formdata.append('audit_video', {
-          // uri: compressedVideo,
-          uri: data?.uri,
+          uri: compressedVideo,
+          // uri: data?.uri,
           type: 'video/mp4',
           name: 'demo.mp4',
         });
