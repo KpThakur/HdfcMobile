@@ -277,7 +277,7 @@ const Question = props => {
             },
             watermarkTexts: [
               {
-                text: `Branch name: ${branchDetailData?.branch_name}\n ${res} \n Lat : ${latitude} \n Long : ${longitude} \n${formattedDate} ${formattedTime}`,
+                text: `Branch: ${branchDetailData?.branch_name}\n${res} \nLat : ${latitude} \nLong : ${longitude} \n${formattedDate} ${formattedTime}`,
                 positionOptions: {
                   position: Position.bottomCenter,
                 },
