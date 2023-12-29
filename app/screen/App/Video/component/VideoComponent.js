@@ -42,6 +42,7 @@ const VideoComponent = ({navigation, route}) => {
   const [loading, setIsLoading] = useState(false);
   const [cameraType, setCameraType] = useState(true);
   const [flashMode, setFlashMode] = useState(false);
+  let manualStop = false;
   const currentTime = new Date();
 
   const camera = useRef(null);
@@ -54,12 +55,17 @@ const VideoComponent = ({navigation, route}) => {
   };
   const handleRecording = async () => {
     setIndicator(false);
+    manualStop = false;
     try {
       if (camera.current) {
-         setTimeout(async () => {
-          await stopRecording();
-        }, 5000); 
-
+        setTimeout(async () => {
+          if(!manualStop)
+          {
+            await stopRecording();
+          }
+        }, 30000); 
+        
+         
         const options = {
           quality: RNCamera.Constants.VideoQuality['720p'],
           orientation: 'portrait',
@@ -74,18 +80,13 @@ const VideoComponent = ({navigation, route}) => {
         const compressedVideo = await Video.compress(data?.uri,{},(progress)=>{
           console.log('Compression Progress: ', progress);
         });
-        // const compressedVideo = await VideoProcessing.compress(data?.uri, {
-        //   quality : 'low',
-        //   bitrateMultiplier: '0.8'
-        // });
+      
         console.log("The compressed Video ===>>",compressedVideo);
         const formdata = new FormData();
 
-        // formdata.append('audit_id', question?.audit_id);
         formdata.append('audit_id', params?.auditId);
         formdata.append('audit_video', {
           uri: compressedVideo,
-          // uri: data?.uri,
           type: 'video/mp4',
           name: 'demo.mp4',
         });
@@ -123,32 +124,10 @@ const VideoComponent = ({navigation, route}) => {
   const stopRecording = async () => {
     // setIsLoading(true);
     setIndicator(true);
+    manualStop = true;
     try {
       if (camera.current) {
         camera.current.stopRecording();
-        //const videoPath = videoData[videoData.length - 1].path;
-        //console.log("The videoPath ==>>", videoPath);
-        /*  const formdata = new FormData();  
-        formdata.append('audit_id', question?.audit_id);
-        formdata.append('audit_video', videoPath);
-        console.log("The form data ===>", formdata); */
-
-        /* const header = {
-          {
-            "Content-Type": "multipart/form-data",
-            "cache-control": "no-cache",
-            processData: false,
-            contentType: false,
-            mimeType: "multipart/form-data",
-          }
-        };  */
-
-        /* const response = await apiCall("POST", apiEndPoints.UPLOAD_VIDEO, formdata,header);
-        console.log("The response of Video Record ====>>> ", response) */
-        // if(response.status ===200)
-        // {
-        //   // setIsLoading(false);
-        // }
       }
     } catch (error) {
       console.log(error);
