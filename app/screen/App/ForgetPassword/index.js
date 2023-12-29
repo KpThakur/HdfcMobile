@@ -10,6 +10,7 @@ import {showMessage} from 'react-native-flash-message';
 export default function Index() {
   const [email, setemail] = useState();
   const [otp, setotp] = useState();
+  const [resendOtp, setResendOtp] = useState();
   const [password, setpassword] = useState();
   const [verfyOTP, setverfyOTP] = useState(false);
   const [changePassowrd, setchangePassowrd] = useState(false);
@@ -39,6 +40,43 @@ export default function Index() {
   const ShowAlert = message => {
     Alert.alert('Invalid Email/Password', message);
   };
+
+  const resendotp = async() => {
+    try {
+      setisLoading(true);
+      const params = {
+        email: email,
+        otp: otp,
+        password,
+      };
+      if (verfyOTP) {
+        const response = await apiCall(
+          'POST',
+          apiEndPoints.FORGET_PASSWORD,
+          params,
+        );
+        if (response.data.status === 200) {
+         // Alert.alert('OTP send to your email');
+          console.log('response staus 200', response.data);
+          setverfyOTP(true);
+          setisLoading(false);
+          showMessage({
+            message: response.data.message,
+            type:'success',
+            duration:3000
+          })
+        }
+      }
+    } catch (error) {
+      showMessage({
+        message: responce.data.message,
+        type: 'danger',
+        duration: 3000,
+      });
+      console.log(error);
+      setisLoading(false);
+    }
+  }
 
   const handleForgetPassword = async () => {
     const vaild = validationFrom();
@@ -116,6 +154,11 @@ export default function Index() {
           }
         }
       } catch (error) {
+        showMessage({
+          message: responce.data.message,
+          type: 'danger',
+          duration: 3000,
+        });
         console.log(error);
         setisLoading(false);
       }
@@ -130,6 +173,7 @@ export default function Index() {
         otp={otp}
         setotp={setotp}
         handleForgetPassword={handleForgetPassword}
+        resendotp={resendotp}
         verfyOTP={verfyOTP}
         password={password}
         setpassword={setpassword}
