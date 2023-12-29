@@ -277,17 +277,18 @@ const Question = props => {
             },
             watermarkTexts: [
               {
-                text: `${branchDetailData?.branch_name}\n ${res} \n Lat : ${latitude} \n Long : ${longitude} \n${formattedDate} ${formattedTime}`,
+                text: `Branch name: ${branchDetailData?.branch_name}\n ${res} \n Lat : ${latitude} \n Long : ${longitude} \n${formattedDate} ${formattedTime}`,
                 positionOptions: {
-                  position: Position.bottomRight,
+                  position: Position.bottomCenter,
                 },
                 style: {
                   color: '#000',
                   fontSize: 5,
                   fontName: FONT_FAMILY_THIN,
                   fontWeight: 'bold',
+                  padding: '5% 10%',
                   textBackgroundStyle: {
-                    padding: '5%',
+                    padding: '5% 10%',
                     //marginRight : '50%',
                     // type: TextBackgroundType.stretchX,
                     color: '#c9c9c9',
