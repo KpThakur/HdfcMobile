@@ -4,6 +4,7 @@ import ChangePasswordView from './component/ChangePassword';
 import Loader from '../../../utils/Loader';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import { apiCall } from '../../../utils/httpClient';
+import { showMessage } from 'react-native-flash-message';
 function ChangePassword() {
     const [isLoading, setIsLoading] = useState(false);
     const [passwordData, setPasswordData] = React.useState({
@@ -53,9 +54,19 @@ function ChangePassword() {
                         newPassword: "",
                         confirmPassword: "",
                     });
+                    showMessage({
+                        message: res.data.message,
+                        type:'success',
+                        duration: 3000
+                    })
                 } else if (res?.data?.status === 401) {
                     alert(res.data.message)
                     setIsLoading(false)
+                    showMessage({
+                        message: res.data.message,
+                        type:'danger',
+                        duration: 3000
+                    })
                 } else {
                     alert(res.data.message)
                     setIsLoading(false)
@@ -63,6 +74,11 @@ function ChangePassword() {
             } catch (eu) {
                 alert(JSON.stringify(eu))
                 setIsLoading(false)
+                showMessage({
+                    message: res.data.message,
+                    type:'danger',
+                    duration: 3000
+                })
             }
         }
     };

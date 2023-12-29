@@ -76,17 +76,6 @@ export const styles = StyleSheet.create({
     // resizeMode:"contain",
     marginRight: 5,
   },
-  flashMessage: {
-    borderRadius: normalize(12),
-    //height: normalize(120),
-    marginHorizontal: normalize(30),
-    marginBottom: normalize(3),
-  },
-  textStyle: {
-    fontFamily: FONT_FAMILY_SEMI_BOLD,
-    fontSize: normalize(14),
-    color: WHITE_BG_COLOR,
-  },
   touch: {
     marginLeft: normalize(18),
     marginTop: normalize(20),
