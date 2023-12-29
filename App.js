@@ -8,6 +8,8 @@ import NoNetworkBar from './app/component/NoNetworkBar';
 import {Camera} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS, check} from 'react-native-permissions';
 import FlashMessage from 'react-native-flash-message';
+import {normalize} from './app/utils/scaleFontSize';
+import {FONT_FAMILY_SEMI_BOLD, WHITE_BG_COLOR} from './app/utils/constant';
 
 function App() {
   useEffect(() => {
@@ -99,7 +101,19 @@ function App() {
           </EditAuditProvider>
         </QuestionProvider>
       </UserProvider>
-      <FlashMessage />
+      <FlashMessage
+        position={'bottom'}
+        style={{
+          borderRadius: normalize(12),
+          marginHorizontal: normalize(30),
+          marginBottom: normalize(3),
+        }}
+        titleStyle={{
+          fontFamily: FONT_FAMILY_SEMI_BOLD,
+          fontSize: normalize(14),
+          color: WHITE_BG_COLOR,
+        }}
+      />
     </View>
   );
 }

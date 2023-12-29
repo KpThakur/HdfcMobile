@@ -24,7 +24,6 @@ import {
   CHECKED,
   UNCHECKED,
 } from '../../../../utils/constant';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
 
 const LoginScreen = props => {
   const {

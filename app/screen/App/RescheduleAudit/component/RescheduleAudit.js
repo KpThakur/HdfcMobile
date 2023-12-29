@@ -237,45 +237,6 @@ export default function RescheduleAudit(props) {
                       )}
                     </TouchableOpacity>
                     {dropDown && (
-                        // <View 
-                        //   style={{backgroundColor: GREY_TEXT_COLOR, height: 200}}>
-                        //   <FlatList
-                        //     data={timeData}
-                        //     renderItem={({item}) => {
-                        //       return (
-                        //         <TouchableOpacity
-                        //           style={styles.drop_down_item}
-                        //           onPress={() => {
-                        //             if (
-                        //               ACDATE ==
-                        //               moment(new Date()).format('DD-MM-YYYY')
-                        //             ) {
-                        //               if (
-                        //                 item < moment(new Date()).format('H-mm')
-                        //               ) {
-                        //                 setdropDown(false);
-                        //                 alert('Please Select Proper Time');
-                        //               } else {
-                        //                 seteditAudit({
-                        //                   ...editAudit,
-                        //                   audit_time: item,
-                        //                 });
-                        //                 setdropDown(false);
-                        //               }
-                        //             } else {
-                        //               seteditAudit({
-                        //                 ...editAudit,
-                        //                 audit_time: item,
-                        //               });
-                        //               setdropDown(false);
-                        //             }
-                        //           }}>
-                        //           <Text style={styles.drop_down_txt}>{item}</Text>
-                        //         </TouchableOpacity>
-                        //       );
-                        //     }}
-                        //   />
-                        // </View>
                       <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={{
@@ -292,7 +253,8 @@ export default function RescheduleAudit(props) {
                           timeData.map((item, index) => {
                             return (
                               <TouchableOpacity
-                                style={styles.drop_down_item}
+                                key={index}
+                                style={[styles.drop_down_item, {zIndex: 1}]}
                                 onPress={() => {
                                   if (
                                     ACDATE ==
@@ -327,7 +289,7 @@ export default function RescheduleAudit(props) {
                   </View>
                 </View>
               </View>
-              <View style={{marginTop: 10}}>
+              <View style={{marginTop: 10, zIndex: -1}}>
                 <Text style={styles.txt_head}>Audit Type:</Text>
                 <TouchableOpacity
                   style={{

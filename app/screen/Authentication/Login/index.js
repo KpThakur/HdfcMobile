@@ -28,11 +28,14 @@ const Login = ({navigation}) => {
 
   const validationFrom = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (email == '') {
+
+    if (email === '' || email === undefined) {
       ShowAlert('Please enter email');
       return false;
-    }
-    if (password == '') {
+    } else if (reg.test(email) === false) {
+      ShowAlert('please enter valid email address');
+      return false;
+    } else if (password === '' || password === undefined) {
       ShowAlert('Please enter password');
       return false;
     }
@@ -79,33 +82,20 @@ const Login = ({navigation}) => {
   function showFlashMessage(responce) {
     showMessage({
       message: responce.data.message,
-      position: 'bottom',
-      type:
-        responce.status === 200
-          ? 'success'
-          : responce.status === 202
-          ? 'warning'
-          : 'danger',
-      style: styles.flashMessage,
-      titleStyle: styles.textStyle,
-      duration: responce.status === 202 ? 10000 : 3000,
-      renderAfterContent: () =>
-        responce.status === 202 ? (
-          <>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={styles.touch}
-                onPress={data => sendClientRequest(responce.data.data)}>
-                <Text style={styles.touchText}>Send Request</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.touch}
-                onPress={() => hideMessage()}>
-                <Text style={styles.touchText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        ) : null,
+      type: 'warning',
+      duration: 10000,
+      renderAfterContent: () => (
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={styles.touch}
+            onPress={data => sendClientRequest(responce.data.data)}>
+            <Text style={styles.touchText}>Send Request</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.touch} onPress={() => hideMessage()}>
+            <Text style={styles.touchText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      ),
     });
   }
 
@@ -120,16 +110,28 @@ const Login = ({navigation}) => {
       const response = await apiCall('POST', apiEndPoints.RESET_DEVICE, params);
       console.log('response: ', response);
       if (response.status === 200) {
-        showFlashMessage(response);
         setisLoading(false);
+        showMessage({
+          message: response.data.message,
+          type: 'success',
+          duration: 3000,
+        });
         console.log('response: ', response.data);
       } else {
         setisLoading(false);
-        showFlashMessage(response);
+        showMessage({
+          message: response.data.message,
+          type: 'danger',
+          duration: 3000,
+        });
       }
     } catch (error) {
       setisLoading(false);
-      showFlashMessage(response);
+      showMessage({
+        message: response.data.message,
+        type: 'danger',
+        duration: 3000,
+      });
     }
   };
 
@@ -154,6 +156,11 @@ const Login = ({navigation}) => {
           setUserData(response.data.data);
           AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
           setisLoading(false);
+          showMessage({
+            message: response.data.message,
+            type: 'success',
+            duration: 3000,
+          });
           console.log('response: ', response.data);
         } else if (response.status === 202) {
           showFlashMessage(response);
@@ -161,13 +168,19 @@ const Login = ({navigation}) => {
           console.log('status 202: ', response.data);
         } else {
           setisLoading(false);
-          showFlashMessage(response);
-          //ShowAlert(response.data.message);
+          showMessage({
+            message: response.data.message,
+            type: 'danger',
+            duration: 3000,
+          });
         }
       } catch (error) {
         setisLoading(false);
-        showFlashMessage(response);
-        //ShowAlert('Something Went Worng!');
+        showMessage({
+          message: responce.data.message,
+          type: 'danger',
+          duration: 3000,
+        });
       }
     }
   };
