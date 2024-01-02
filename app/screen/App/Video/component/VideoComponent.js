@@ -47,21 +47,23 @@ const VideoComponent = ({navigation, route}) => {
   const currentTime = new Date();
   const camera = useRef(null);
 
-  useEffect(()=> {
+  useEffect(() => {
     let interval;
-     if(!indicator){
-        interval = setInterval(() => {
-           setTimer((prevTimer) =>  prevTimer + 1)
-        }, 1000);
-     }
-     return ()=> clearInterval(interval);
-  },[indicator]);
+    if (!indicator) {
+      interval = setInterval(() => {
+        setTimer(prevTimer => prevTimer + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [indicator]);
 
-  const formatTime = (seconds) => {
-       const minutes = Math.floor(seconds/60);
-       const remainingSeconds = seconds % 60;
-       const formatedTime = `${String(minutes).padStart(2,'0')}:${String(remainingSeconds).padStart(2,'0')}`;
-       return formatedTime;
+  const formatTime = seconds => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    const formatedTime = `${String(minutes).padStart(2, '0')}:${String(
+      remainingSeconds,
+    ).padStart(2, '0')}`;
+    return formatedTime;
   };
 
   const handleFlash = () => {
@@ -76,13 +78,11 @@ const VideoComponent = ({navigation, route}) => {
     try {
       if (camera.current) {
         setTimeout(async () => {
-          if(!manualStop)
-          {
+          if (!manualStop) {
             await stopRecording();
           }
-        }, 30000); 
-        
-         
+        }, 30000);
+
         const options = {
           quality: RNCamera.Constants.VideoQuality['720p'],
           orientation: 'portrait',
@@ -94,11 +94,15 @@ const VideoComponent = ({navigation, route}) => {
         setIsLoading(true);
 
         // Compressing the video
-        const compressedVideo = await Video.compress(data?.uri,{},(progress)=>{
-          console.log('Compression Progress: ', progress);
-        });
-      
-        console.log("The compressed Video ===>>",compressedVideo);
+        const compressedVideo = await Video.compress(
+          data?.uri,
+          {},
+          progress => {
+            console.log('Compression Progress: ', progress);
+          },
+        );
+
+        console.log('The compressed Video ===>>', compressedVideo);
         const formdata = new FormData();
 
         formdata.append('audit_id', params?.auditId);
@@ -125,12 +129,12 @@ const VideoComponent = ({navigation, route}) => {
         console.log('The response of Video Record ====>>> ', response.data);
         if (response.status === 200) {
           setIsLoading(false);
-          Alert.alert(response?.data.message);
+          Alert.alert('Audit completed !');
           navigation.navigate('DashboardScreen');
           // setstartAudit(3);
         } else {
           setIsLoading(false);
-          Alert.alert("Something went wrong, please try again !!");
+          Alert.alert('Something went wrong, please try again !!');
         }
       } else {
         console.error('Camera ref is null');
@@ -154,7 +158,7 @@ const VideoComponent = ({navigation, route}) => {
 
   return (
     <>
-      {loading  && <Loader />}
+      {loading && <Loader />}
       <SafeAreaView>
         <Header
           leftImg={LEFT_ARROW}
@@ -171,13 +175,11 @@ const VideoComponent = ({navigation, route}) => {
               : RNCamera.Constants.Type.front
           }
           flash={
-            flashMode
-              ? RNCamera.Constants.Type.on
-              : RNCamera.Constants.Type.off
+            flashMode ? RNCamera.Constants.Type.on : RNCamera.Constants.Type.off
           }
           captureAudio={true}
           ref={camera}></RNCamera>
-          <Text style={styles.timerTextStyle}>{formatTime(timer)}</Text>
+
         <View
           style={{
             marginBottom: 20,
@@ -190,9 +192,9 @@ const VideoComponent = ({navigation, route}) => {
             backgroundColor: GREY_TEXT_COLOR,
             marginBottom: 0,
           }}>
-           <TouchableOpacity style={{width: 50}}>
-
-           </TouchableOpacity>
+          <TouchableOpacity style={{width: 50}}>
+            <Text style={styles.timerTextStyle}>{formatTime(timer)}</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             // style={styles.buttonView}
             onPress={
@@ -262,6 +264,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILY_REGULAR,
     fontSize: MEDIUM_FONT_SIZE,
     color: BLACK_COLOR,
-  }
+  },
 });
 export default VideoComponent;
