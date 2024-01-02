@@ -129,7 +129,7 @@ const Login = ({ navigation }) => {
     } catch (error) {
       setisLoading(false);
       showMessage({
-        message: response.data.message,
+        message: error.message,
         type: 'danger',
         duration: 3000,
       });

@@ -8,7 +8,7 @@ const Input = React.forwardRef((props, i) => {
         placeholder, returnKeyType, value,
         onChangeText, textInputStyle, onPressOut,
         containerStyle, blurOnSubmit, editable,
-        numberOfLines, maxLength, minLength, onSubmitEditing, InputHeading
+        numberOfLines, maxLength, minLength, onSubmitEditing, InputHeading,secureTextEntry
     } = props;
     const {
         container, textInput,

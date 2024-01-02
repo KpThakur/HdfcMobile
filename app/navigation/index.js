@@ -56,7 +56,7 @@ function TabStack(params) {
 function AppStack() {
     return (
         <App.Navigator screenOptions={{ headerShown: false }} >
-            <App.Screen name="DashboardScreen" component={TabStack} />
+            <App.Screen name="AppDashboardScreen" component={TabStack} />
             <App.Screen name="ScheduleNewAuditScreen" component={ScheduleNewAuditScreen} />
             <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
             <App.Screen name="RescheduleAudit" component={RescheduleAuditScreen}/>
@@ -185,7 +185,7 @@ export default function Routes({ navigation }) {
                 {}
                 {state.userToken === null ? (
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="Login" component={AuthStack} />
+                        <Stack.Screen name="AuthLogin" component={AuthStack} />
                     </Stack.Navigator>
                 ) : (
                     <Drawer.Navigator screenOptions={{ headerShown: false,drawerType:"slide" }} drawerContent={(props) => <DrawerTab {...props} />}>
