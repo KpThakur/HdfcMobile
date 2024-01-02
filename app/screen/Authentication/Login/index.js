@@ -1,30 +1,30 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import apiEndPoints from '../../../utils/apiEndPoints';
-import {apiCall} from '../../../utils/httpClient';
+import { apiCall } from '../../../utils/httpClient';
 import LoginScreen from './component/login';
-import {AuthContext, UserContext} from '../../../utils/UserContext';
-import {Alert, TouchableOpacity} from 'react-native';
+import { AuthContext, UserContext } from '../../../utils/UserContext';
+import { Alert, TouchableOpacity } from 'react-native';
 import Loader from '../../../utils/Loader';
 import Geolocation from 'react-native-geolocation-service';
 import messaging from '@react-native-firebase/messaging';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import FlashMessage, {
   showMessage,
   hideMessage,
 } from 'react-native-flash-message';
-import {STATUS_BAR_COLOR} from '../../../utils/constant';
-import {styles} from './component/styles';
-import {View, Text, Button} from 'react-native';
-const Login = ({navigation}) => {
+import { STATUS_BAR_COLOR } from '../../../utils/constant';
+import { styles } from './component/styles';
+import { View, Text, Button } from 'react-native';
+const Login = ({ navigation }) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
   const [password, setpassword] = useState();
   const [isLoading, setisLoading] = useState(false);
   const [isChecked, setisChecked] = useState(false);
-  const [location, setLocation] = useState({latitude: null, longitude: null});
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
 
-  const {signIn} = React.useContext(AuthContext);
+  const { signIn } = React.useContext(AuthContext);
 
   const validationFrom = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -42,19 +42,20 @@ const Login = ({navigation}) => {
     return true;
   };
 
-  const getCurrentLocation = () => {
+  /* const getCurrentLocation = async () => {
     Geolocation.getCurrentPosition(
-      position => {
+      async position => {
         const {latitude, longitude} = position.coords;
+        console.log("🚀 ~ file: index.js:49 ~ getCurrentLocation ~ latitude:", latitude)
         setLocation({latitude, longitude});
-        // console.log('setLocation: ', location);
+        console.log('setLocation: ', location);
       },
       error => {
         console.log('Error getting location: ', error);
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
-  };
+  }; */
 
   const requestPermission = async () => {
     if (Platform.OS === 'android') {
@@ -67,9 +68,9 @@ const Login = ({navigation}) => {
   };
 
   useEffect(() => {
-    getCurrentLocation();
-    // CheckToken();
     requestPermission();
+    //getCurrentLocation();
+    // CheckToken();
   }, []);
 
   const CheckToken = async () => {
@@ -85,7 +86,7 @@ const Login = ({navigation}) => {
       type: 'warning',
       duration: 10000,
       renderAfterContent: () => (
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity
             style={styles.touch}
             onPress={data => sendClientRequest(responce.data.data)}>
@@ -111,11 +112,11 @@ const Login = ({navigation}) => {
       console.log('response: ', response);
       if (response.status === 200) {
         setisLoading(false);
-        showMessage({
+        /* showMessage({
           message: response.data.message,
           type: 'success',
           duration: 3000,
-        });
+        }); */
         console.log('response: ', response.data);
       } else {
         setisLoading(false);
@@ -136,53 +137,63 @@ const Login = ({navigation}) => {
   };
 
   const handleLogin = async () => {
-    const vaild = validationFrom();
-    if (vaild) {
-      try {
-        const deviceToken = await messaging().getToken();
-        const deviceType = Platform.OS;
-        setisLoading(true);
-        const params = {
-          email: email,
-          password: password,
-          device_token: deviceToken,
-          device_type: deviceType,
-          latitude: location.latitude,
-          longitude: location.longitude,
-        };
-        const response = await apiCall('POST', apiEndPoints.USERLOGIN, params);
-        if (response.status === 200) {
-          signIn(response.data.token);
-          setUserData(response.data.data);
-          AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
-          setisLoading(false);
-          showMessage({
-            message: response.data.message,
-            type: 'success',
-            duration: 3000,
-          });
-          console.log('response: ', response.data);
-        } else if (response.status === 202) {
-          showFlashMessage(response);
-          setisLoading(false);
-          console.log('status 202: ', response.data);
-        } else {
-          setisLoading(false);
-          showMessage({
-            message: response.data.message,
-            type: 'danger',
-            duration: 3000,
-          });
+
+    Geolocation.getCurrentPosition(
+      async position => {
+        const { latitude, longitude } = position.coords;
+        const vaild = validationFrom();
+        if (vaild) {
+          try {
+            const deviceToken = await messaging().getToken();
+            const deviceType = Platform.OS;
+            setisLoading(true);
+            const params = {
+              email: email,
+              password: password,
+              device_token: deviceToken,
+              device_type: deviceType,
+              latitude: location.latitude ? location.latitude : latitude,
+              longitude: location.longitude ? location.longitude : longitude,
+            };
+            console.log("🚀 ~ file: index.js:153 ~ handleLogin ~ params:", params)
+            const response = await apiCall('POST', apiEndPoints.USERLOGIN, params);
+            if (response.status === 200) {
+              signIn(response.data.token);
+              setUserData(response.data.data);
+              AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
+              setisLoading(false);
+              showMessage({
+                message: response.data.message,
+                type: 'success',
+                duration: 3000,
+              });
+              console.log('response: ', response.data);
+            } else if (response.status === 202) {
+              showFlashMessage(response);
+              setisLoading(false);
+              console.log('status 202: ', response.data);
+            } else {
+              setisLoading(false);
+              showMessage({
+                message: response.data.message,
+                type: 'danger',
+                duration: 3000,
+              });
+            }
+          } catch (error) {
+            setisLoading(false);
+            showMessage({
+              message: responce.data.message,
+              type: 'danger',
+              duration: 3000,
+            });
+          }
         }
-      } catch (error) {
-        setisLoading(false);
-        showMessage({
-          message: error.message,
-          type: 'danger',
-          duration: 3000,
-        });
-      }
-    }
+      }, error => {
+        console.log('This is the error', error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
   };
   const ShowAlert = message => {
     Alert.alert('Invalid Email/Password', message);

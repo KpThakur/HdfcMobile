@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DashboardView from './component/dashboard';
 import {
   Text,
@@ -10,7 +10,11 @@ import {
   Pressable,
   Linking,
 } from 'react-native';
-import {styles} from './component/style';
+import { styles } from './component/style';
+import FlashMessage, {
+  showMessage,
+  hideMessage,
+} from 'react-native-flash-message';
 import {
   CALENDAR,
   CLOCK,
@@ -23,21 +27,22 @@ import {
   TINY_FONT_SIZE,
 } from '../../../utils/constant';
 import Cancel from '../../../component/Cancel';
-import {normalize} from '../../../utils/scaleFontSize';
-import {apiCall} from '../../../utils/httpClient';
+import { normalize } from '../../../utils/scaleFontSize';
+import { apiCall } from '../../../utils/httpClient';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import moment from 'moment';
-import {useFocusEffect} from '@react-navigation/native';
-import {Alert} from 'react-native';
-import {UserContext} from '../../../utils/UserContext';
-import {QuestionContext} from '../../../utils/QuestionContext';
-import {EditAuditContext} from '../../../utils/EditAuditContext';
-import {socket} from '../../../utils/Client';
+import { useFocusEffect } from '@react-navigation/native';
+import { Alert } from 'react-native';
+import { UserContext } from '../../../utils/UserContext';
+import { QuestionContext } from '../../../utils/QuestionContext';
+import { EditAuditContext } from '../../../utils/EditAuditContext';
+import { socket } from '../../../utils/Client';
 import _ from 'lodash';
+import Geolocation from 'react-native-geolocation-service';
 
 import UpdateAlert from '../../../component/UpdateAlert';
 import Loader from '../../../utils/Loader';
-const DashboardScreen = ({navigation}) => {
+const DashboardScreen = ({ navigation }) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
   const [tabBar, setTabBar] = useState(1);
@@ -50,7 +55,7 @@ const DashboardScreen = ({navigation}) => {
   const [onRefresh, setOnRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [baseUrl, setBaseUrl] = useState('');
-  
+
   const [repo, setRepo] = useState();
   useFocusEffect(
     React.useCallback(() => {
@@ -58,7 +63,7 @@ const DashboardScreen = ({navigation}) => {
       return;
     }, [tabBar]),
   );
-  useEffect(() => {}, [auditList]);
+  useEffect(() => { }, [auditList]);
   useEffect(() => {
     AuditList(tabBar);
   }, [tabBar]);
@@ -102,7 +107,7 @@ const DashboardScreen = ({navigation}) => {
   const AuditList = async index => {
     try {
       setOnRefresh(true);
-      const params = {audit_type: index};
+      const params = { audit_type: index };
       const response = await apiCall(
         'POST',
         apiEndPoints.GET_AUDIT_LIST,
@@ -130,15 +135,15 @@ const DashboardScreen = ({navigation}) => {
   const onRefreshAuditList = async () => {
     try {
       setOnRefresh(true);
-      const params = {audit_type: tabBar};
+      const params = { audit_type: tabBar };
       const response = await apiCall(
         'POST',
         apiEndPoints.GET_AUDIT_LIST,
         params,
       );
       if (response.status === 200) {
-        console.log('---',response.data.data)
-        console.log("Repor URL -->",response.data.base_url);
+        console.log('---', response.data.data)
+        console.log("Repor URL -->", response.data.base_url);
         setOnRefresh(false);
         setauditArray(response?.data?.data);
         setauditList(response?.data?.data);
@@ -168,13 +173,73 @@ const DashboardScreen = ({navigation}) => {
     setpopup(!popup);
     AuditList(1);
   };
-  const StartAudit = async id => {
-    const params = {
-      audit_id: id,
-      audit_status: 4,
-    };
-    const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params);
+  const StartAudit = async (id) => {
+
+
+        const params = {
+          audit_id: id,
+          audit_status: 4,
+         
+        };
+        const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params);
+
+        return true
+       
   };
+
+  const StartAuditCheck = (id) => {
+    return new Promise((resolve, reject) => {
+      Geolocation.getCurrentPosition(
+        async position => {
+          try {
+            const { latitude, longitude } = position.coords;
+  
+            const params = {
+              audit_id: id,
+              audit_status: 4,
+              currentlat: latitude ? latitude : "",
+              currentlong: longitude ? longitude : "",
+            };
+  
+            const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params);
+  
+            console.log("🚀 ~ file: index.js:190 ~ StartAudit ~ response?.data?.status:", response?.data?.status);
+  
+            if (response?.data?.status === 200) {
+              resolve(true);
+            } else {
+              showMessage({
+                message: response.data.message,
+                type: 'warning',
+                duration: 5000,
+              });
+              resolve(false);
+            }
+          } catch (error) {
+            console.error('Error during audit start:', error);
+            showMessage({
+              message: 'An error occurred during audit start.',
+              type: 'warning',
+              duration: 5000,
+            });
+            resolve(false);
+          }
+        },
+        error => {
+          console.log('Geolocation error:', error);
+          showMessage({
+            message: 'Please enable location services before starting the audit!',
+            type: 'warning',
+            duration: 3000,
+          });
+          resolve(false);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
+    });
+  };
+
+
   const HandleStatus = async (
     id,
     status,
@@ -185,7 +250,10 @@ const DashboardScreen = ({navigation}) => {
     if (status == 1) {
       QuestionList(id, branch_manager, questions_id);
     } else {
-      StartAudit(id);
+      const getresdistance = await StartAudit(id);
+      console.log("🚀 ~ file: index.js:219 ~ DashboardScreen ~ getres:", getresdistance)
+     
+     if(getresdistance) {
       const params = {
         audit_id: id,
         employee_id: userData.emp_id,
@@ -193,7 +261,6 @@ const DashboardScreen = ({navigation}) => {
         type: 1,
       };
       const response = await apiCall('POST', apiEndPoints.QUESTION, params);
-      console.log('The question data --->>>>', response);
       if (response.status === 200) {
         setquestion({
           data: response.data.data,
@@ -209,6 +276,8 @@ const DashboardScreen = ({navigation}) => {
           navigation.navigate('VideoScreen');
         }
       }
+    }
+
     }
   };
 
@@ -228,7 +297,7 @@ const DashboardScreen = ({navigation}) => {
         answer: data.answer,
       });
     });
-    navigation.navigate('AuditWelcomeScreen', {audit_id: id});
+    navigation.navigate('AuditWelcomeScreen', { audit_id: id });
   };
   const EditAudit = item => {
     seteditAudit(item);
@@ -259,17 +328,17 @@ const DashboardScreen = ({navigation}) => {
   };
 
   const handleReport = async (auditreport) => {
-   
+
     console.log("The report URL ==> ", auditreport);
     await Linking.openURL(auditreport);
     // await Linking.openURL(props.repo?.reporturl);
   };
-  
-  const renderAudit = ({item: audit, index}) => {
+
+  const renderAudit = ({ item: audit, index }) => {
     return (
       <View
         pointerEvents={onRefresh ? 'none' : 'auto'}
-        style={{marginHorizontal: 10}}
+        style={{ marginHorizontal: 10 }}
         key={audit.city_id}>
         <Cancel
           popup={popup}
@@ -322,7 +391,7 @@ const DashboardScreen = ({navigation}) => {
                 </Text>
               </View>
             </View>
-            <View style={{marginVertical: 10}}>
+            <View style={{ marginVertical: 10 }}>
               <Text style={styles.s_txt}>Branch Manager Name</Text>
               <Text style={styles.txt}>{audit.branch_manager}</Text>
             </View>
@@ -332,10 +401,10 @@ const DashboardScreen = ({navigation}) => {
                 justifyContent: 'space-between',
                 marginVertical: 10,
               }}>
-              <View>
+              {/*   <View>
                 <Text style={styles.s_txt}>Actionable No.</Text>
                 <Text style={styles.txt}>02 Members</Text>
-              </View>
+              </View> */}
               <View>
                 <Text style={styles.s_txt}>Audit Status</Text>
                 <Text style={styles.txt}>
@@ -343,7 +412,7 @@ const DashboardScreen = ({navigation}) => {
                 </Text>
               </View>
             </View>
-            <View style={{marginVertical: 10}}>
+            <View style={{ marginVertical: 10 }}>
               <Text style={styles.s_txt}>City</Text>
               <View
                 style={{
@@ -426,7 +495,7 @@ const DashboardScreen = ({navigation}) => {
                           fontSize: normalize(TINY_FONT_SIZE),
                           fontFamily: FONT_FAMILY_SEMI_BOLD,
                         }}>
-                        Update
+                        Upload Video
                       </Text>
                     </TouchableOpacity>
                   ) : null}
@@ -447,7 +516,7 @@ const DashboardScreen = ({navigation}) => {
                         {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
                       </Text>
                       {audit.audit_status === 3 ? (
-                        <Pressable onPress={() => handleReport(baseUrl+''+audit.report)}>
+                        <Pressable onPress={() => handleReport(baseUrl + '' + audit.report)}>
                           <Text style={styles.download_text}>
                             Download Report
                           </Text>
@@ -482,14 +551,14 @@ const DashboardScreen = ({navigation}) => {
     }
   };
   const renderEmptyComponent = () => (
-    <View style={{flex: 5, backgroundColor: '#fff'}}>
-      <View style={{alignItems: 'center'}}>
+    <View style={{ flex: 5, backgroundColor: '#fff' }}>
+      <View style={{ alignItems: 'center' }}>
         <Image
           resizeMode={'contain'}
-          style={{width: 250, height: 350}}
+          style={{ width: 250, height: 350 }}
           source={DASHBOARD_HEROIC}
         />
-        <View style={{padding: 10}}>
+        <View style={{ padding: 10 }}>
           <Text
             style={{
               color: '#5382b5',
@@ -500,7 +569,7 @@ const DashboardScreen = ({navigation}) => {
           </Text>
         </View>
         {tabBar === 1 && (
-          <View style={{alignItems: 'center'}}>
+          <View style={{ alignItems: 'center' }}>
             <Text
               style={{
                 color: '#000000',
@@ -556,7 +625,7 @@ const DashboardScreen = ({navigation}) => {
 
   return (
     <>
-      {isLoading && <Loader/>}
+      {isLoading && <Loader />}
       <UpdateAlert />
       <DashboardView
         option={option}
