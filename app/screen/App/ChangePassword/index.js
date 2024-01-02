@@ -75,7 +75,7 @@ function ChangePassword() {
                 alert(JSON.stringify(eu))
                 setIsLoading(false)
                 showMessage({
-                    message: res.data.message,
+                    message: eu.message,
                     type:'danger',
                     duration: 3000
                 })

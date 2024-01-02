@@ -25,44 +25,49 @@ export default function ForgetPassword(props) {
             borderBottomLeftRadius: 6,
             borderBottomRightRadius: 6,
             padding: 10,
-          }}
-        >
-          <View style={{ flex: 4 }}>
+          }}>
+          <View style={{flex: 4}}>
             <Input
-              onChangeText={(text) => props.setemail(text)}
+              onChangeText={text => props.setemail(text)}
               value={props.email}
               containerStyle={Styles.display}
-              placeholder={"Email"}
+              placeholder={'Email'}
             />
             {props.verfyOTP && (
               <Input
-                onChangeText={(text) => props.setotp(text)}
+                onChangeText={text => props.setotp(text)}
                 value={props.otp}
                 containerStyle={Styles.display}
-                placeholder={"OTP"}
-                keyboardType={"numeric"}
+                placeholder={'OTP'}
+                keyboardType={'numeric'}
               />
+            )}
+            {props.verfyOTP && (
+              <TouchableOpacity onPress={() => props.resendotp()} style={Styles.touch}>
+                <Text style={Styles.touchText}>Resend Otp</Text>
+              </TouchableOpacity>
             )}
             {props.changePassowrd && (
               <Input
-                onChangeText={(text) => props.setpassword(text)}
+                onChangeText={text => props.setpassword(text)}
                 value={props.password}
                 containerStyle={Styles.display}
-                placeholder={"Password"}
+                placeholder={'Password'}
+                InputHeading={'Password'}
               />
             )}
           </View>
+
           <View
             style={{
               flex: 2,
               paddingVertical: 15,
-              justifyContent: "flex-end",
+              justifyContent: 'flex-end',
               paddingHorizontal: 20,
-            }}
-          >
+            }}>
             <Button
               onPress={() => props.handleForgetPassword()}
-              buttonText={"Change Password"}
+              buttonText={'Change Password'}
             />
           </View>
         </View>
