@@ -131,6 +131,7 @@ const DashboardScreen = ({ navigation }) => {
     } catch (error) {
       setOnRefresh(false);
     }
+    return true
   };
   const onRefreshAuditList = async () => {
     try {
@@ -248,7 +249,7 @@ const DashboardScreen = ({ navigation }) => {
     if (status == 1) {
       QuestionList(id, branch_manager, questions_id);
     } else {
-      const getresdistance = await StartAuditCheck(id);
+      const getresdistance = await StartAudit(id);
       console.log("🚀 ~ file: index.js:219 ~ DashboardScreen ~ getres:", getresdistance)
      
      if(getresdistance) {
