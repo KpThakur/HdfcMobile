@@ -137,7 +137,7 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-
+    setisLoading(true); 
     Geolocation.getCurrentPosition(
       async position => {
         const { latitude, longitude } = position.coords;
@@ -190,7 +190,12 @@ const Login = ({ navigation }) => {
           }
         }
       }, error => {
-        console.log('This is the error', error);
+        setisLoading(false);
+        showMessage({
+          message: 'Set location permission for using App.',
+          type: 'danger',
+          duration: 3000,
+        });
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
