@@ -9,6 +9,8 @@ flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : Flip
 target 'HDFC' do
   config = use_native_modules!
   # Flags change depending on the env values.
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   flags = get_default_flags()
 
   use_react_native!(
