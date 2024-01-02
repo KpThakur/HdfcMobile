@@ -34,11 +34,11 @@ allprojects {
     //            }
     //        }
     //    }
-    jcenter() {
-            content {
-                includeModule("com.yqritc", "android-scalablevideoview")
-            }
-        }
+    // jcenter() {
+    //         content {
+    //             includeModule("com.yqritc", "android-scalablevideoview")
+    //         }
+    //     }
       
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
