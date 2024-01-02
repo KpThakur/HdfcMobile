@@ -177,7 +177,7 @@ const Question = ({navigation, route}) => {
         formdata.append('check_answer', checkedAns);
         formdata.append('show_actionable', showActionable);
         if (question?.data.image_capture === '1') {
-          if (camImg.length > 0) {
+          if (camImg.length > 0 || !showCapIMG) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
                 return formdata.append('question_image', {
@@ -707,6 +707,7 @@ const Question = ({navigation, route}) => {
         handleCheckList={handleCheckList}
         disableBtn={disableBtn}
         branchDetailData={branchDetailData}
+        setshowCapIMG={setshowCapIMG}
       />
     </>
   );

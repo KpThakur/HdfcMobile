@@ -108,7 +108,7 @@ const Question = props => {
     setstartAudit,
     getIMG,
     onCapture,
-    branchDetailData
+    branchDetailData,
   } = props;
 
   const handleRating = async item => {
@@ -586,6 +586,7 @@ const Question = props => {
                 }
               </View>
             )}
+               
             {startAudit === 1 ? (
               <View style={styles.body}>
                 {question?.data?.image_capture === '1' && (
@@ -607,7 +608,53 @@ const Question = props => {
                         ) : null}
                       </View>
                     ) : null}
-
+                    {question?.data?.question_type === '1' && (
+                      <View style={styles.brnchmannme}>
+                        <Button
+                          buttonText={'Yes'}
+                          style={{
+                            paddingVertical: 5,
+                            backgroundColor:
+                              yesNo === 'YES'
+                                ? DARK_BLUE_COLOR
+                                : PRIMARY_BLUE_COLOR,
+                          }}
+                          onPress={() => {
+                            props.setyesNo('YES');
+                            props.setshowCapIMG(true);
+                            props.setrevActionable(0);
+                            handleRemark(question.data.remark_yes);
+                            props.handleShowActionable(false);
+                            if (question.data.score_range == 1)
+                              props.showSetRange(true);
+                          }}
+                        />
+                        <Button
+                          buttonText={'No'}
+                          style={{
+                            paddingVertical: 5,
+                            backgroundColor:
+                              yesNo === 'NO'
+                                ? DARK_BLUE_COLOR
+                                : PRIMARY_BLUE_COLOR,
+                          }}
+                          onPress={() => {
+                            props.setyesNo('NO');
+                            props.setshowCapIMG(false);
+                            props.setrevActionable(1);
+                            handleRemark(question.data.remark_no);
+                            props.handleShowActionable(true);
+                            if (question.data.score_range == 1)
+                              props.showSetRange(false);
+                            if (question.data.action_on_no == 3) {
+                              props.HandleActionable(0);
+                              props.setshowActionable(false);
+                            }
+                          }}
+                        />
+                        {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
+                      </View>
+                    )}
                     <View style={styles.brnchmannme}>
                       {props.showCapIMG ? (
                         <TouchableOpacity
@@ -740,49 +787,6 @@ const Question = props => {
                   </>
                 )}
 
-                {question?.data?.question_type === '1' && (
-                  <View style={styles.brnchmannme}>
-                    <Button
-                      buttonText={'Yes'}
-                      style={{
-                        paddingVertical: 5,
-                        backgroundColor:
-                          yesNo === 'YES'
-                            ? DARK_BLUE_COLOR
-                            : PRIMARY_BLUE_COLOR,
-                      }}
-                      onPress={() => {
-                        props.setyesNo('YES');
-                        props.setrevActionable(0);
-                        handleRemark(question.data.remark_yes);
-                        props.handleShowActionable(false);
-                        if (question.data.score_range == 1)
-                          props.showSetRange(true);
-                      }}
-                    />
-                    <Button
-                      buttonText={'No'}
-                      style={{
-                        paddingVertical: 5,
-                        backgroundColor:
-                          yesNo === 'NO' ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR,
-                      }}
-                      onPress={() => {
-                        props.setyesNo('NO');
-                        props.setrevActionable(1);
-                        handleRemark(question.data.remark_no);
-                        props.handleShowActionable(true);
-                        if (question.data.score_range == 1)
-                          props.showSetRange(false);
-                        if (question.data.action_on_no == 3) {
-                          props.HandleActionable(0);
-                          props.setshowActionable(false);
-                        }
-                      }}
-                    />
-                    {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
-                  </View>
-                )}
                 {question?.data?.question_type === '5' && (
                   <View style={styles.brnchmannme}>
                     <Button

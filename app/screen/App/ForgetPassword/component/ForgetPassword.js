@@ -4,11 +4,14 @@ import Button from "../../../../component/Button";
 import Header from "../../../../component/Header";
 import Input from "../../../../component/Input";
 import Styles from "./styles";
+import { useNavigation } from "@react-navigation/native";
+import { LEFT_ARROW } from "../../../../utils/constant";
 export default function ForgetPassword(props) {
+    const navigation = useNavigation();
   return (
     <View style={Styles.container}>
       <Header
-        leftImg={""}
+        leftImg={LEFT_ARROW}
         headerText={"Forget Password"}
         onPress={() => navigation.goBack()}
       />

@@ -42,10 +42,27 @@ const VideoComponent = ({navigation, route}) => {
   const [loading, setIsLoading] = useState(false);
   const [cameraType, setCameraType] = useState(true);
   const [flashMode, setFlashMode] = useState(false);
+  const [timer, setTimer] = useState(0);
   let manualStop = false;
   const currentTime = new Date();
-
   const camera = useRef(null);
+
+  useEffect(()=> {
+    let interval;
+     if(!indicator){
+        interval = setInterval(() => {
+           setTimer((prevTimer) =>  prevTimer + 1)
+        }, 1000);
+     }
+     return ()=> clearInterval(interval);
+  },[indicator]);
+
+  const formatTime = (seconds) => {
+       const minutes = Math.floor(seconds/60);
+       const remainingSeconds = seconds % 60;
+       const formatedTime = `${String(minutes).padStart(2,'0')}:${String(remainingSeconds).padStart(2,'0')}`;
+       return formatedTime;
+  };
 
   const handleFlash = () => {
     flashMode ? setFlashMode(true) : setFlashMode(false);
@@ -108,11 +125,12 @@ const VideoComponent = ({navigation, route}) => {
         console.log('The response of Video Record ====>>> ', response.data);
         if (response.status === 200) {
           setIsLoading(false);
+          Alert.alert(response?.data.message);
           navigation.navigate('DashboardScreen');
           // setstartAudit(3);
         } else {
           setIsLoading(false);
-          Alert("Something went wrong, please try again !!");
+          Alert.alert("Something went wrong, please try again !!");
         }
       } else {
         console.error('Camera ref is null');
@@ -159,6 +177,7 @@ const VideoComponent = ({navigation, route}) => {
           }
           captureAudio={true}
           ref={camera}></RNCamera>
+          <Text style={styles.timerTextStyle}>{formatTime(timer)}</Text>
         <View
           style={{
             marginBottom: 20,
@@ -239,5 +258,10 @@ const styles = StyleSheet.create({
     height: 50,
     color: 'white',
   },
+  timerTextStyle: {
+    fontFamily: FONT_FAMILY_REGULAR,
+    fontSize: MEDIUM_FONT_SIZE,
+    color: BLACK_COLOR,
+  }
 });
 export default VideoComponent;
