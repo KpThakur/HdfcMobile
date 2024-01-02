@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { View, TextInput, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { TEXT_INPUT_PLACEHOLDER_COLOR } from '../../utils/constant'
 const Input = React.forwardRef((props, i) => {
-    const [eye, setEye] = useState(false);
+    const [eye, setEye] = useState(true);
     const {
         autoCapitalize, autoFocus, keyboardType, multiline,
         placeholder, returnKeyType, value,
@@ -69,8 +69,8 @@ const Input = React.forwardRef((props, i) => {
                         <Image
                             source={
                                 eye ?
-                                    require('../../assets/images/eye.png') :
-                                    require('../../assets/images/closeeye.png')
+                                    require('../../assets/images/closeeye.png') :
+                                    require('../../assets/images/eye.png')
                             } />
                     </TouchableOpacity>
                 }
