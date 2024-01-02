@@ -52,7 +52,7 @@ const Login = ({navigation}) => {
       error => {
         console.log('Error getting location: ', error);
       },
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
 
