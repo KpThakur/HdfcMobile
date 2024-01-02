@@ -51,6 +51,7 @@ export default function ForgetPassword(props) {
                 containerStyle={Styles.display}
                 placeholder={'Password'}
                 InputHeading={'Password'}
+                eye={true}
               />
             )}
           </View>

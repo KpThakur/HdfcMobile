@@ -143,6 +143,7 @@ const Login = ({ navigation }) => {
         const { latitude, longitude } = position.coords;
         const vaild = validationFrom();
         if (vaild) {
+          
           try {
             const deviceToken = await messaging().getToken();
             const deviceType = Platform.OS;
@@ -188,7 +189,10 @@ const Login = ({ navigation }) => {
               duration: 3000,
             });
           }
+        }else{  
+          setisLoading(false); 
         }
+     
       }, error => {
         setisLoading(false);
         showMessage({
