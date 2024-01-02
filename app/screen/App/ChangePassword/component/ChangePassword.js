@@ -28,6 +28,7 @@ function ChangePassword(props) {
               secureTextEntry={false}
               placeholder={"Old Password"}
               InputHeading={'Password'}
+              eye={true}
             />
             <Input
               onChangeText={(value) => props.setPasswordData({
@@ -39,6 +40,7 @@ function ChangePassword(props) {
               secureTextEntry={false}
               placeholder={"New Password"}
               InputHeading={'Password'}
+              eye={true}
             />
             <Input
               onChangeText={(value) => props.setPasswordData({
@@ -50,6 +52,7 @@ function ChangePassword(props) {
               secureTextEntry={false}
               placeholder={"Confirm Password"}
               InputHeading={'Password'}
+              eye={true}
             />
           </View>
           <View style={{ flex: 2, paddingVertical: 15, justifyContent: 'flex-end', paddingHorizontal: 20 }}>
