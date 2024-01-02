@@ -30,7 +30,7 @@ export default function UpdateAlert() {
       if (Platform.OS === "ios") {
         setlink(data.data.ios_url);
         setupdateNotify(
-          data.data?.ios_version > deviceInfoModule.getVersion() ? true : false
+          data.data?.ios_version > deviceInfoModule.getVersion() ? false : false
         );
       } else {
         setlink(data.data.android_url);
