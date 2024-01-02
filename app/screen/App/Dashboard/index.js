@@ -131,7 +131,6 @@ const DashboardScreen = ({ navigation }) => {
     } catch (error) {
       setOnRefresh(false);
     }
-    return true
   };
   const onRefreshAuditList = async () => {
     try {
@@ -183,6 +182,8 @@ const DashboardScreen = ({ navigation }) => {
          
         };
         const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params);
+
+        return true
        
   };
 
