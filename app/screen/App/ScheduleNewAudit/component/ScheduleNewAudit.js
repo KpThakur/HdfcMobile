@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -60,6 +60,11 @@ export default function ScheduleNewAudit(props) {
     handleSumbit,
     currentTime,
   } = props;
+
+  useEffect(() => {
+    setdropDown(false)
+ }, [navigation])
+
   const displayCityDropDown = ({item}) => {
     return (
       <TouchableOpacity
@@ -241,21 +246,13 @@ export default function ScheduleNewAudit(props) {
                                 key={index}
                                 style={[styles.drop_down_item, {zIndex: 1}]}
                                 onPress={() => {
-                                  if (
-                                    date ==
-                                    moment(new Date()).format('DD-MM-YYYY')
-                                  ) {
-                                    if (
-                                      moment(new Date()).format('HH-mm') <
-                                      '10-00'
-                                    ) {
+                                  if (date == moment(new Date()).format('DD-MM-YYYY')) {
+                                    if (moment(new Date()).format('HH-mm') < '10-00') {
                                       settime(item);
                                       setdropDown(false);
                                     } else {
-                                      if (
-                                        item < moment(new Date()).format('H-mm')
-                                      ) {
-                                        setdropDown(false);
+                                      if (item < moment(new Date()).format('H-mm')) {
+                                        //setdropDown(false);
                                         alert('Please Select Proper Time');
                                       } else {
                                         settime(item);
@@ -275,7 +272,7 @@ export default function ScheduleNewAudit(props) {
                     )}
                   </View>
                 </View>
-                <View style={{marginTop: 10, zIndex: -1}}>
+                <View style={{marginTop: 10, zIndex: -1,width:'50%',height:150}}>
                   <Text style={styles.txt_head}>Audit Type:</Text>
                   <TouchableOpacity
                     style={{

@@ -16,7 +16,7 @@ export default function Index({ navigation }) {
     const [branchName, setbranchName] = useState()
     const [branchNameDropDown, setbranchNameDropDown] = useState(false)
     const [branchManagerName, setbranchManagerName] = useState()
-    const [auditType, setauditType] = useState(1)
+    const [auditType, setauditType] = useState(2)
     const [cityId, setcityId] = useState()
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
