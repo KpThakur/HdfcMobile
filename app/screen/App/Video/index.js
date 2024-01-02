@@ -32,7 +32,7 @@ const VideoScreen = ({navigation}) => {
           setVideoPath(video?.path);
           console.log(video?.path);
           const originalPath =
-            'file:///storage/emulated/0/Android/data/com.audit.Kreate/files/Pictures';
+            'file:///storage/emulated/0/Android/data/com.insuranceaudit.kreate/files/Pictures';
           const fileName = '_recordedVideo' + new Date().getTime() + '.mp4';
           const destinationImagePath = originalPath + '/' + fileName;
 

@@ -1,4 +1,4 @@
-package com.audit.Kreate;
+package com.insuranceaudit.kreate;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen; 

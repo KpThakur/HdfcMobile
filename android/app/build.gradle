@@ -95,9 +95,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.audit.Kreate"
+    namespace "com.insuranceaudit.kreate"
     defaultConfig {
-        applicationId "com.audit.Kreate"
+        applicationId "com.insuranceaudit.kreate"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

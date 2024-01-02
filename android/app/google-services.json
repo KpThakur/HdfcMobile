@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1074988780067:android:fc7b3416e74f0138963f96",
+        "mobilesdk_app_id": "1:1074988780067:android:b53ec7afa258d118963f96",
         "android_client_info": {
-          "package_name": "com.audit.Kreate"
+          "package_name": "com.insuranceaudit.kreate"
         }
       },
       "oauth_client": [],
