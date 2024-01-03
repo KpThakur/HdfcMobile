@@ -27,9 +27,10 @@ const Login = ({ navigation }) => {
   const { signIn } = React.useContext(AuthContext);
 
   const validationFrom = () => {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let reg = /^\s*\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+\s*$/;
+    // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (email === '' || email === undefined) {
+    if (email === '' || email === undefined || email.trim() === '') {
       ShowAlert('Please enter email');
       return false;
     } else if (reg.test(email) === false) {
