@@ -1,3 +1,5 @@
+import Geolocation from 'react-native-geolocation-service';
+
 //Font name
 export const FONT_FAMILY_BOLD = 'Poppins-Bold';
 export const FONT_FAMILY_REGULAR = 'Poppins-Regular';
@@ -55,8 +57,8 @@ export const MICON = require('../assets/images/voice-recording.png');
 export const MICOFF = require('../assets/images/mute.png');
 export const LEFT_ARROW = require('../assets/images/left-2.png');
 export const UPDATE_ICON = require('../assets/images/refresh-page-option.png');
-export const FLIP_ICON =  require('../assets/images/flip.png');
-export const VIDEO =  require('../assets/images/start.png');
+export const FLIP_ICON = require('../assets/images/flip.png');
+export const VIDEO = require('../assets/images/start.png');
 export const STOP_VIDEO = require('../assets/images/stopIcon.png');
 export const FLASH_ON = require('../assets/images/flashOn.png');
 export const FLASH_OFF = require('../assets/images/flashOff.png');
@@ -78,3 +80,13 @@ export const BASEURL = 'https://dev.easycalls.in:3036';
 // export const BASEURL = 'http://192.168.1.21:3001'
 //Google API key
 export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';
+
+export const requestGeolocationPermission = async () => {
+  try {
+    const authorizationLevel = 'whenInUse'; // or "always"
+    const status = await Geolocation.requestAuthorization(authorizationLevel);
+    console.log('Permission status:', status);
+  } catch (error) {
+    console.error(error);
+  }
+};
