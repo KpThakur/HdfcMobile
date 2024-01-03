@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { View, PermissionsAndroid, Platform, Alert } from 'react-native';
+import React, {useEffect} from 'react';
+import {View, PermissionsAndroid, Platform, Alert} from 'react-native';
 import Navigation from './app/navigation';
-import { EditAuditProvider } from './app/utils/EditAuditContext';
-import { QuestionProvider } from './app/utils/QuestionContext';
-import { UserProvider } from './app/utils/UserContext';
+import {EditAuditProvider} from './app/utils/EditAuditContext';
+import {QuestionProvider} from './app/utils/QuestionContext';
+import {UserProvider} from './app/utils/UserContext';
 import NoNetworkBar from './app/component/NoNetworkBar';
-import { Camera } from 'react-native-vision-camera';
-import { PERMISSIONS, request, RESULTS, check } from 'react-native-permissions';
+import {Camera} from 'react-native-vision-camera';
+import {PERMISSIONS, request, RESULTS, check} from 'react-native-permissions';
 import FlashMessage from 'react-native-flash-message';
-import { normalize } from './app/utils/scaleFontSize';
-import { FONT_FAMILY_SEMI_BOLD, WHITE_BG_COLOR } from './app/utils/constant';
+import {normalize} from './app/utils/scaleFontSize';
+import {FONT_FAMILY_SEMI_BOLD, WHITE_BG_COLOR} from './app/utils/constant';
 import Geolocation from 'react-native-geolocation-service';
 function App() {
   useEffect(() => {
@@ -33,7 +33,7 @@ function App() {
         Platform.OS === 'ios'
           ? PERMISSIONS.IOS.CAMERA
           : PERMISSIONS.ANDROID.CAMERA,
-       /*  {
+        /*  {
           message:
             'App needs access to your camera ' + 'so you can take pictures.',
           buttonNeutral: 'Ask Me Later',
@@ -41,8 +41,17 @@ function App() {
           buttonPositive: 'OK',
         }, */
       );
+
       if (cameraPermissionStatus === RESULTS.GRANTED) {
         console.log('Camera Permission Granted ');
+      }
+      if (Platform.OS === 'android' && parseInt(Platform.Version, 10) >= 13) {
+        const response = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (response === RESULTS.GRANTED) {
+          console.log('Camera Permission Granted >= 13');
+        }
       } else {
         console.log('Camera Permission Denied ');
       }
@@ -58,7 +67,13 @@ function App() {
           ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
-      if (locationPermissionRequest === RESULTS.GRANTED) {
+      const response = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (
+        locationPermissionRequest === RESULTS.GRANTED &&
+        response === RESULTS.GRANTED
+      ) {
         console.log('Location Permission Granted');
       } else {
         console.log('Location Permission Denied ');
@@ -70,17 +85,24 @@ function App() {
 
   const checkLocation = async () => {
     try {
-
       Geolocation.getCurrentPosition(
         async position => {
-          const { latitude, longitude } = position.coords;
+          const {latitude, longitude} = position.coords;
 
           const locationPermissionCheck = await check(
             Platform.OS === 'ios'
               ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
               : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
           );
-          if (locationPermissionCheck === RESULTS.GRANTED) {
+
+          const response = await PermissionsAndroid.check(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+
+          if (
+            locationPermissionCheck === RESULTS.GRANTED &&
+            response === RESULTS.GRANTED
+          ) {
             console.log('Location checke');
           } else {
             console.log('Location not checked');
@@ -89,7 +111,7 @@ function App() {
         error => {
           console.log('Error getting location: ', error);
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
       );
     } catch (error) {
       console.error('Error checking location permission:', error);
@@ -103,7 +125,7 @@ function App() {
     console.log('Camera permission --> ', newCameraPermission);
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <UserProvider>
         <QuestionProvider>
           <EditAuditProvider>

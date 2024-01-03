@@ -11,6 +11,8 @@ import {
   Dimensions,
   FlatList,
   KeyboardAvoidingView,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
@@ -230,13 +232,14 @@ const Question = props => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
+ 
   const requestCameraPermission = async () => {
     try {
       const cameraPermissionStatus = await request(
         Platform.OS === 'ios'
           ? PERMISSIONS.IOS.CAMERA
           : PERMISSIONS.ANDROID.CAMERA,
-       /*  {
+        /*  {
           message:
             'App needs access to your camera ' + 'so you can take pictures.',
           buttonNeutral: 'Ask Me Later',
@@ -244,8 +247,17 @@ const Question = props => {
           buttonPositive: 'OK',
         }, */
       );
+
       if (cameraPermissionStatus === RESULTS.GRANTED) {
         console.log('Camera Permission Granted ');
+      }
+      if (Platform.OS === 'android' && parseInt(Platform.Version, 10) >= 13) {
+        const response = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+        if (response === RESULTS.GRANTED) {
+          console.log('Camera Permission Granted >= 13');
+        }
       } else {
         console.log('Camera Permission Denied ');
       }
@@ -261,7 +273,13 @@ const Question = props => {
           ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
-      if (locationPermissionRequest === RESULTS.GRANTED) {
+      const response = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (
+        locationPermissionRequest === RESULTS.GRANTED &&
+        response === RESULTS.GRANTED
+      ) {
         console.log('Location Permission Granted');
       } else {
         console.log('Location Permission Denied ');
@@ -270,6 +288,7 @@ const Question = props => {
       console.log('location error', error);
     }
   };
+  
 
   const OpenCamera = async () => {
     await requestLocationPermission();
