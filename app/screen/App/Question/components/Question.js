@@ -64,6 +64,7 @@ import {apiCall, getLocation} from '../../../../utils/httpClient';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import moment from 'moment';
+import { PERMISSIONS, request, RESULTS, check } from 'react-native-permissions';
 
 const Question = props => {
   const windowWidth = Dimensions.get('window').width;
@@ -229,8 +230,50 @@ const Question = props => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
+  const requestCameraPermission = async () => {
+    try {
+      const cameraPermissionStatus = await request(
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.CAMERA
+          : PERMISSIONS.ANDROID.CAMERA,
+       /*  {
+          message:
+            'App needs access to your camera ' + 'so you can take pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        }, */
+      );
+      if (cameraPermissionStatus === RESULTS.GRANTED) {
+        console.log('Camera Permission Granted ');
+      } else {
+        console.log('Camera Permission Denied ');
+      }
+    } catch (error) {
+      console.error('Error requesting camera permission:', error);
+    }
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const locationPermissionRequest = await request(
+        Platform.OS === 'ios'
+          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      );
+      if (locationPermissionRequest === RESULTS.GRANTED) {
+        console.log('Location Permission Granted');
+      } else {
+        console.log('Location Permission Denied ');
+      }
+    } catch (error) {
+      console.log('location error', error);
+    }
+  };
 
   const OpenCamera = async () => {
+    await requestLocationPermission();
+    await requestCameraPermission();
     Geolocation.getCurrentPosition(
       async position => {
         const {latitude, longitude} = position.coords;
