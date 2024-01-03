@@ -1,5 +1,6 @@
-import { Alert, Linking } from 'react-native';
+import {Alert, Linking, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 //Font name
 export const FONT_FAMILY_BOLD = 'Poppins-Bold';
@@ -82,23 +83,55 @@ export const BASEURL = 'https://dev.easycalls.in:3036';
 //Google API key
 export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';
 
+const requestLocationPermission = async () => {
+  try {
+    const locationPermissionRequest = await request(
+      Platform.OS === 'ios'
+        ? requestGeolocationPermission()
+        : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    );
+    const response = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+    if (
+      locationPermissionRequest === RESULTS.GRANTED &&
+      response === RESULTS.GRANTED
+    ) {
+      console.log('Location Permission Granted');
+    } else {
+      Alert.alert(
+        'Location Permission',
+        'Please enable it in the Settings.',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'Open Settings', onPress: () => Linking.openSettings()},
+        ],
+      );
+    }
+  } catch (error) {
+    console.log('location error', error);
+  }
+};
 export const requestGeolocationPermission = async () => {
   try {
-    const authorizationLevel = 'whenInUse'; // or "always"
-    const status = await Geolocation.requestAuthorization(authorizationLevel);
-    if (status !== 'granted') {
-      Alert.alert(
-        "Location Permission",
-        "Please enable it in the Settings.",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Open Settings", onPress: () => Linking.openSettings() }
-        ]
-      );
+    if (Platform.OS == 'ios') {
+      const authorizationLevel = 'whenInUse'; // or "always"
+      const status = await Geolocation.requestAuthorization(authorizationLevel);
+      if (status !== 'granted') {
+        Alert.alert(
+          'Location Permission',
+          'Please enable it in the Settings.',
+          [
+            {text: 'Cancel', style: 'cancel'},
+            {text: 'Open Settings', onPress: () => Linking.openSettings()},
+          ],
+        );
+      } else {
+        console.log('Location permission granted');
+      }
     } else {
-      console.log('Location permission granted');
+      requestLocationPermission()
     }
-    console.log('Permission status:', status);
   } catch (error) {
     console.error(error);
   }
