@@ -13,7 +13,7 @@ import FlashMessage, {
   showMessage,
   hideMessage,
 } from 'react-native-flash-message';
-import { STATUS_BAR_COLOR } from '../../../utils/constant';
+import { STATUS_BAR_COLOR, requestGeolocationPermission } from '../../../utils/constant';
 import { styles } from './component/styles';
 import { View, Text, Button } from 'react-native';
 const Login = ({ navigation }) => {
@@ -194,12 +194,14 @@ const Login = ({ navigation }) => {
         }
      
       }, error => {
+      console.log('error: ', error);
         setisLoading(false);
-        showMessage({
-          message: 'Set location permission for using App.',
-          type: 'danger',
-          duration: 3000,
-        });
+        requestGeolocationPermission()
+        // showMessage({
+        //   message: 'Set location permission for using App.',
+        //   type: 'danger',
+        //   duration: 3000,
+        // });
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );

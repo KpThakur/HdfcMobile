@@ -1,3 +1,4 @@
+import { Alert, Linking } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 //Font name
@@ -85,6 +86,18 @@ export const requestGeolocationPermission = async () => {
   try {
     const authorizationLevel = 'whenInUse'; // or "always"
     const status = await Geolocation.requestAuthorization(authorizationLevel);
+    if (status !== 'granted') {
+      Alert.alert(
+        "Location Permission",
+        "Please enable it in the Settings.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Open Settings", onPress: () => Linking.openSettings() }
+        ]
+      );
+    } else {
+      console.log('Location permission granted');
+    }
     console.log('Permission status:', status);
   } catch (error) {
     console.error(error);
