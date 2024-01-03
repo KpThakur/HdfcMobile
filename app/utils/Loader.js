@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
+import { DARK_BLUE_COLOR, PRIMARY_BLUE_COLOR } from './constant';
 const Loader = props => {
   return (
     <View
@@ -14,7 +15,7 @@ const Loader = props => {
         backgroundColor: 'black',
         opacity: 0.5,
       }}>
-      <Image
+      {/* <Image
         style={{
           width: 150,
           height: 150,
@@ -23,17 +24,21 @@ const Loader = props => {
           opacity: 1,
         }}
         source={require('../assets/loader/Loading_2.gif')}
-      />
-      {/* <LottieView
+      /> */}
+      <LottieView
         visible={true}
         style={{
+          flex:1,
           backgroundColor: "transparent",
           alignSelf: "center",
           width: 150,
+          opacity: 1
         }}
         source={require('../assets/loader/loader.json')}
-        //autoPlay loop 
-        /> */}
+        colorFilters={[{keypath:'*', color: DARK_BLUE_COLOR, }]}
+        autoPlay 
+        loop 
+        />
     </View>
   );
 };
