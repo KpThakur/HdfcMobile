@@ -108,7 +108,8 @@ const VideoComponent = ({navigation, route}) => {
         console.log('The response of Video Record ====>>> ', response.data);
         if (response.status === 200) {
           setIsLoading(false);
-          navigation.navigate('DashboardScreen');
+          navigation.navigate("ScheduleNewAuditScreen");
+          // navigation.navigate('DashboardScreen');
           // setstartAudit(3);
         } else {
           setIsLoading(false);
