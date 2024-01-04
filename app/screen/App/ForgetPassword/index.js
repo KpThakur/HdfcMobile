@@ -10,7 +10,6 @@ import {showMessage} from 'react-native-flash-message';
 export default function Index() {
   const [email, setemail] = useState();
   const [otp, setotp] = useState();
-  const [resendOtp, setResendOtp] = useState();
   const [password, setpassword] = useState();
   const [verfyOTP, setverfyOTP] = useState(false);
   const [changePassowrd, setchangePassowrd] = useState(false);
@@ -41,7 +40,7 @@ export default function Index() {
     Alert.alert('Invalid Email/Password', message);
   };
 
-  const resendotp = async() => {
+  const resendotp = async () => {
     try {
       setisLoading(true);
       const params = {
@@ -56,15 +55,16 @@ export default function Index() {
           params,
         );
         if (response.data.status === 200) {
-         // Alert.alert('OTP send to your email');
+          // Alert.alert('OTP send to your email');
           console.log('response staus 200', response.data);
           setverfyOTP(true);
+          setotp('');
           setisLoading(false);
           showMessage({
             message: response.data.message,
-            type:'success',
-            duration:3000
-          })
+            type: 'success',
+            duration: 3000,
+          });
         }
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export default function Index() {
       console.log(error);
       setisLoading(false);
     }
-  }
+  };
 
   const handleForgetPassword = async () => {
     const vaild = validationFrom();
@@ -95,15 +95,15 @@ export default function Index() {
             params,
           );
           if (response.data.status === 200) {
-           // Alert.alert('OTP send to your email');
+            // Alert.alert('OTP send to your email');
             console.log('response staus 200', response.data);
             setverfyOTP(true);
             setisLoading(false);
             showMessage({
               message: response.data.message,
-              type:'success',
-              duration:3000
-            })
+              type: 'success',
+              duration: 3000,
+            });
           }
         }
         if (verfyOTP) {
@@ -118,20 +118,20 @@ export default function Index() {
             setverfyOTP(false);
             setisLoading(false);
             showMessage({
-              message:response.data.message,
-              type:'success',
-              duration:3000,
-            })
+              message: response.data.message,
+              type: 'success',
+              duration: 3000,
+            });
             console.log('response staus 200', response.data);
           }
           if (response.data.status === 201) {
-           // Alert.alert(response.data.message);
+            // Alert.alert(response.data.message);
             setisLoading(false);
             showMessage({
               message: response.data.message,
-              type:'danger',
-              duration:3000,
-            })
+              type: 'danger',
+              duration: 3000,
+            });
             console.log('response staus 201', response.data);
           }
         }
@@ -143,14 +143,14 @@ export default function Index() {
             params,
           );
           if (response.data.status === 200) {
-           // Alert.alert(response.data.message);
+            // Alert.alert(response.data.message);
             setisLoading(false);
             navigation.navigate('Login');
             showMessage({
               message: response.data.message,
-              type:'success',
-              duration:3000,
-            })
+              type: 'success',
+              duration: 3000,
+            });
           }
         }
       } catch (error) {
