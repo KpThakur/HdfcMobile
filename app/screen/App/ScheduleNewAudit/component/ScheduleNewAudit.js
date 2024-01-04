@@ -108,7 +108,7 @@ export default function ScheduleNewAudit(props) {
               headerText={'Schedule New Audit'}
               leftImg={ARROW}
               onPress={() => {
-                navigation.goBack();
+                  navigation.navigate("DashboardScreen");
               }}
             />
             <View

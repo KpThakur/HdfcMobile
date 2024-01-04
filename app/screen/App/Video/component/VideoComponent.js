@@ -136,6 +136,7 @@ const VideoComponent = ({navigation, route}) => {
           // setstartAudit(3);
         } else {
           setIsLoading(false);
+          setTimer(0);
           Alert.alert('Something went wrong, please try again !!');
         }
       } else {
