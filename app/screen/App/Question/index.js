@@ -383,7 +383,7 @@ const Question = ({navigation, route}) => {
   };
 
   const handleJoin = data => {
-    alert(data);
+    // alert(data);
     setBmJoined(data);
   };
   const prevQuestion = async () => {
