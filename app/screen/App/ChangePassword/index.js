@@ -21,6 +21,11 @@ function ChangePassword() {
             alert("Enter New Password");
             return false
         }
+        if (passwordData.newPassword.trim().length === 0)
+        {
+            alert("Enter valid new password");
+            return false;
+        }
         if (passwordData?.newPassword?.length <= 5) {
             alert("Enter min 6 characters");
             return false;

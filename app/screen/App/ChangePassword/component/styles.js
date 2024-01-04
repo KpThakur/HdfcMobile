@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { MAIN_BG_GREY_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -7,7 +8,7 @@ const Styles = StyleSheet.create({
         flexGrow: 1,
         paddingLeft: 10,
         paddingRight: 10,
-        backgroundColor: "#ffffff"
+        backgroundColor: MAIN_BG_GREY_COLOR
     },
     display: {
         marginVertical: 10,

@@ -34,14 +34,15 @@ export default function AuditScore(props) {
             Note: Live streaming will be stopped after click on view actionable.
           </Text>
         ) : null}
-           {/* <Button
-            buttonText={"Complete Audit Remi"}
+        {props.type == 1 ? ( <Button
+            buttonText={"Generate Report"}
             onPress={() => handleViewActionable()}
-          />  */}
-          <Button
+          /> ): ( <Button
             buttonText={"Start Your Video Upload"}
             onPress={() => startvideo()}
-          />
+          />)}
+          
+         
       </View>
     </ScrollView>
     // </View>
