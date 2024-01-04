@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import Header from '../../../../component/Header'
 import { styles } from './styles'
@@ -11,6 +11,7 @@ export default function Profile(props) {
     const OnpressDrawer = () => {
         navigation.dispatch(DrawerActions.toggleDrawer());
     }
+   
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -34,7 +35,7 @@ export default function Profile(props) {
                             email: value
                         })}
                         value={props.profileData.email}
-                        editable={true}
+                        editable={false}
                         />
                     <Input
                         placeholder={"Contact Number"}
@@ -46,7 +47,7 @@ export default function Profile(props) {
                         keyboardType={"number-pad"}
                         value={props.profileData.phone.toString()}
                     />
-                    <View style={{ paddingTop: 30 }}>
+                    <View style={{ paddingTop: 290, paddingBottom: 10 }}>
                         <Button
                             onPress={() => props._handleSubmit()}
                             buttonText={"Submit"} />

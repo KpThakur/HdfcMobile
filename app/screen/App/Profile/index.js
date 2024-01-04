@@ -5,8 +5,11 @@ import { apiCall } from "../../../utils/httpClient";
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../../../utils/Loader";
 import AsyncStorage from "@react-native-community/async-storage";
+import { Alert } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
-export default function Index() {
+export default function Index({navigation}) {
+  // const navigation = useNavigation();
   const [userData, setUserData] = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -16,9 +19,9 @@ export default function Index() {
     email: "",
     phone: "",
   });
-  useEffect(() => {
-    userDetail()
-  }, []);
+  // useEffect(() => {
+  //   userDetail()
+  // }, [navigation]);
   const userDetail = async () => {
     const data = JSON.parse(await AsyncStorage.getItem("userData"));
     if (data) {
@@ -29,11 +32,30 @@ export default function Index() {
         phone: data.phone,
       });
     }
+    setIsLoading(false);
   };
+  const validationForm = () => {
+    if(profileData.firstName === '')
+    {
+      Alert.alert("Please enter name ");
+      return false;
+    }else if (profileData.phone === '')
+    {
+      Alert.alert("Please fill phone number");
+      return false;
+    }
+    else if(profileData.phone.length !==10)
+    {
+      Alert.alert("Please enter proper number");
+      return false;
+    } 
+    return true;
+  }
   async function _handleSubmit(params) {
     try {
       setIsLoading(true);
-      if(profileData.phone.length==10)
+      const valid = validationForm();
+      if(valid)
       {
         const params = {
             name: profileData.firstName,
@@ -56,8 +78,7 @@ export default function Index() {
             alert(data.message);
           }
       }else{
-          setIsLoading(false)
-          alert("Please enter proper number")
+          setIsLoading(false);
       }
       
     } catch (error) {
@@ -65,6 +86,10 @@ export default function Index() {
       alert(JSON.stringify(error));
     }
   }
+  useFocusEffect(React.useCallback(()=>{
+    setIsLoading(true);
+       userDetail();
+  },[]))
   return (
     <>
       {isLoading && <Loader />}
