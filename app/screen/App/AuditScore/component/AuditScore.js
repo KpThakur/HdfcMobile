@@ -29,11 +29,14 @@ export default function AuditScore(props) {
             />
           </View>
         )}
+        
         {props.type == 1 ? (
-          <Text style={{ fontFamily: FONT_FAMILY_REGULAR }}>
-            Note: Live streaming will be stopped after click on view actionable.
+          <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
+            Note: Live streaming will be stopped after click on generate report.
           </Text>
-        ) : null}
+        ) : ( <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
+          Note: Make a video of max 30-45 secs showcasing the branch from outside and covering the marketing collaterals displayed.
+        </Text>)}
         {props.type == 1 ? ( <Button
             buttonText={"Generate Report"}
             onPress={() => handleViewActionable()}
