@@ -37,7 +37,7 @@ export default function Index() {
   };
 
   const ShowAlert = message => {
-    Alert.alert('Invalid Email/Password', message);
+    Alert.alert(message);
   };
 
   const resendotp = async () => {
