@@ -73,6 +73,7 @@ export default function RescheduleAudit(props) {
     );
   };
   const handleDropDown = () => {
+    setopenDate(false);
     setdropDown(!dropDown);
   };
   for (var i = 10; i <= 18; i++) {
@@ -112,6 +113,7 @@ export default function RescheduleAudit(props) {
                   dropDown={citydropDown}
                   data_name={'city_name'}
                   setdropDown={setcitydropDown}
+                  setTimeDropDown ={setdropDown}
                 />
 
                 <DropDown
@@ -125,6 +127,7 @@ export default function RescheduleAudit(props) {
                   dropDown={branchNameDropDown}
                   data_name={'brach_name'}
                   setdropDown={setbranchNameDropDown}
+                  setTimeDropDown ={setdropDown}
                 />
 
                 <Text
@@ -168,6 +171,7 @@ export default function RescheduleAudit(props) {
                       mode="date"
                       date={Cdate}
                       onConfirm={date => {
+                        setopenDate(false);
                         if (
                           moment(date).format('DD-MM-YYYY') <
                           moment(moment()).format('DD-MM-YYYY')
@@ -340,7 +344,7 @@ export default function RescheduleAudit(props) {
                   </Text>
                 </TouchableOpacity>
 
-              
+                
               </View>
             </View>
             <View

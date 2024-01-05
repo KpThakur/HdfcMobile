@@ -41,7 +41,6 @@ const VideoComponent = ({navigation, route}) => {
   const [videoData, setVideoData] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const [cameraType, setCameraType] = useState(true);
-  const [flashMode, setFlashMode] = useState(false);
   const [timer, setTimer] = useState(0);
   let manualStop = false;
   const currentTime = new Date();
@@ -66,11 +65,14 @@ const VideoComponent = ({navigation, route}) => {
     return formatedTime;
   };
 
-  const handleFlash = () => {
-    flashMode ? setFlashMode(true) : setFlashMode(false);
-  };
+ 
   const toggleCamera = () => {
-    cameraType ? setCameraType(false) : setCameraType(true);
+    setCameraType((prevCameraType)=> !prevCameraType);
+    // setCameraType(prevCameraType =>
+    //   prevCameraType === RNCamera.Constants.Type.back
+    //     ? RNCamera.Constants.Type.front
+    //     : RNCamera.Constants.Type.back
+    // );
   };
   const handleRecording = async () => {
     setIndicator(false);
@@ -177,9 +179,6 @@ const VideoComponent = ({navigation, route}) => {
               ? RNCamera.Constants.Type.back
               : RNCamera.Constants.Type.front
           }
-          flash={
-            flashMode ? RNCamera.Constants.Type.on : RNCamera.Constants.Type.off
-          }
           captureAudio={true}
           ref={camera}></RNCamera>
 
@@ -214,7 +213,10 @@ const VideoComponent = ({navigation, route}) => {
               {indicator ? 'Start' : 'Stop'}
             </Text> */}
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => toggleCamera()}>
+          <TouchableOpacity 
+          onPress={() => toggleCamera()}
+          disabled={!indicator}
+          >
             <Image source={FLIP_ICON} style={styles.iconView} />
           </TouchableOpacity>
         </View>

@@ -142,6 +142,7 @@ export default function Index({ navigation }) {
                 setisLaoding(false)
                 if(response.status===200)
                 {
+                    Alert.alert("Audit Scheduled Successfully !")
                     navigation.navigate('DashboardScreen')
                 }
                 else{

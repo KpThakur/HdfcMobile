@@ -111,7 +111,7 @@ export default function ScheduleNewAudit(props) {
                   navigation.navigate("DashboardScreen");
               }}
             />
-            <View
+            <TouchableOpacity onPress={() => setdropDown(false)}
               style={{
                 padding: 20,
                 justifyContent: 'space-evenly',
@@ -125,7 +125,9 @@ export default function ScheduleNewAudit(props) {
                   dropDown={citydropDown}
                   data_name={'city_name'}
                   setdropDown={setcitydropDown}
+                  setTimeDropDown={setdropDown}
                 />
+                
                 <DropDown
                   title={branchName ? branchName : 'Branch Name / ATM Name'}
                   data={branchDetail}
@@ -133,6 +135,7 @@ export default function ScheduleNewAudit(props) {
                   dropDown={branchNameDropDown}
                   data_name={'brach_name'}
                   setdropDown={setbranchNameDropDown}
+                  setTimeDropDown={setdropDown}
                 />
                 <Text
                   style={{
@@ -158,6 +161,7 @@ export default function ScheduleNewAudit(props) {
                     <TouchableOpacity
                       style={styles.date_time}
                       onPress={() => {
+                        setdropDown(false);
                         setopenDate(true);
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
@@ -313,10 +317,10 @@ export default function ScheduleNewAudit(props) {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
+              </TouchableOpacity>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
-              <Button title="Schedule" onPress={() => handleSumbit()} />
+              <Button buttonText="Schedule" onPress={() => handleSumbit()} />
             </View>
           </View>
         </ScrollView>
