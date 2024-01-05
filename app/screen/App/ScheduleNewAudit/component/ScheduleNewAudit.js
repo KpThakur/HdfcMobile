@@ -320,7 +320,7 @@ export default function ScheduleNewAudit(props) {
               </TouchableOpacity>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
-              <Button title="Schedule" onPress={() => handleSumbit()} />
+              <Button buttonText="Schedule" onPress={() => handleSumbit()} />
             </View>
           </View>
         </ScrollView>
