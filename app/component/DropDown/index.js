@@ -4,11 +4,12 @@ import { FONT_FAMILY_REGULAR, GREY_TEXT_COLOR, DOWNARROW, PRIMARY_BLUE_COLOR } f
 import Input from '../../component/Input'
 import { ARROW } from '../../utils/constant'
 const WindowHeight = Dimensions.get('window').height
-export default function index({ data, data_name, title, renderItem, dropDown, setdropDown }) {
+export default function index({ data, data_name, title, renderItem, dropDown, setdropDown, setTimeDropDown }) {
     const [search, setsearch] = useState('')
     const [filterData, setfilterData] = useState(null)
     const handleDropDown = () => {
         setdropDown(!dropDown)
+        setTimeDropDown(false)
     }
     const handleSearch = (text) => {
         setsearch(text)

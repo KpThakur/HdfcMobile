@@ -353,7 +353,8 @@ const Question = props => {
                     padding: '5% 10%',
                     //marginRight : '50%',
                     // type: TextBackgroundType.stretchX,
-                    color: '#c9c9c9',
+                    // color: '#c9c9c9',
+                    color: '#C9C9C98B', 
                   },
                 },
               },
@@ -691,6 +692,7 @@ const Question = props => {
                               props.showSetRange(true);
                           }}
                         />
+                        { props.camImg.length > 0 ? null :
                         <Button
                           buttonText={'No'}
                           style={{
@@ -704,6 +706,7 @@ const Question = props => {
                             props.setyesNo('NO');
                             props.setshowCapIMG(false);
                             props.setrevActionable(1);
+                            props.setCamImg([]);
                             handleRemark(question.data.remark_no);
                             props.handleShowActionable(true);
                             if (question.data.score_range == 1)
@@ -713,7 +716,7 @@ const Question = props => {
                               props.setshowActionable(false);
                             }
                           }}
-                        />
+                        /> }
                         {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
                       </View>
                     )}
