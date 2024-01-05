@@ -295,6 +295,7 @@ export default function RescheduleAudit(props) {
               </View>
               <View style={{marginTop: 10, zIndex: -1,width:'50%',height:150}}>
                 <Text style={styles.txt_head}>Audit Type:</Text>
+
                 <TouchableOpacity
                   style={{
                     marginVertical: 10,
@@ -318,6 +319,7 @@ export default function RescheduleAudit(props) {
                     On-Site Audit
                   </Text>
                 </TouchableOpacity>
+                
                 <TouchableOpacity
                   style={{
                     marginVertical: 10,

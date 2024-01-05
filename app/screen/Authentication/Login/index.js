@@ -1,30 +1,33 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import apiEndPoints from '../../../utils/apiEndPoints';
-import { apiCall } from '../../../utils/httpClient';
+import {apiCall} from '../../../utils/httpClient';
 import LoginScreen from './component/login';
-import { AuthContext, UserContext } from '../../../utils/UserContext';
-import { Alert, TouchableOpacity } from 'react-native';
+import {AuthContext, UserContext} from '../../../utils/UserContext';
+import {Alert, TouchableOpacity} from 'react-native';
 import Loader from '../../../utils/Loader';
 import Geolocation from 'react-native-geolocation-service';
 import messaging from '@react-native-firebase/messaging';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import FlashMessage, {
   showMessage,
   hideMessage,
 } from 'react-native-flash-message';
-import { STATUS_BAR_COLOR, requestGeolocationPermission } from '../../../utils/constant';
-import { styles } from './component/styles';
-import { View, Text, Button } from 'react-native';
-const Login = ({ navigation }) => {
+import {
+  STATUS_BAR_COLOR,
+  requestGeolocationPermission,
+} from '../../../utils/constant';
+import {styles} from './component/styles';
+import {View, Text, Button} from 'react-native';
+const Login = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
   const [password, setpassword] = useState();
   const [isLoading, setisLoading] = useState(false);
   const [isChecked, setisChecked] = useState(false);
-  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [location, setLocation] = useState({latitude: null, longitude: null});
 
-  const { signIn } = React.useContext(AuthContext);
+  const {signIn} = React.useContext(AuthContext);
 
   const validationFrom = () => {
     let reg = /^\s*\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+\s*$/;
@@ -87,7 +90,7 @@ const Login = ({ navigation }) => {
       type: 'warning',
       duration: 10000,
       renderAfterContent: () => (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <TouchableOpacity
             style={styles.touch}
             onPress={data => sendClientRequest(responce.data.data)}>
@@ -138,13 +141,12 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-   // setisLoading(true); 
+    // setisLoading(true);
     Geolocation.getCurrentPosition(
       async position => {
-        const { latitude, longitude } = position.coords;
+        const {latitude, longitude} = position.coords;
         const vaild = validationFrom();
         if (vaild) {
-          
           try {
             const deviceToken = await messaging().getToken();
             const deviceType = Platform.OS;
@@ -157,12 +159,22 @@ const Login = ({ navigation }) => {
               latitude: location.latitude ? location.latitude : latitude,
               longitude: location.longitude ? location.longitude : longitude,
             };
-            console.log("🚀 ~ file: index.js:153 ~ handleLogin ~ params:", params)
-            const response = await apiCall('POST', apiEndPoints.USERLOGIN, params);
+            console.log(
+              '🚀 ~ file: index.js:153 ~ handleLogin ~ params:',
+              params,
+            );
+            const response = await apiCall(
+              'POST',
+              apiEndPoints.USERLOGIN,
+              params,
+            );
             if (response.status === 200) {
               signIn(response.data.token);
               setUserData(response.data.data);
-              AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
+              AsyncStorage.setItem(
+                'userData',
+                JSON.stringify(response.data.data),
+              );
               setisLoading(false);
               showMessage({
                 message: response.data.message,
@@ -190,21 +202,21 @@ const Login = ({ navigation }) => {
               duration: 3000,
             });
           }
-        }else{  
-          setisLoading(false); 
+        } else {
+          setisLoading(false);
         }
-     
-      }, error => {
-      console.log('error: ', error);
+      },
+      error => {
+        console.log('error: ', error);
         setisLoading(false);
-        requestGeolocationPermission()
+        requestGeolocationPermission();
         // showMessage({
         //   message: 'Set location permission for using App.',
         //   type: 'danger',
         //   duration: 3000,
         // });
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
   const ShowAlert = message => {
