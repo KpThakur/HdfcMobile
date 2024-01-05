@@ -46,6 +46,7 @@ const DashboardScreen = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
   const [tabBar, setTabBar] = useState(1);
+  const [cancelaudit, setCancelaudit] = useState('');
   const [popup, setpopup] = useState(false);
   const [search, setsearch] = useState('');
   const [auditList, setauditList] = useState([]);
@@ -67,8 +68,11 @@ const DashboardScreen = ({navigation}) => {
   useEffect(() => {
     AuditList(tabBar);
   }, [tabBar]);
-  const togglePopUp = () => {
+  const togglePopUp = audit_id => {
+    console.log('-----', audit_id);
+    setCancelaudit(audit_id);
     setpopup(!popup);
+    setreason('');
   };
   const [option, setOption] = useState([
     {
@@ -164,15 +168,27 @@ const DashboardScreen = ({navigation}) => {
 
   const handleCancelAudit = async audit_id => {
     const params = {
-      audit_id: audit_id,
+      audit_id: cancelaudit,
       audit_status: 2,
       reason: reason,
     };
 
-    const response = await apiCall('POST', apiEndPoints.CANCEL_AUDIT, params);
-    Alert.alert('Audit Cancelled', response.data.message);
-    setpopup(!popup);
-    AuditList(1);
+    if (cancelaudit !== '') {
+      try {
+        const response = await apiCall(
+          'POST',
+          apiEndPoints.CANCEL_AUDIT,
+          params,
+        );
+        Alert.alert('Audit Cancelled', response.data.message);
+        setpopup(!popup);
+        AuditList(tabBar);
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      Alert.alert('Select Audit cancel');
+    }
   };
   const StartAudit = async id => {
     const params = {
@@ -435,7 +451,7 @@ const DashboardScreen = ({navigation}) => {
                   {tabBar === 1 || tabBar === 2 || tabBar === 6 ? (
                     <TouchableOpacity
                       style={styles.cancel_btn}
-                      onPress={() => togglePopUp()}>
+                      onPress={() => togglePopUp(audit?.audit_id)}>
                       <Text
                         style={{
                           color: '#fff',

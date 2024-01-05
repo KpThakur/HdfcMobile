@@ -291,29 +291,6 @@ export default function RescheduleAudit(props) {
               </View>
               <View style={{marginTop: 10, zIndex: -1,width:'50%',height:150}}>
                 <Text style={styles.txt_head}>Audit Type:</Text>
-                <TouchableOpacity
-                  style={{
-                    marginVertical: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                  onPress={() => _handleSelect(1)}>
-                  <Image
-                    source={
-                      editAudit.audit_type === 1 ? CHECKED_ICON : UNCHECKED_ICON
-                    }
-                    style={{marginRight: 5}}
-                  />
-                  <Text
-                    style={{
-                      color:
-                        editAudit.audit_type === 1
-                          ? PRIMARY_BLUE_COLOR
-                          : 'gray',
-                    }}>
-                    Online Audit
-                  </Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity
                   style={{
@@ -338,6 +315,32 @@ export default function RescheduleAudit(props) {
                     On-Site Audit
                   </Text>
                 </TouchableOpacity>
+                
+                <TouchableOpacity
+                  style={{
+                    marginVertical: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                  onPress={() => _handleSelect(1)}>
+                  <Image
+                    source={
+                      editAudit.audit_type === 1 ? CHECKED_ICON : UNCHECKED_ICON
+                    }
+                    style={{marginRight: 5}}
+                  />
+                  <Text
+                    style={{
+                      color:
+                        editAudit.audit_type === 1
+                          ? PRIMARY_BLUE_COLOR
+                          : 'gray',
+                    }}>
+                    Online Audit
+                  </Text>
+                </TouchableOpacity>
+
+              
               </View>
             </View>
             <View
