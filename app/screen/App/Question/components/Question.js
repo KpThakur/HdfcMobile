@@ -52,6 +52,7 @@ import {
   BLACK_COLOR,
   MAP_KEY,
   FONT_FAMILY_THIN,
+  requestGeolocationPermission,
 } from '../../../../utils/constant';
 import DropDown from '../../../../component/DropDown';
 import {useNavigation} from '@react-navigation/native';
@@ -66,7 +67,7 @@ import {apiCall, getLocation} from '../../../../utils/httpClient';
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import moment from 'moment';
-import { PERMISSIONS, request, RESULTS, check } from 'react-native-permissions';
+import {PERMISSIONS, request, RESULTS, check} from 'react-native-permissions';
 
 const Question = props => {
   const windowWidth = Dimensions.get('window').width;
@@ -232,7 +233,7 @@ const Question = props => {
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
   };
- 
+
   const requestCameraPermission = async () => {
     try {
       const cameraPermissionStatus = await request(
@@ -270,16 +271,18 @@ const Question = props => {
     try {
       const locationPermissionRequest = await request(
         Platform.OS === 'ios'
-          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+          ? requestGeolocationPermission()
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
-      const response = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      if (
-        locationPermissionRequest === RESULTS.GRANTED &&
-        response === RESULTS.GRANTED
-      ) {
+      if (Platform.OS === 'android') {
+        const response = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (response === RESULTS.GRANTED) {
+          console.log('Location Permission Granted >= 13');
+        }
+      }
+      if (locationPermissionRequest === RESULTS.GRANTED) {
         console.log('Location Permission Granted');
       } else {
         console.log('Location Permission Denied ');
@@ -288,7 +291,6 @@ const Question = props => {
       console.log('location error', error);
     }
   };
-  
 
   const OpenCamera = async () => {
     await requestLocationPermission();
@@ -649,7 +651,7 @@ const Question = props => {
                 }
               </View>
             )}
-               
+
             {startAudit === 1 ? (
               <View style={styles.body}>
                 {question?.data?.image_capture === '1' && (

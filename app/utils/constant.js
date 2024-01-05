@@ -90,23 +90,21 @@ const requestLocationPermission = async () => {
         ? requestGeolocationPermission()
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
     );
-    const response = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-    if (
-      locationPermissionRequest === RESULTS.GRANTED &&
-      response === RESULTS.GRANTED
-    ) {
+    if (Platform.OS === 'android') {
+      const response = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (response === RESULTS.GRANTED) {
+        console.log('Location Permission Granted >= 13');
+      }
+    }
+    if (locationPermissionRequest === RESULTS.GRANTED) {
       console.log('Location Permission Granted');
     } else {
-      Alert.alert(
-        'Location Permission',
-        'Please enable it in the Settings.',
-        [
-          {text: 'Cancel', style: 'cancel'},
-          {text: 'Open Settings', onPress: () => Linking.openSettings()},
-        ],
-      );
+      Alert.alert('Location Permission', 'Please enable it in the Settings.', [
+        {text: 'Cancel', style: 'cancel'},
+        {text: 'Open Settings', onPress: () => Linking.openSettings()},
+      ]);
     }
   } catch (error) {
     console.log('location error', error);
@@ -130,7 +128,7 @@ export const requestGeolocationPermission = async () => {
         console.log('Location permission granted');
       }
     } else {
-      requestLocationPermission()
+      requestLocationPermission();
     }
   } catch (error) {
     console.error(error);
