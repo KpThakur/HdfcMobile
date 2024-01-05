@@ -138,7 +138,7 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    setisLoading(true); 
+   // setisLoading(true); 
     Geolocation.getCurrentPosition(
       async position => {
         const { latitude, longitude } = position.coords;
@@ -208,7 +208,7 @@ const Login = ({ navigation }) => {
     );
   };
   const ShowAlert = message => {
-    Alert.alert('Invalid Email/Password', message);
+    Alert.alert(message);
   };
   const handleForgetPassword = () => {
     navigation.navigate('ForgetPassword');
