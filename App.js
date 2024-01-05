@@ -71,7 +71,14 @@ function App() {
           ? requestGeolocationPermission()
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
-
+      if (Platform.OS === 'android') {
+        const response = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        );
+        if (response === RESULTS.GRANTED) {
+          console.log('Location Permission Granted >= 13');
+        }
+      }
       if (locationPermissionRequest === RESULTS.GRANTED) {
         console.log('Location Permission Granted');
       } else {
@@ -94,14 +101,16 @@ function App() {
               : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
           );
 
-          const response = await PermissionsAndroid.check(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          );
+          if (Platform.OS === 'android') {
+            const response = await PermissionsAndroid.check(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            );
+            if (response === RESULTS.GRANTED) {
+              console.log('Location checke >= 13');
+            }
+          }
 
-          if (
-            locationPermissionCheck === RESULTS.GRANTED &&
-            response === RESULTS.GRANTED
-          ) {
+          if (locationPermissionCheck === RESULTS.GRANTED) {
             console.log('Location checke');
           } else {
             console.log('Location not checked');
