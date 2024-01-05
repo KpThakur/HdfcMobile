@@ -9,7 +9,11 @@ import {Camera} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS, check} from 'react-native-permissions';
 import FlashMessage from 'react-native-flash-message';
 import {normalize} from './app/utils/scaleFontSize';
-import {FONT_FAMILY_SEMI_BOLD, WHITE_BG_COLOR, requestGeolocationPermission} from './app/utils/constant';
+import {
+  FONT_FAMILY_SEMI_BOLD,
+  WHITE_BG_COLOR,
+  requestGeolocationPermission,
+} from './app/utils/constant';
 import Geolocation from 'react-native-geolocation-service';
 function App() {
   useEffect(() => {
@@ -67,13 +71,8 @@ function App() {
           ? requestGeolocationPermission()
           : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
-      const response = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-      if (
-        locationPermissionRequest === RESULTS.GRANTED &&
-        response === RESULTS.GRANTED
-      ) {
+
+      if (locationPermissionRequest === RESULTS.GRANTED) {
         console.log('Location Permission Granted');
       } else {
         console.log('Location Permission Denied ');
