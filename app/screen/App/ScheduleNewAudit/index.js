@@ -5,6 +5,7 @@ import apiEndPoints from '../../../utils/apiEndPoints'
 import { apiCall } from '../../../utils/httpClient'
 import ScheduleNewAudit from './component/ScheduleNewAudit'
 import Loader from '../../../utils/Loader'
+import { useFocusEffect } from '@react-navigation/native'
 export default function Index({ navigation }) {
     const [date, setdate] = useState()
     const [time, settime] = useState()
@@ -21,8 +22,20 @@ export default function Index({ navigation }) {
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
     useEffect(() => {
-        getCityName()
+        // getCityName()
+        resetState();
     }, [])
+    const resetState = () => {
+        setdate(null);
+        settime(null);
+        setCityName(null);
+        setbranchName(null);
+        setbranchManagerName(null);
+        setauditType(2);
+        setcityId(null);
+        setbranchNameId(null);
+        setbranchManagerId(null);
+    }
     const getCityName = async () => {
         try {
             setisLaoding(true)
@@ -140,6 +153,10 @@ export default function Index({ navigation }) {
 
         }
     }
+    useFocusEffect(React.useCallback(()=>{
+         resetState();
+         getCityName();
+    },[]))
     return (
         <>
         {isLaoding&&<Loader/>}

@@ -5,6 +5,10 @@ platform :ios, min_ios_version_supported
 prepare_react_native_project!
 flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
 
+ pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
 
 target 'HDFC' do
   config = use_native_modules!

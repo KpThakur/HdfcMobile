@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { MAIN_BG_GREY_COLOR, PRIMARY_BLUE_COLOR } from '../../../../utils/constant';
+import { MAIN_BG_GREY_COLOR, PRIMARY_BLUE_COLOR, WHITE_BG_COLOR } from '../../../../utils/constant';
 const Styles = StyleSheet.create({
     container: {
         flex: 1,
     },
     scrollViewStyle: {
         flexGrow: 1,
+        paddingTop : 10,
         paddingLeft: 10,
         paddingRight: 10,
-        backgroundColor: MAIN_BG_GREY_COLOR
+        backgroundColor: WHITE_BG_COLOR
     },
     display: {
         marginVertical: 10,
