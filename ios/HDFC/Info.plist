@@ -42,7 +42,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera Permission</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Please allow permission for better performance</string>
+	<string>Your usage description here</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone Permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
