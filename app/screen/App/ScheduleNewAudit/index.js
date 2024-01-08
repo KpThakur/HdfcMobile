@@ -146,7 +146,7 @@ export default function Index({ navigation }) {
                     navigation.navigate('DashboardScreen')
                 }
                 else{
-                    alert(response.data.message)
+                    Alert.alert(response.data.message)
                 }
             } catch (error) {
                 console.log(error, "ERROR")
