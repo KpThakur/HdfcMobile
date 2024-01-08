@@ -108,8 +108,11 @@ export default function Index({ navigation }) {
                 setisLaoding(false)
                 if(response.status===200)
                 {
-                    navigation.navigate('DashboardScreen')
+                   navigation.navigate('DashboardScreen')
+                }  else{
+                    Alert.alert(response.data.message)
                 }
+
             } catch (error) {
                 console.log(error, "ERROR")
             }
