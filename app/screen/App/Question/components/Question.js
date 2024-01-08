@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   PermissionsAndroid,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
@@ -81,6 +82,7 @@ const Question = props => {
   const [maxIMG, setmaxIMG] = useState(false);
   const [showModalIMG, setshowModalIMG] = useState();
   const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {}, [props.camImg]);
   const handleInfo = () => {
     setonInfo(!onInfo);
@@ -293,6 +295,7 @@ const Question = props => {
   };
 
   const OpenCamera = async () => {
+    setLoading(true)
     await requestLocationPermission();
     await requestCameraPermission();
     Geolocation.getCurrentPosition(
@@ -306,7 +309,7 @@ const Question = props => {
 
         const formattedDate = moment(currentTime).format('DD-MM-YYYY');
         const formattedTime = moment(currentTime).format('hh:mm:ss A');
-
+        setLoading(false)
         ImagePicker.openCamera({
           width: 350,
           height: 350,
@@ -356,7 +359,7 @@ const Question = props => {
                     //marginRight : '50%',
                     // type: TextBackgroundType.stretchX,
                     // color: '#c9c9c9',
-                    color: '#C9C9C98B', 
+                    color: '#C9C9C98B',
                   },
                 },
               },
@@ -694,31 +697,32 @@ const Question = props => {
                               props.showSetRange(true);
                           }}
                         />
-                        { props.camImg.length > 0 ? null :
-                        <Button
-                          buttonText={'No'}
-                          style={{
-                            paddingVertical: 5,
-                            backgroundColor:
-                              yesNo === 'NO'
-                                ? DARK_BLUE_COLOR
-                                : PRIMARY_BLUE_COLOR,
-                          }}
-                          onPress={() => {
-                            props.setyesNo('NO');
-                            props.setshowCapIMG(false);
-                            props.setrevActionable(1);
-                            props.setCamImg([]);
-                            handleRemark(question.data.remark_no);
-                            props.handleShowActionable(true);
-                            if (question.data.score_range == 1)
-                              props.showSetRange(false);
-                            if (question.data.action_on_no == 3) {
-                              props.HandleActionable(0);
-                              props.setshowActionable(false);
-                            }
-                          }}
-                        /> }
+                        {props.camImg.length > 0 ? null : (
+                          <Button
+                            buttonText={'No'}
+                            style={{
+                              paddingVertical: 5,
+                              backgroundColor:
+                                yesNo === 'NO'
+                                  ? DARK_BLUE_COLOR
+                                  : PRIMARY_BLUE_COLOR,
+                            }}
+                            onPress={() => {
+                              props.setyesNo('NO');
+                              props.setshowCapIMG(false);
+                              props.setrevActionable(1);
+                              props.setCamImg([]);
+                              handleRemark(question.data.remark_no);
+                              props.handleShowActionable(true);
+                              if (question.data.score_range == 1)
+                                props.showSetRange(false);
+                              if (question.data.action_on_no == 3) {
+                                props.HandleActionable(0);
+                                props.setshowActionable(false);
+                              }
+                            }}
+                          />
+                        )}
                         {/* <Button buttonText={"NA"} style={{ paddingVertical: 5, backgroundColor: yesNo === "NA" ? DARK_BLUE_COLOR : PRIMARY_BLUE_COLOR }} onPress={() => props.setyesNo('NA')} /> */}
                       </View>
                     )}
@@ -793,15 +797,22 @@ const Question = props => {
                                 <TouchableOpacity
                                   style={{alignItems: 'center'}}
                                   onPress={() => OpenCamera()}>
-                                  <Image
-                                    source={CAMERA}
-                                    style={{
-                                      width: 30,
-                                      height: 30,
-                                      resizeMode: 'contain',
-                                      tintColor: PRIMARY_BLUE_COLOR,
-                                    }}
-                                  />
+                                  {loading ? (
+                                    <ActivityIndicator
+                                      size="large"
+                                      color="#004c8f95"
+                                    />
+                                  ) : (
+                                    <Image
+                                      source={CAMERA}
+                                      style={{
+                                        width: 30,
+                                        height: 30,
+                                        resizeMode: 'contain',
+                                        tintColor: PRIMARY_BLUE_COLOR,
+                                      }}
+                                    />
+                                  )}
                                   <Text
                                     style={{
                                       color: '#000',
