@@ -90,4 +90,11 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
   },
+  decText:{
+    color: DARK_BLUE_COLOR,
+    fontSize: normalize(10),
+    fontFamily: FONT_FAMILY_REGULAR,
+    textAlign: 'center',
+    marginBottom: normalize(10)
+  }
 });
