@@ -131,7 +131,7 @@ const VideoComponent = ({navigation, route}) => {
         console.log('The response of Video Record ====>>> ', response.data);
         if (response.status === 200) {
           setIsLoading(false);
-          Alert.alert('Audit completed !');
+          Alert.alert('Your Video is Uploaded and Audit is Complete !');
           navigation.navigate("ScheduleNewAuditScreen");
           // navigation.navigate('DashboardScreen');
           

@@ -47,7 +47,7 @@ const LoginScreen = props => {
     setisChecked(!isChecked);
   };
   return (
-    <ScrollView contentContainerStyle={{flex: 1}}>
+    <ScrollView contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
       {/* <View style={styles.container}> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -102,7 +102,11 @@ const LoginScreen = props => {
           <View style={styles.btn_view}>
             <Button buttonText="Log in" onPress={handleLogin} />
           </View>
-          <Text style={styles.decText}>This app collects location data to enable Geo Tagging against the images that will be captured even when the app is closed or not in use.</Text>
+          <Text style={styles.decText}>
+            This app collects location data to enable Geo Tagging against the
+            images that will be captured even when the app is closed or not in
+            use.
+          </Text>
         </View>
       </KeyboardAvoidingView>
     </ScrollView>

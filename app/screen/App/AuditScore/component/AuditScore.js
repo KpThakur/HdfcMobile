@@ -41,7 +41,7 @@ export default function AuditScore(props) {
             buttonText={"Generate Report"}
             onPress={() => handleViewActionable()}
           /> ): ( <Button
-            buttonText={"Start Your Video Upload"}
+            buttonText={"Start your Video Capture"}
             onPress={() => startvideo()}
           />)}
           

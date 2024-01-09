@@ -35,7 +35,7 @@ export default function MerchandisingAudit() {
                         </View>
                         <View>
                             <Text style={styles.s_txt}>Audit Status</Text>
-                            <Text style={styles.txt}>Online Audit</Text>
+                            <Text style={styles.txt}>Branch Audit</Text>
                         </View>
                     </View>
                     <View style={{marginVertical:10}}>
