@@ -293,7 +293,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 2 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      On-Site Audit
+                      Physical Audit
                     </Text>
                   </TouchableOpacity>
 
@@ -312,7 +312,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Online Audit
+                      Branch Audit
                     </Text>
                   </TouchableOpacity>
                 </View>

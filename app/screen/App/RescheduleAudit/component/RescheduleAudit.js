@@ -316,7 +316,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                    On-Site Audit
+                    Physical Audit
                   </Text>
                 </TouchableOpacity>
                 
@@ -340,7 +340,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                    Online Audit
+                    Branch Audit
                   </Text>
                 </TouchableOpacity>
 
