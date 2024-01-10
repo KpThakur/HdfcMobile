@@ -19,11 +19,13 @@ import {
 } from '../../../utils/constant';
 import {styles} from './component/styles';
 import {View, Text, Button} from 'react-native';
+import { LoadingContext } from '../../../utils/LoadingContext';
 const Login = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
   const [password, setpassword] = useState();
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useContext(LoadingContext);
+  // const [isLoading, setisLoading] = useState(false);
   const [isChecked, setisChecked] = useState(false);
   const [location, setLocation] = useState({latitude: null, longitude: null});
 
@@ -227,7 +229,7 @@ const Login = ({navigation}) => {
   };
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <LoginScreen
         handleLogin={handleLogin}
         email={email}

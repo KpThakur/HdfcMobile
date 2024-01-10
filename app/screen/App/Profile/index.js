@@ -8,10 +8,12 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Alert} from 'react-native';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import { showMessage } from 'react-native-flash-message';
+import { LoadingContext } from '../../../utils/LoadingContext';
 export default function Index({navigation}) {
   // const navigation = useNavigation();
   const [userData, setUserData] = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useContext(LoadingContext);
+  // const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -103,7 +105,7 @@ export default function Index({navigation}) {
   );
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <Profile
         profileData={profileData}
         setProfileData={setProfileData}

@@ -5,6 +5,7 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../../../utils/Loader";
 import { useNavigation } from "@react-navigation/core";
 import { UserContext } from "../../../utils/UserContext";
+import { LoadingContext } from "../../../utils/LoadingContext";
 export default function Index({ route }) {
   const params = route.params ||{};
   const navigation = useNavigation();
@@ -13,7 +14,8 @@ export default function Index({ route }) {
   const [BM, setBM] = useState();
   const [baseURL, setbaseURL] = useState();
   const [RM, setRM] = useState();
-  const [islaoding, setislaoding] = useState(false);
+  const [islaoding, setislaoding] = useContext(LoadingContext);
+  // const [islaoding, setislaoding] = useState(false);
   const [userData, setuserData] = useContext(UserContext);
   const [repo, setrepo] = useState();
   const Details = async () => {
@@ -104,7 +106,7 @@ export default function Index({ route }) {
   };
   return (
     <>
-      {islaoding && <Loader />}
+      {/* {islaoding && <Loader />} */}
       <ReviewAuit
         handleSubmitReport={handleSubmitReport}
         BM={BM}

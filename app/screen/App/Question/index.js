@@ -9,6 +9,7 @@ import {socket} from '../../../utils/Client';
 import {UserContext} from '../../../utils/UserContext';
 import NetInfo from '@react-native-community/netinfo';
 import FormData from 'form-data';
+import { LoadingContext } from '../../../utils/LoadingContext';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -24,7 +25,8 @@ const Question = ({navigation, route}) => {
   const [camImg, setCamImg] = useState([]);
   const [sliderValue, setSliderValue] = useState('');
   const [reviewValue, setReviewValue] = useState(0);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useContext(LoadingContext);
+  // const [isLoading, setisLoading] = useState(false);
   const [startAudit, setstartAudit] = useState();
   const [joined, setjoined] = useState(true);
   const [bmJoined, setBmJoined] = useState(false);
@@ -641,7 +643,7 @@ const Question = ({navigation, route}) => {
   // console.log("QES:", question);
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
 
       <QuestionView
         baseUrl={baseUrl}
