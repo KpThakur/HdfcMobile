@@ -924,6 +924,7 @@ const Question = props => {
                     <TextInput
                       placeholder="Enter the quantity"
                       value={quality}
+                      maxLength={3}
                       onChangeText={text => {
                         props.handleQuality(text);
                       }}
