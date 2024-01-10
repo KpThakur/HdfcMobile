@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,6 +22,7 @@ import {
   CAMERA,
 } from "../../../utils/constant";
 import { normalize } from "../../../utils/scaleFontSize";
+import { LoadingContext } from "../../../utils/LoadingContext";
 export default function Index({ navigation, route }) {
   const data = route.params ||{};
   const windowWidth = Dimensions.get("window").width;
@@ -30,7 +31,8 @@ export default function Index({ navigation, route }) {
   const [camImg, setcamImg] = useState();
   const [remark, setremark] = useState("");
   const [ID, setID] = useState("");
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useContext(LoadingContext);
+  // const [isLoading, setisLoading] = useState(false);
   const [ssDropDown, setssDropDown] = useState(false);
   const [work, setwork] = useState(0);
   useEffect(() => {
@@ -143,7 +145,7 @@ export default function Index({ navigation, route }) {
   };
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <Actionable
         next={next}
         data={data}

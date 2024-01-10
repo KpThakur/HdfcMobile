@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import {apiCall, setDefaultHeader} from '../../../utils/httpClient';
 import ForgetPassword from './component/ForgetPassword';
 import Loader from '../../../utils/Loader';
 import {showMessage} from 'react-native-flash-message';
+import { LoadingContext } from '../../../utils/LoadingContext';
 
 export default function Index() {
   const [email, setemail] = useState();
@@ -14,7 +15,8 @@ export default function Index() {
   const [verfyOTP, setverfyOTP] = useState(false);
   const [changePassowrd, setchangePassowrd] = useState(false);
   const [token, settoken] = useState();
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useContext(LoadingContext);
+  // const [isLoading, setisLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -166,7 +168,7 @@ export default function Index() {
   };
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <ForgetPassword
         email={email}
         setemail={setemail}

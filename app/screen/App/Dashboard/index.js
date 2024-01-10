@@ -42,6 +42,7 @@ import Geolocation from 'react-native-geolocation-service';
 
 import UpdateAlert from '../../../component/UpdateAlert';
 import Loader from '../../../utils/Loader';
+import { LoadingContext } from '../../../utils/LoadingContext';
 const DashboardScreen = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
@@ -54,7 +55,8 @@ const DashboardScreen = ({navigation}) => {
   const [editAudit, seteditAudit] = useContext(EditAuditContext);
   const [auditArray, setauditArray] = useState([]);
   const [onRefresh, setOnRefresh] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useContext(LoadingContext);
+  // const [isLoading, setIsLoading] = useState(false);
   const [baseUrl, setBaseUrl] = useState('');
 
   const [repo, setRepo] = useState();
@@ -651,7 +653,7 @@ const DashboardScreen = ({navigation}) => {
 
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <UpdateAlert />
       <DashboardView
         option={option}

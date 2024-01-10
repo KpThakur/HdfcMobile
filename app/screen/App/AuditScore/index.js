@@ -6,10 +6,12 @@ import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../.../../../../utils/Loader";
 import { BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/core";
+import { LoadingContext } from "../../../utils/LoadingContext";
 export default function Index(props) {
   const navigation = useNavigation();
   const [question, setquestion] = useContext(QuestionContext);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useContext(LoadingContext);
+  // const [isLoading, setisLoading] = useState(false);
   const [totalScore, settotalScore] = useState();
   const fetchScore = async () => {
     setisLoading(true);
@@ -56,7 +58,7 @@ export default function Index(props) {
   };
   return (
     <>
-      {isLoading && <Loader />}
+      {/* {isLoading && <Loader />} */}
       <AuditScore
         handleViewActionable={handleViewActionable}
         type={question?.audit_type}

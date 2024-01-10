@@ -6,11 +6,13 @@ import { apiCall } from "../../../utils/httpClient";
 import Loader from "../../../utils/Loader";
 import { QuestionContext } from "../../../utils/QuestionContext";
 import NotifyView from './components/Notify';
+import { LoadingContext } from "../../../utils/LoadingContext";
 const Notify = ({managerJoin,joined,setstartAudit,bmJoined}) =>{
     const navigation=useNavigation()
     const [question, setquestion] = useContext(QuestionContext)
     const [engine, setengine] = useState()
-    const [isLoading, setisLoading] = useState(false)
+    const [isLoading, setisLoading] = useContext(LoadingContext);
+    // const [isLoading, setisLoading] = useState(false)
     const onShare = async () => {
         try {
             setisLoading(true)
@@ -43,7 +45,7 @@ const Notify = ({managerJoin,joined,setstartAudit,bmJoined}) =>{
     }
     return (
         <>
-        {isLoading && <Loader />}
+        {/* {isLoading && <Loader />} */}
         <NotifyView
             onShare={onShare} handleStartCall={handleStartCall}
             question={question} bmJoined={bmJoined} 

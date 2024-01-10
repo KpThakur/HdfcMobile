@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View } from 'react-native';
 import ChangePasswordView from './component/ChangePassword';
 import Loader from '../../../utils/Loader';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import { apiCall } from '../../../utils/httpClient';
 import { showMessage } from 'react-native-flash-message';
+import { LoadingContext } from '../../../utils/LoadingContext';
 function ChangePassword() {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useContext(LoadingContext);
+    // const [isLoading, setIsLoading] = useState(false);
     const [passwordData, setPasswordData] = React.useState({
         oldPassword: "",
         newPassword: "",
@@ -89,7 +91,7 @@ function ChangePassword() {
     };
     return (
         <View style={{ flex: 1 }}>
-            {isLoading && <Loader state={isLoading} />}
+            {/* {isLoading && <Loader state={isLoading} />} */}
             <ChangePasswordView
                 passwordData={passwordData}
                 setPasswordData={setPasswordData}
