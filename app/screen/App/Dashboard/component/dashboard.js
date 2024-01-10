@@ -1,15 +1,34 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, Platform } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Platform, Alert, BackHandler } from "react-native";
 import Header from "../../../../component/Header";
 import Input from "../../../../component/Input";
 import { styles } from "./style";
 import { normalize } from "../../../../utils/scaleFontSize";
-import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { DrawerActions, useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
   GREY_TEXT_COLOR,
   PRIMARY_BLUE_COLOR,
 } from "../../../../utils/constant";
 const DashboardView = (props) => {
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert("Hold on!", "Are you sure you want to close this app ?", [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel",
+          },
+          { text: "YES", onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      };
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+      return () =>
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+    }, [])
+  );
   const navigation = useNavigation();
   const OnpressDrawer = () => {
     navigation.dispatch(DrawerActions.openDrawer());
