@@ -34,12 +34,14 @@ import {apiCall} from '../../../../utils/httpClient';
 import apiEndPoints from '../../../../utils/apiEndPoints';
 // import VideoProcessing from 'react-native-video-processing';
 import {Video} from 'react-native-compressor';
+import { LoadingContext } from '../../../../utils/LoadingContext';
 
 const VideoComponent = ({navigation, route}) => {
   const {params} = route;
   const [indicator, setIndicator] = useState(true);
   const [videoData, setVideoData] = useState([]);
-  const [loading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useContext(LoadingContext);
+  // const [loading, setIsLoading] = useState(false);
   const [cameraType, setCameraType] = useState(true);
   const [timer, setTimer] = useState(0);
   let manualStop = false;
@@ -163,7 +165,7 @@ const VideoComponent = ({navigation, route}) => {
 
   return (
     <>
-      {loading && <Loader />}
+      {/* {loading && <Loader />} */}
       <SafeAreaView>
         <Header
           leftImg={LEFT_ARROW}

@@ -1,18 +1,20 @@
 import moment from 'moment'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Alert } from 'react-native'
 import apiEndPoints from '../../../utils/apiEndPoints'
 import { apiCall } from '../../../utils/httpClient'
 import ScheduleNewAudit from './component/ScheduleNewAudit'
 import Loader from '../../../utils/Loader'
 import { useFocusEffect } from '@react-navigation/native'
+import { LoadingContext } from '../../../utils/LoadingContext'
 export default function Index({ navigation }) {
     const [date, setdate] = useState()
     const [time, settime] = useState()
     const [cityBranch, setcityBranch] = useState([])
     const [cityName, setCityName] = useState()
     const [branchDetail, setbranchDetail] = useState([])
-    const [isLaoding, setisLaoding] = useState(false)
+    const [isLaoding, setisLaoding] = useContext(LoadingContext)
+    // const [isLaoding, setisLaoding] = useState(false)
     const [citydropDown, setcitydropDown] = useState(false)
     const [branchName, setbranchName] = useState()
     const [branchNameDropDown, setbranchNameDropDown] = useState(false)
@@ -160,7 +162,7 @@ export default function Index({ navigation }) {
     },[]))
     return (
         <>
-        {isLaoding&&<Loader/>}
+        {/* {isLaoding&&<Loader/>} */}
         <ScheduleNewAudit cityBranch={cityBranch}
             time={time}
             settime={settime}
