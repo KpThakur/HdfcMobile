@@ -20,9 +20,7 @@ const Notify = ({managerJoin,joined,setstartAudit,bmJoined}) =>{
                 var shareData = response.data?.data
                 const result = await Share.share({
                     message:
-                        `${shareData?.link}/
-                        employee code =
-                        ${shareData?.bm_code}/ password = ${shareData?.password}`
+                        `${shareData?.link}\n employee code = ${shareData?.bm_code}\n password = ${shareData?.password}`
                 });
                 if (result.action === Share.sharedAction) {
                     if (result.activityType) {

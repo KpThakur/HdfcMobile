@@ -61,9 +61,25 @@ export default function ScheduleNewAudit(props) {
     currentTime,
   } = props;
 
+  const generateTimeData = () => {
+    const newData = [];
+
+    for (let i = 10; i <= 18; i++) {
+      for (let j = 0; j <= 45; j += 15) {
+        const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+        newData.push(formattedTime);
+      }
+    }
+
+    newData.push('19-00');
+    return newData;
+  };
+
+  const timeData = generateTimeData();
+
   useEffect(() => {
-    setdropDown(false)
- }, [navigation])
+    setdropDown(false);
+  }, [navigation]);
 
   const displayCityDropDown = ({item}) => {
     return (
@@ -87,13 +103,13 @@ export default function ScheduleNewAudit(props) {
     setopenDate(false);
     setdropDown(!dropDown);
   };
-  for (var i = 10; i <= 18; i++) {
-    for (var j = 0; j <= 55; j += 15) {
-      if (j == 0) timeData.push(i + '-0' + j);
-      else timeData.push(i + '-' + j);
-    }
-  }
-  timeData.push('19-00');
+  // for (var i = 10; i <= 18; i++) {
+  //   for (var j = 0; j <= 55; j += 15) {
+  //     if (j == 0) timeData.push(i + '-0' + j);
+  //     else timeData.push(i + '-' + j);
+  //   }
+  // }
+  // timeData.push('19-00');
   const navigation = useNavigation();
   return (
     <>
@@ -108,10 +124,11 @@ export default function ScheduleNewAudit(props) {
               headerText={'Schedule New Audit'}
               leftImg={ARROW}
               onPress={() => {
-                  navigation.navigate("DashboardScreen");
+                navigation.navigate('DashboardScreen');
               }}
             />
-            <TouchableOpacity onPress={() => setdropDown(false)}
+            <TouchableOpacity
+              onPress={() => setdropDown(false)}
               style={{
                 padding: 20,
                 justifyContent: 'space-evenly',
@@ -127,7 +144,7 @@ export default function ScheduleNewAudit(props) {
                   setdropDown={setcitydropDown}
                   setTimeDropDown={setdropDown}
                 />
-                
+
                 <DropDown
                   title={branchName ? branchName : 'Branch Name / ATM Name'}
                   data={branchDetail}
@@ -250,12 +267,20 @@ export default function ScheduleNewAudit(props) {
                                 key={index}
                                 style={[styles.drop_down_item, {zIndex: 1}]}
                                 onPress={() => {
-                                  if (date == moment(new Date()).format('DD-MM-YYYY')) {
-                                    if (moment(new Date()).format('HH-mm') < '10-00') {
+                                  if (
+                                    date ==
+                                    moment(new Date()).format('DD-MM-YYYY')
+                                  ) {
+                                    if (
+                                      moment(new Date()).format('HH-mm') <
+                                      '10-00'
+                                    ) {
                                       settime(item);
                                       setdropDown(false);
                                     } else {
-                                      if (item < moment(new Date()).format('H-mm')) {
+                                      if (
+                                        item < moment(new Date()).format('H-mm')
+                                      ) {
                                         //setdropDown(false);
                                         alert('Please Select Proper Time');
                                       } else {
@@ -276,7 +301,13 @@ export default function ScheduleNewAudit(props) {
                     )}
                   </View>
                 </View>
-                <View style={{marginTop: 10, zIndex: -1,width:'50%',height:150}}>
+                <View
+                  style={{
+                    marginTop: 10,
+                    zIndex: -1,
+                    width: '50%',
+                    height: 150,
+                  }}>
                   <Text style={styles.txt_head}>Audit Type:</Text>
                   <TouchableOpacity
                     style={{
@@ -317,7 +348,7 @@ export default function ScheduleNewAudit(props) {
                   </TouchableOpacity>
                 </View>
               </View>
-              </TouchableOpacity>
+            </TouchableOpacity>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
               <Button buttonText="Schedule" onPress={() => handleSumbit()} />

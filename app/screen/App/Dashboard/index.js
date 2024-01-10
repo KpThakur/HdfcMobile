@@ -184,7 +184,7 @@ const DashboardScreen = ({navigation}) => {
         setpopup(!popup);
         AuditList(tabBar);
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       }
     } else {
       Alert.alert('Select Audit cancel');
@@ -435,6 +435,7 @@ const DashboardScreen = ({navigation}) => {
             </View>
             <View style={{marginVertical: 10}}>
               <Text style={styles.s_txt}>City</Text>
+
               <View
                 style={{
                   flexDirection: 'row',
@@ -523,8 +524,8 @@ const DashboardScreen = ({navigation}) => {
                   {tabBar === 4 || tabBar === 5 ? (
                     <View
                       style={{
-                        marginTop: 20,
-                        flexDirection: 'column',
+                        // marginTop: 20,
+                        flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                       }}>
@@ -536,6 +537,7 @@ const DashboardScreen = ({navigation}) => {
                         }}>
                         {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
                       </Text>
+
                       {audit.audit_status === 3 ? (
                         <Pressable
                           onPress={() =>

@@ -111,7 +111,8 @@ export const styles = StyleSheet.create({
     },
     download_text:{
         color:PRIMARY_BLUE_COLOR,
-        fontFamily:FONT_FAMILY_REGULAR
+        fontFamily:FONT_FAMILY_REGULAR,
+        paddingHorizontal: normalize(10)
     }
 })
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -51,9 +51,27 @@ export default function RescheduleAudit(props) {
     editAudit,
     seteditAudit,
   } = props;
+
+  const generateTimeData = () => {
+    const newData = [];
+
+    for (let i = 10; i <= 18; i++) {
+      for (let j = 0; j <= 45; j += 15) {
+        const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+        newData.push(formattedTime);
+      }
+    }
+
+    newData.push('19-00');
+    return newData;
+  };
+
+  const timeData = generateTimeData();
+
   function _handleSelect(params) {
     seteditAudit({...editAudit, audit_type: params});
   }
+
   const displayCityDropDown = ({item}) => {
     return (
       <TouchableOpacity
@@ -76,13 +94,13 @@ export default function RescheduleAudit(props) {
     setopenDate(false);
     setdropDown(!dropDown);
   };
-  for (var i = 10; i <= 18; i++) {
-    for (var j = 0; j <= 55; j += 15) {
-      if (j == 0) timeData.push(i + '-0' + j);
-      else timeData.push(i + '-' + j);
-    }
-  }
-  timeData.push('19-00');
+  // for (var i = 10; i <= 18; i++) {
+  //   for (var j = 0; j <= 55; j += 15) {
+  //     if (j == 0) timeData.push(i + '-0' + j);
+  //     else timeData.push(i + '-' + j);
+  //   }
+  // }
+  // timeData.push('19-00');
   const navigation = useNavigation();
   return (
     <>
@@ -113,7 +131,7 @@ export default function RescheduleAudit(props) {
                   dropDown={citydropDown}
                   data_name={'city_name'}
                   setdropDown={setcitydropDown}
-                  setTimeDropDown ={setdropDown}
+                  setTimeDropDown={setdropDown}
                 />
 
                 <DropDown
@@ -127,7 +145,7 @@ export default function RescheduleAudit(props) {
                   dropDown={branchNameDropDown}
                   data_name={'brach_name'}
                   setdropDown={setbranchNameDropDown}
-                  setTimeDropDown ={setdropDown}
+                  setTimeDropDown={setdropDown}
                 />
 
                 <Text
@@ -293,7 +311,8 @@ export default function RescheduleAudit(props) {
                   </View>
                 </View>
               </View>
-              <View style={{marginTop: 10, zIndex: -1,width:'50%',height:150}}>
+              <View
+                style={{marginTop: 10, zIndex: -1, width: '50%', height: 150}}>
                 <Text style={styles.txt_head}>Audit Type:</Text>
 
                 <TouchableOpacity
@@ -319,7 +338,7 @@ export default function RescheduleAudit(props) {
                     Physical Audit
                   </Text>
                 </TouchableOpacity>
-                
+
                 <TouchableOpacity
                   style={{
                     marginVertical: 10,
@@ -343,8 +362,6 @@ export default function RescheduleAudit(props) {
                     Branch Audit
                   </Text>
                 </TouchableOpacity>
-
-                
               </View>
             </View>
             <View
