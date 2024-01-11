@@ -14,6 +14,8 @@ import {
   PermissionsAndroid,
   Platform,
   ActivityIndicator,
+  Alert,
+  Linking,
 } from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
@@ -262,42 +264,18 @@ const Question = props => {
           console.log('Camera Permission Granted >= 13');
         }
       } else {
-        console.log('Camera Permission Denied ');
+        Alert.alert('Camera Permission', 'Please enable it in the Settings.', [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'Open Settings', onPress: () => Linking.openSettings()},
+        ]);
       }
     } catch (error) {
       console.error('Error requesting camera permission:', error);
     }
   };
 
-  const requestLocationPermission = async () => {
-    try {
-      const locationPermissionRequest = await request(
-        Platform.OS === 'ios'
-          ? requestGeolocationPermission()
-          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-      );
-      if (Platform.OS === 'android') {
-        const response = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-        if (response === RESULTS.GRANTED) {
-          console.log('Location Permission Granted >= 13');
-        }
-      }
-      if (locationPermissionRequest === RESULTS.GRANTED) {
-        console.log('Location Permission Granted');
-      } else {
-        console.log('Location Permission Denied ');
-      }
-    } catch (error) {
-      console.log('location error', error);
-    }
-  };
-
   const OpenCamera = async () => {
-    setLoading(true)
-    await requestLocationPermission();
-    await requestCameraPermission();
+    setLoading(true);
     Geolocation.getCurrentPosition(
       async position => {
         const {latitude, longitude} = position.coords;
@@ -309,7 +287,7 @@ const Question = props => {
 
         const formattedDate = moment(currentTime).format('DD-MM-YYYY');
         const formattedTime = moment(currentTime).format('hh:mm:ss A');
-        setLoading(false)
+        setLoading(false);
         ImagePicker.openCamera({
           width: 350,
           height: 350,
@@ -404,6 +382,8 @@ const Question = props => {
       },
       error => {
         console.log('This is the error', error);
+        requestGeolocationPermission();
+        requestCameraPermission();
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
     );
@@ -484,6 +464,7 @@ const Question = props => {
     setssDropDown(!ssDropDown);
   };
   // console.log("StartAudit;", startAudit);
+
   return (
     <View style={styles.container}>
       {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -585,12 +566,24 @@ const Question = props => {
                 styles.txt,
                 {
                   marginTop: 10,
-                  fontWeight: '600',
+                  fontFamily: FONT_FAMILY_REGULAR,
                   fontSize: normalize(SMALL_FONT_SIZE),
                 },
               ]}>
-              {`${question?.data?.audit_question} : ${branchDetailData?.insurance_com}`}
+              {`${question?.data?.audit_question}`}
             </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text
+                style={[
+                  styles.txt,
+                  {
+                    fontFamily: FONT_FAMILY_SEMI_BOLD,
+                    fontSize: normalize(SMALL_FONT_SIZE),
+                  },
+                ]}>
+                Mention Insurer : {branchDetailData?.insurance_com}
+              </Text>
+            </View>
           </>
         ) : null}
         {managerJoin && maxIMG ? (

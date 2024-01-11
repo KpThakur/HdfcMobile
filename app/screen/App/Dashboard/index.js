@@ -9,6 +9,8 @@ import {
   FlatList,
   Pressable,
   Linking,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {styles} from './component/style';
 import FlashMessage, {
@@ -25,6 +27,7 @@ import {
   FONT_FAMILY_REGULAR,
   FONT_FAMILY_SEMI_BOLD,
   TINY_FONT_SIZE,
+  requestGeolocationPermission,
 } from '../../../utils/constant';
 import Cancel from '../../../component/Cancel';
 import {normalize} from '../../../utils/scaleFontSize';
@@ -42,7 +45,8 @@ import Geolocation from 'react-native-geolocation-service';
 
 import UpdateAlert from '../../../component/UpdateAlert';
 import Loader from '../../../utils/Loader';
-import { LoadingContext } from '../../../utils/LoadingContext';
+import {LoadingContext} from '../../../utils/LoadingContext';
+import {RESULTS} from 'react-native-permissions';
 const DashboardScreen = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [question, setquestion] = useContext(QuestionContext);
@@ -201,7 +205,7 @@ const DashboardScreen = ({navigation}) => {
 
     return true;
   };
-
+ 
   const StartAuditCheck = id => {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
@@ -249,12 +253,13 @@ const DashboardScreen = ({navigation}) => {
         },
         error => {
           console.log('Geolocation error:', error);
-          showMessage({
-            message:
-              'Please enable location services before starting the audit!',
-            type: 'warning',
-            duration: 3000,
-          });
+          requestGeolocationPermission();
+          // showMessage({
+          //   message:
+          //     'Please enable location services before starting the audit!',
+          //   type: 'warning',
+          //   duration: 3000,
+          // });
           resolve(false);
         },
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
@@ -272,7 +277,7 @@ const DashboardScreen = ({navigation}) => {
     if (status == 1) {
       QuestionList(id, branch_manager, questions_id);
     } else {
-      const getresdistance = await StartAudit(id);
+      const getresdistance = await StartAuditCheck(id);
       console.log(
         '🚀 ~ file: index.js:219 ~ DashboardScreen ~ getres:',
         getresdistance,
@@ -539,20 +544,17 @@ const DashboardScreen = ({navigation}) => {
                         }}>
                         {audit.audit_status === 3 ? 'Completed' : 'Cancelled'}
                       </Text>
-
-                      {audit.audit_status === 3 ? (
-                        <Pressable
-                          onPress={() =>
-                            handleReport(baseUrl + '' + audit.report)
-                          }>
-                          <Text style={styles.download_text}>
-                            Download Report
-                          </Text>
-                        </Pressable>
-                      ) : null}
                     </View>
                   ) : null}
                 </View>
+              </View>
+              <View style={styles.download_View}>
+                {audit.audit_status === 3 ? (
+                  <Pressable
+                    onPress={() => handleReport(baseUrl + '' + audit.report)}>
+                    <Text style={styles.download_text}>Download Report</Text>
+                  </Pressable>
+                ) : null}
               </View>
             </View>
           </View>

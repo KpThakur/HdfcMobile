@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from "react-native"
-import { DARK_BLUE_COLOR, FONT_FAMILY_BOLD, FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, FONT_FAMILY_THIN, LARGE_FONT_SIZE, PRIMARY_BLUE_COLOR, SMALL_FONT_SIZE, TINY_FONT_SIZE } from '../../../../utils/constant'
+import { DARK_BLUE_COLOR, FONT_FAMILY_BOLD, FONT_FAMILY_REGULAR, FONT_FAMILY_SEMI_BOLD, FONT_FAMILY_THIN, LARGE_FONT_SIZE, MEDIUM_FONT_SIZE, PRIMARY_BLUE_COLOR, SMALL_FONT_SIZE, TINY_FONT_SIZE } from '../../../../utils/constant'
 import { normalize } from "../../../../utils/scaleFontSize"
 export const styles = StyleSheet.create({
     container: {
@@ -109,10 +109,13 @@ export const styles = StyleSheet.create({
         paddingHorizontal: normalize(15),
         alignItems: "center",
     },
+    download_View:{
+        alignSelf:'flex-end'
+    },
     download_text:{
         color:PRIMARY_BLUE_COLOR,
-        fontFamily:FONT_FAMILY_REGULAR,
-        paddingHorizontal: normalize(10)
+        fontFamily:FONT_FAMILY_SEMI_BOLD,
+        
     }
 })
 
