@@ -143,7 +143,7 @@ const Question = props => {
     setshowIndex(index);
     setcheckedAns(question);
   };
-
+  
   const OpenGallery = () => {
     Geolocation.getCurrentPosition(
       async position => {

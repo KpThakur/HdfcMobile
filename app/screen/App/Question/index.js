@@ -150,7 +150,7 @@ const Question = ({navigation, route}) => {
     setisLoading(true);
     setLocationCordinates(22.723135,75.916492);
     const actualDistance = calculateHaversineDistance(22.723135,75.916492,22.721083,75.902383);
-    console.log("The set location is ====>>>", location.latitude, location.longitude);
+    console.log("The set location is ====>>>", location.lat, location.long);
     try {
       setisLoading(true);
       if (actualDistance <= distanceThreshold) {
