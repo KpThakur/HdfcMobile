@@ -9,7 +9,8 @@ import {socket} from '../../../utils/Client';
 import {UserContext} from '../../../utils/UserContext';
 import NetInfo from '@react-native-community/netinfo';
 import FormData from 'form-data';
-import { LoadingContext } from '../../../utils/LoadingContext';
+import {LoadingContext} from '../../../utils/LoadingContext';
+import { LocationContext } from '../../../utils/LocationContext';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -26,6 +27,8 @@ const Question = ({navigation, route}) => {
   const [sliderValue, setSliderValue] = useState('');
   const [reviewValue, setReviewValue] = useState(0);
   const [isLoading, setisLoading] = useContext(LoadingContext);
+  const {location,setLocationCordinates} = useContext(LocationContext);
+
   // const [isLoading, setisLoading] = useState(false);
   const [startAudit, setstartAudit] = useState();
   const [joined, setjoined] = useState(true);
@@ -127,28 +130,53 @@ const Question = ({navigation, route}) => {
     }
   };
 
+  const calculateHaversineDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    return distance * 1000; // Convert distance to meters
+  };
+  const distanceThreshold = 500;
   const SubmitAPI = async formdata => {
+    setisLoading(true);
+    setLocationCordinates(22.723135,75.916492);
+    const actualDistance = calculateHaversineDistance(22.723135,75.916492,22.721083,75.902383);
+    console.log("The set location is ====>>>", location.latitude, location.longitude);
     try {
       setisLoading(true);
-      const response = await apiCall(
-        'POST',
-        apiEndPoints.SUBMIT_QUESTION,
-        formdata,
-        {
-          'Content-Type': 'multipart/form-data',
-          'cache-control': 'no-cache',
-          processData: false,
-          contentType: false,
-          mimeType: 'multipart/form-data',
-        },
-      );
-      setisLoading(false);
-      if (response.data.status === 200) {
-        handleNext();
-      } else if (response.data.status !== 500) {
-        alert(response.data.message);
+      if (actualDistance <= distanceThreshold) {
+        const response = await apiCall(
+          'POST',
+          apiEndPoints.SUBMIT_QUESTION,
+          formdata,
+          {
+            'Content-Type': 'multipart/form-data',
+            'cache-control': 'no-cache',
+            processData: false,
+            contentType: false,
+            mimeType: 'multipart/form-data',
+          },
+        );
+        setisLoading(false);
+        if (response.data.status === 200) {
+          handleNext();
+        } else if (response.data.status !== 500) {
+          alert(response.data.message);
+        }
+        setisLoading(false);
+      } else {
+        setisLoading(false);
+        Alert.alert('The distance is less than 500m');
       }
-      setisLoading(false);
     } catch (error) {
       setisLoading(false);
     }
