@@ -610,7 +610,7 @@
 				DEVELOPMENT_TEAM = L6K53HTKSQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HDFC/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Branch Audit Application";
+				INFOPLIST_KEY_CFBundleDisplayName = "Virtual Audit Application";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -644,7 +644,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DEVELOPMENT_TEAM = L6K53HTKSQ;
 				INFOPLIST_FILE = HDFC/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Branch Audit Application";
+				INFOPLIST_KEY_CFBundleDisplayName = "Virtual Audit Application";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

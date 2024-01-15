@@ -436,7 +436,7 @@ const DashboardScreen = ({navigation}) => {
               <View>
                 <Text style={styles.s_txt}>Audit Status</Text>
                 <Text style={styles.txt}>
-                  {audit.audit_type === 1 ? 'Branch Audit' : 'Physical Audit'}
+                  {audit.audit_type === 1 ? 'Virtual Audit' : 'Physical Audit'}
                 </Text>
               </View>
             </View>

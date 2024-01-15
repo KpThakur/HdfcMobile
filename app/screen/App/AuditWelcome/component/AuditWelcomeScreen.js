@@ -14,11 +14,11 @@ const AuditWelcomeScreen = (props) => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <Header headerText={"WelCome Branch Audit"} onPress={() => OnpressDrawer()}/>
+                <Header headerText={"WelCome Virtual Audit"} onPress={() => OnpressDrawer()}/>
                 <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
                         <Image resizeMode={"contain"} style={styles.img} source={INSTRUCTION} />
-                        <Text style={styles.txt}>Welcome To Branch Audit</Text>
+                        <Text style={styles.txt}>Welcome To Virtual Audit</Text>
                     </View>
                     <View style={styles.body}>
                         <Text style={styles.g_txt}>Following are the online/live audit requirement :</Text>

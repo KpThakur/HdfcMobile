@@ -37,7 +37,7 @@ export default function Profile(props) {
                         value={props.profileData.email}
                         editable={false}
                         />
-                    <Input
+                    {/* <Input
                         placeholder={"Contact Number"}
                         containerStyle={styles.display}
                         onChangeText={(value) => props.setProfileData({
@@ -46,7 +46,7 @@ export default function Profile(props) {
                         })}
                         keyboardType={"number-pad"}
                         value={props.profileData.phone.toString()}
-                    />
+                    /> */}
                     <View style={{ paddingTop: 290, paddingBottom: 10 }}>
                         <Button
                             onPress={() => props._handleSubmit()}

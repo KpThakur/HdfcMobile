@@ -244,15 +244,7 @@ const Question = props => {
         Platform.OS === 'ios'
           ? PERMISSIONS.IOS.CAMERA
           : PERMISSIONS.ANDROID.CAMERA,
-        /*  {
-          message:
-            'App needs access to your camera ' + 'so you can take pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        }, */
       );
-
       if (cameraPermissionStatus === RESULTS.GRANTED) {
         console.log('Camera Permission Granted ');
       }

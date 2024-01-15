@@ -37,6 +37,7 @@ export default function ScheduleNewAudit(props) {
   function _handleSelect(params) {
     setauditType(params);
   }
+
   const {
     handleSchedule,
     cityBranch,
@@ -77,9 +78,9 @@ export default function ScheduleNewAudit(props) {
 
   const timeData = generateTimeData();
 
-  useEffect(() => {
-    setdropDown(false);
-  }, [navigation]);
+  // useEffect(() => {
+  //   setdropDown(false);
+  // }, [navigation]);
 
   const displayCityDropDown = ({item}) => {
     return (
@@ -100,7 +101,7 @@ export default function ScheduleNewAudit(props) {
     );
   };
   const handleDropDown = () => {
-    setopenDate(false);
+    // setopenDate(false);
     setdropDown(!dropDown);
   };
   // for (var i = 10; i <= 18; i++) {
@@ -128,7 +129,7 @@ export default function ScheduleNewAudit(props) {
               }}
             />
             <TouchableOpacity
-              onPress={() => setdropDown(false)}
+               onPress={() => setdropDown(false)}
               style={{
                 padding: 20,
                 justifyContent: 'space-evenly',
@@ -178,7 +179,7 @@ export default function ScheduleNewAudit(props) {
                     <TouchableOpacity
                       style={styles.date_time}
                       onPress={() => {
-                        setdropDown(false);
+                        // setdropDown(false);
                         setopenDate(true);
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
@@ -202,7 +203,7 @@ export default function ScheduleNewAudit(props) {
                             moment(moment()).format('DD-MM-YYYY')
                           ) {
                             if (time < moment(new Date()).format('H-mm')) {
-                              alert('Please select vaild time.');
+                              Alert.alert('Please select vaild time.');
                               settime();
                             } else {
                               setopenDate(false);
@@ -282,7 +283,9 @@ export default function ScheduleNewAudit(props) {
                                         item < moment(new Date()).format('H-mm')
                                       ) {
                                         //setdropDown(false);
-                                        alert('Please Select Proper Time');
+                                        Alert.alert(
+                                          'Please Select Proper Time',
+                                        );
                                       } else {
                                         settime(item);
                                         setdropDown(false);
@@ -343,7 +346,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Branch Audit
+                      Virtual Audit
                     </Text>
                   </TouchableOpacity>
                 </View>
