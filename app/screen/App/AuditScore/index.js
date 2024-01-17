@@ -1,12 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
-import AuditScore from "./component/AuditScore";
-import { QuestionContext } from "../../../utils/QuestionContext";
-import { apiCall } from "../../../utils/httpClient";
-import apiEndPoints from "../../../utils/apiEndPoints";
-import Loader from "../.../../../../utils/Loader";
-import { BackHandler } from "react-native";
-import { useNavigation } from "@react-navigation/core";
-import { LoadingContext } from "../../../utils/LoadingContext";
+import React, {useContext, useEffect, useState} from 'react';
+import AuditScore from './component/AuditScore';
+import {QuestionContext} from '../../../utils/QuestionContext';
+import {apiCall} from '../../../utils/httpClient';
+import apiEndPoints from '../../../utils/apiEndPoints';
+import Loader from '../.../../../../utils/Loader';
+import {BackHandler} from 'react-native';
+import {useNavigation} from '@react-navigation/core';
+import {LoadingContext} from '../../../utils/LoadingContext';
+import Button from '../../../component/Button';
+import {
+  FONT_FAMILY_REGULAR,
+  MEDIUM_FONT_SIZE,
+  STOP_VIDEO,
+} from '../../../utils/constant';
+import RecordVideo from './component/RecordVideo';
 export default function Index(props) {
   const navigation = useNavigation();
   const [question, setquestion] = useContext(QuestionContext);
@@ -18,25 +25,27 @@ export default function Index(props) {
     const params = {
       audit_id: question.audit_id,
     };
-    const response = await apiCall("POST", apiEndPoints.AUDIT_SCORE, params);
+    const response = await apiCall('POST', apiEndPoints.AUDIT_SCORE, params);
     settotalScore(response.data);
     setisLoading(false);
   };
+
+
   useEffect(() => {
     fetchScore();
   }, []);
 
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
     return () =>
-      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
   }, []);
   const onBackPress = () => {
-    navigation.navigate("Profile");
+    navigation.navigate('Profile');
   };
   const startvideo = () => {
-    navigation.navigate("VideoScreen", {auditId : question?.audit_id});
+    navigation.navigate('VideoScreen', {auditId: question?.audit_id});
   };
 
   const handleViewActionable = async () => {
@@ -47,24 +56,29 @@ export default function Index(props) {
     };
 
     const response = await apiCall(
-      "POST",
+      'POST',
       apiEndPoints.GET_ACTIONABLE_DETAIL,
-      params
+      params,
     );
     setisLoading(false);
     // props.setstartAudit(4)
     // navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
-    navigation.navigate("DashboardScreen");
+    navigation.navigate('DashboardScreen');
   };
   return (
     <>
       {/* {isLoading && <Loader />} */}
-      <AuditScore
-        handleViewActionable={handleViewActionable}
-        type={question?.audit_type}
-        totalScore={totalScore}
-        startvideo={startvideo}
-      />
+      {/* <RecordVideo/> */}
+      {question?.audit_type == 1 ? (
+        <RecordVideo />
+      ) : (
+        <AuditScore
+          handleViewActionable={handleViewActionable}
+          type={question?.audit_type}
+          totalScore={totalScore}
+          startvideo={startvideo}
+        />
+      )}
     </>
   );
 }

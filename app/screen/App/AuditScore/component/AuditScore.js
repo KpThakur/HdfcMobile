@@ -8,6 +8,7 @@ import { FONT_FAMILY_REGULAR } from "../../../../utils/constant";
 export default function AuditScore(props) {
   console.log("🚀 ~ file: AuditScore.js:9 ~ AuditScore ~ props:", props)
   const { handleViewActionable, totalScore,startvideo } = props;
+  
   return (
     // <View style={styles.container}>
     <ScrollView contentContainerStyle={{ flexGrow: 1, marginLeft: 10 }}>
@@ -29,15 +30,14 @@ export default function AuditScore(props) {
             />
           </View>
         )}
-        
-        {props.type == 1 ? (
+        {props.type == 1? (
           <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
             Note: Live streaming will be stopped after click on generate report.
           </Text>
         ) : ( <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
           Note: Make a video of max 30-45 secs showcasing the branch from outside and covering the marketing collaterals displayed.
         </Text>)}
-        {props.type == 1 ? ( <Button
+        {props.type == 1  ? ( <Button
             buttonText={"Generate Report"}
             onPress={() => handleViewActionable()}
           /> ): ( <Button

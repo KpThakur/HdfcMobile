@@ -283,7 +283,7 @@ const DashboardScreen = ({navigation}) => {
         getresdistance,
       );
 
-      if (getresdistance) {
+      if (true) {
         const params = {
           audit_id: id,
           employee_id: userData.emp_id,
@@ -298,7 +298,8 @@ const DashboardScreen = ({navigation}) => {
             branch_manager: branch_manager,
             audit_type: 0,
           });
-          navigation.navigate('QuestionScreen');
+          // navigation.navigate('QuestionScreen');
+          navigation.navigate('AuditScore');
           //  navigation.navigate("VideoScreen");
         } else {
           if (response.status === 404) {
