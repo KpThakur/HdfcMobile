@@ -93,7 +93,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                                             fontWeight: "500",
                                             color: isFocused === true ? PRIMARY_BLUE_COLOR : "#000",
                                             fontSize: normalize(11),
-                                        }}>{"Schedule Audit"}</Text>
+                                        }}>{"Schedule Review"}</Text>
                                     </View>
                                     : label === 'Profile' ?
                                         <View style={styles.tabBarContain}>

@@ -30,7 +30,7 @@ let ACDATE;
 let timeData = [];
 export default function RescheduleAudit(props) {
   const [Cdate, setCdate] = useState(new Date());
-  const [openDate, setopenDate] = useState(false);
+  const [openDates, setopenDates] = useState(false);
   const [openTime, setopenTime] = useState(false);
   const [dropDown, setdropDown] = useState(false);
   const {
@@ -91,7 +91,7 @@ export default function RescheduleAudit(props) {
     );
   };
   const handleDropDown = () => {
-    setopenDate(false);
+   // setopenDates(false);
     setdropDown(!dropDown);
   };
   // for (var i = 10; i <= 18; i++) {
@@ -110,7 +110,7 @@ export default function RescheduleAudit(props) {
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.contianer}>
             <Header
-              headerText={'Reschedule Audit'}
+              headerText={'Reschedule Review'}
               leftImg={ARROW}
               onPress={() => {
                 navigation.goBack();
@@ -119,11 +119,12 @@ export default function RescheduleAudit(props) {
             <View
               style={{
                 padding: 20,
-                padding: 20,
+               // padding: 20,
                 justifyContent: 'space-evenly',
+                
               }}>
               <View>
-                <Text style={styles.txt_head}>Bank Details for Audit</Text>
+                <Text style={styles.txt_head}>Bank Details for Review</Text>
                 <DropDown
                   title={editAudit ? editAudit.city_name : 'City'}
                   data={cityBranch}
@@ -174,7 +175,7 @@ export default function RescheduleAudit(props) {
                     <TouchableOpacity
                       style={styles.date_time}
                       onPress={() => {
-                        setopenDate(true);
+                        setopenDates(true);
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
                       {editAudit ? (
@@ -185,11 +186,11 @@ export default function RescheduleAudit(props) {
                     </TouchableOpacity>
                     <DatePicker
                       modal
-                      open={openDate}
+                      open={openDates}
                       mode="date"
                       date={Cdate}
                       onConfirm={date => {
-                        setopenDate(false);
+                        setopenDates(false);
                         if (
                           moment(date).format('DD-MM-YYYY') <
                           moment(moment()).format('DD-MM-YYYY')
@@ -204,10 +205,10 @@ export default function RescheduleAudit(props) {
                               editAudit.audit_time <
                               moment(new Date()).format('H-mm')
                             ) {
-                              setopenDate(!openDate);
-                              alert('Please select vaild time.');
+                              setopenDates(!openDates);
+                              Alert.alert('Please select vaild time.');
                             } else {
-                              setopenDate(!openDate);
+                              setopenDates(!openDates);
                               ACDATE = moment(date).format('DD-MM-YYYY');
                               seteditAudit({
                                 ...editAudit,
@@ -215,7 +216,7 @@ export default function RescheduleAudit(props) {
                               });
                             }
                           } else {
-                            setopenDate(!openDate);
+                            setopenDates(!openDates);
                             ACDATE = moment(date).format('DD-MM-YYYY');
                             seteditAudit({
                               ...editAudit,
@@ -223,12 +224,12 @@ export default function RescheduleAudit(props) {
                             });
                           }
 
-                          // setopenDate(!openDate)
+                          // setopenDates(!openDates)
                           // seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
                         }
                       }}
                       onCancel={() => {
-                        setopenDate(false);
+                        setopenDates(false);
                       }}
                     />
                   </View>
@@ -286,7 +287,7 @@ export default function RescheduleAudit(props) {
                                       item < moment(new Date()).format('H-mm')
                                     ) {
                                       setdropDown(false);
-                                      alert('Please Select Proper Time');
+                                      Alert.alert('Please Select Proper Time');
                                     } else {
                                       seteditAudit({
                                         ...editAudit,
@@ -313,7 +314,7 @@ export default function RescheduleAudit(props) {
               </View>
               <View
                 style={{marginTop: 10, zIndex: -1, width: '50%', height: 150}}>
-                <Text style={styles.txt_head}>Audit Type:</Text>
+                <Text style={styles.txt_head}>Review Type:</Text>
 
                 <TouchableOpacity
                   style={{
@@ -335,7 +336,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                    Physical Audit
+                    Physical/In-branch review
                   </Text>
                 </TouchableOpacity>
 
@@ -359,7 +360,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                    Branch Audit
+                   Virtual/online review
                   </Text>
                 </TouchableOpacity>
               </View>

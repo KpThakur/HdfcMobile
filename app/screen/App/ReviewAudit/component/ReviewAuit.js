@@ -48,7 +48,7 @@ export default function ReviewAuit(props) {
     <View style={styles.container}>
       <ScrollView style={{flex:2, marginBottom:5 }}>
         <Header
-          headerText={"Audit Actionable Review"}
+          headerText={"Review Actionable Review"}
           onPress={() => {
             navigation.openDrawer();
           }}
@@ -244,7 +244,7 @@ export default function ReviewAuit(props) {
               Actionable Completed
             </Text>
             <Button
-              buttonText={"Complete Audit"}
+              buttonText={"Complete Review"}
               onPress={() => handleSubmitReport()}
             />
           </>
@@ -261,7 +261,7 @@ export default function ReviewAuit(props) {
               Actionable Not Completed
             </Text>
             <Button
-              buttonText={"Complete Audit"}
+              buttonText={"Complete Review"}
               onPress={() => {
                 navigation.navigate("DashboardScreen");
               }}

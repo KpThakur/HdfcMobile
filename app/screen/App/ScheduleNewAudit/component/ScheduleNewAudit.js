@@ -37,6 +37,7 @@ export default function ScheduleNewAudit(props) {
   function _handleSelect(params) {
     setauditType(params);
   }
+
   const {
     handleSchedule,
     cityBranch,
@@ -100,9 +101,10 @@ export default function ScheduleNewAudit(props) {
     );
   };
   const handleDropDown = () => {
-    setopenDate(false);
+    // setopenDate(false);
     setdropDown(!dropDown);
   };
+
   // for (var i = 10; i <= 18; i++) {
   //   for (var j = 0; j <= 55; j += 15) {
   //     if (j == 0) timeData.push(i + '-0' + j);
@@ -121,7 +123,7 @@ export default function ScheduleNewAudit(props) {
           keyboardShouldPersistTaps="always">
           <View style={styles.contianer}>
             <Header
-              headerText={'Schedule New Audit'}
+              headerText={'Schedule New Review'}
               leftImg={ARROW}
               onPress={() => {
                 navigation.navigate('DashboardScreen');
@@ -134,7 +136,7 @@ export default function ScheduleNewAudit(props) {
                 justifyContent: 'space-evenly',
               }}>
               <View>
-                <Text style={styles.txt_head}>Bank Details for Audit</Text>
+                <Text style={styles.txt_head}>Bank Details for Review</Text>
                 <DropDown
                   title={cityName ? cityName : 'City'}
                   data={cityBranch}
@@ -202,7 +204,7 @@ export default function ScheduleNewAudit(props) {
                             moment(moment()).format('DD-MM-YYYY')
                           ) {
                             if (time < moment(new Date()).format('H-mm')) {
-                              alert('Please select vaild time.');
+                              Alert.alert('Please select vaild time.');
                               settime();
                             } else {
                               setopenDate(false);
@@ -282,7 +284,9 @@ export default function ScheduleNewAudit(props) {
                                         item < moment(new Date()).format('H-mm')
                                       ) {
                                         //setdropDown(false);
-                                        alert('Please Select Proper Time');
+                                        Alert.alert(
+                                          'Please Select Proper Time',
+                                        );
                                       } else {
                                         settime(item);
                                         setdropDown(false);
@@ -308,7 +312,7 @@ export default function ScheduleNewAudit(props) {
                     width: '50%',
                     height: 150,
                   }}>
-                  <Text style={styles.txt_head}>Audit Type:</Text>
+                  <Text style={styles.txt_head}>Review Type:</Text>
                   <TouchableOpacity
                     style={{
                       marginVertical: 10,
@@ -324,7 +328,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 2 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Physical Audit
+                      Physical/In-branch review
                     </Text>
                   </TouchableOpacity>
 
@@ -343,7 +347,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Branch Audit
+                      Virtual/online review
                     </Text>
                   </TouchableOpacity>
                 </View>

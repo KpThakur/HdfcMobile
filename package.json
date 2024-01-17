@@ -32,7 +32,7 @@
     "react-native-agora": "^3.5.1",
     "react-native-camera": "^4.2.1",
     "react-native-compressor": "^1.8.23",
-    "react-native-date-picker": "^4.1.0",
+    "react-native-date-picker": "^4.3.5",
     "react-native-device-info": "^8.4.9",
     "react-native-flash-message": "^0.4.2",
     "react-native-fs": "^2.20.0",

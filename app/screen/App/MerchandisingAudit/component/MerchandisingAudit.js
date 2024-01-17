@@ -34,8 +34,8 @@ export default function MerchandisingAudit() {
                             <Text style={styles.txt}>02 Members</Text>
                         </View>
                         <View>
-                            <Text style={styles.s_txt}>Audit Status</Text>
-                            <Text style={styles.txt}>Branch Audit</Text>
+                            <Text style={styles.s_txt}>Review Status</Text>
+                            <Text style={styles.txt}>Virtual/online review</Text>
                         </View>
                     </View>
                     <View style={{marginVertical:10}}>
@@ -44,10 +44,10 @@ export default function MerchandisingAudit() {
                             <Text style={styles.txt}>Indore</Text>
                             <View style={{flexDirection:'row',justifyContent:"space-between"}}>
                                 <TouchableOpacity style={styles.cancel_btn}>
-                                    <Text style={{color:"#fff"}}>Cancel Audit</Text>
+                                    <Text style={{color:"#fff"}}>Cancel Review</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.prim_btn}>
-                                    <Text style={{color:"#fff"}}>Start Audit</Text>
+                                    <Text style={{color:"#fff"}}>Start Review</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
