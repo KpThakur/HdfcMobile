@@ -456,7 +456,7 @@ const Question = props => {
     setssDropDown(!ssDropDown);
   };
   // console.log("StartAudit;", startAudit);
-
+ // console.log('question=======>', branchDetailData);
   return (
     <View style={styles.container}>
       {/* <Header leftImg={ARROW} headerText={`Question - ${question?.data?.item_number}`} onPress={() => navigation.goBack()} /> */}
@@ -464,12 +464,12 @@ const Question = props => {
       {startAudit === 2 ? (
         <Header
           leftImg={LEFT_ARROW}
-          headerText={'Start Audit'}
+          headerText={'Start Review'}
           onPress={() => navigation.goBack()}
         />
       ) : //  : startAudit === 4 ? (
       //   <Header
-      //     headerText={"Audit Actionable Review"}
+      //     headerText={"Review Actionable Review"}
       //     onPress={() => {
       //       navigation.openDrawer();
       //     }}
@@ -479,7 +479,7 @@ const Question = props => {
       <View style={styles.mainvwe}>
         {startAudit === 1 ? (
           <>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{
                 position: 'absolute',
                 right: 1,
@@ -488,7 +488,7 @@ const Question = props => {
               }}
               onPress={() => handleInfo()}>
               <Image source={INFO_ICON} style={{width: 20, height: 20}} />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             {onInfo && (
               <View style={styles.info}>
                 <View
@@ -573,7 +573,10 @@ const Question = props => {
                     fontSize: normalize(SMALL_FONT_SIZE),
                   },
                 ]}>
-                Mention Insurer : {branchDetailData?.insurance_com}
+                {question?.data?.question_id === 569 ||
+                question?.data?.question_id === 571
+                  ? null
+                  : `Insurer : ${branchDetailData?.insurance_com}`}
               </Text>
             </View>
           </>
@@ -674,7 +677,7 @@ const Question = props => {
                           }}
                           onPress={() => {
                             props.setyesNo('YES');
-                            props.setshowCapIMG(true);
+                            props.setshowCapIMG(false);
                             props.setrevActionable(0);
                             handleRemark(question.data.remark_yes);
                             props.handleShowActionable(false);
@@ -694,7 +697,7 @@ const Question = props => {
                             }}
                             onPress={() => {
                               props.setyesNo('NO');
-                              props.setshowCapIMG(false);
+                              props.setshowCapIMG(true);
                               props.setrevActionable(1);
                               props.setCamImg([]);
                               handleRemark(question.data.remark_no);
@@ -712,7 +715,7 @@ const Question = props => {
                       </View>
                     )}
                     <View style={styles.brnchmannme}>
-                      {props.showCapIMG ? (
+                      {!props.showCapIMG ? (
                         <TouchableOpacity
                           onPress={() => {
                             question?.audit_type == 0
@@ -733,7 +736,9 @@ const Question = props => {
                               fontWeight: '700',
                               color: '#ffffff',
                             }}>
-                            Capture The image
+                            {props.camImg.length > 0
+                              ? 'Add More Images'
+                              : 'Capture Image'}
                           </Text>
                         </TouchableOpacity>
                       ) : null}
@@ -1144,7 +1149,7 @@ const Question = props => {
                   <View style={{marginTop: 10}}>
                     <Text style={styles.branname}>Actionable/ Remarks </Text>
                     <TextInput
-                      placeholder="Remarks"
+                      placeholder="Type Your Remarks.... "
                       multiline
                       numberOfLines={3}
                       style={styles.input}

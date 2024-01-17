@@ -14,14 +14,14 @@ const AuditWelcomeScreen = (props) => {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                <Header headerText={"WelCome Virtual Audit"} onPress={() => OnpressDrawer()}/>
+                <Header headerText={"WelCome Virtual/online review"} onPress={() => OnpressDrawer()}/>
                 <View style={styles.main}>
                     <View style={{ alignItems: 'center' }}>
                         <Image resizeMode={"contain"} style={styles.img} source={INSTRUCTION} />
-                        <Text style={styles.txt}>Welcome To Virtual Audit</Text>
+                        <Text style={styles.txt}>Welcome To Virtual/online review</Text>
                     </View>
                     <View style={styles.body}>
-                        <Text style={styles.g_txt}>Following are the online/live audit requirement :</Text>
+                        <Text style={styles.g_txt}>Following are the online/live review requirement :</Text>
 
                         <View style={styles.icon_txt}>
                             <Image resizeMode={"contain"} style={styles.icon_img} source={HEADPHONE} />
@@ -38,7 +38,7 @@ const AuditWelcomeScreen = (props) => {
                     </View>
                     <Button
                         style={{ marginVertical: 20 }}
-                        buttonText={"Start Audit"}
+                        buttonText={"Start Review"}
                         onPress={()=>handleStartAudit()}
                     />
                 </View>

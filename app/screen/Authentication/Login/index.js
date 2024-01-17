@@ -19,7 +19,7 @@ import {
 } from '../../../utils/constant';
 import {styles} from './component/styles';
 import {View, Text, Button} from 'react-native';
-import { LoadingContext } from '../../../utils/LoadingContext';
+import {LoadingContext} from '../../../utils/LoadingContext';
 const Login = ({navigation}) => {
   const [userData, setUserData] = useContext(UserContext);
   const [email, setemail] = useState();
@@ -143,12 +143,13 @@ const Login = ({navigation}) => {
   };
 
   const handleLogin = async () => {
-    // setisLoading(true);
-    Geolocation.getCurrentPosition(
-      async position => {
-        const {latitude, longitude} = position.coords;
-        const vaild = validationFrom();
-        if (vaild) {
+    const vaild = validationFrom();
+    if (vaild) {
+      setisLoading(true);
+      Geolocation.getCurrentPosition(
+        async position => {
+          const {latitude, longitude} = position.coords;
+
           try {
             const deviceToken = await messaging().getToken();
             const deviceType = Platform.OS;
@@ -204,23 +205,24 @@ const Login = ({navigation}) => {
               duration: 3000,
             });
           }
-        } else {
+        },
+        error => {
+          console.log('error: ', error);
           setisLoading(false);
-        }
-      },
-      error => {
-        console.log('error: ', error);
-        setisLoading(false);
-        requestGeolocationPermission();
-        // showMessage({
-        //   message: 'Set location permission for using App.',
-        //   type: 'danger',
-        //   duration: 3000,
-        // });
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+          requestGeolocationPermission();
+          // showMessage({
+          //   message: 'Set location permission for using App.',
+          //   type: 'danger',
+          //   duration: 3000,
+          // });
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    } else {
+      setisLoading(false);
+    }
   };
+
   const ShowAlert = message => {
     Alert.alert(message);
   };

@@ -83,27 +83,27 @@ const DashboardScreen = ({navigation}) => {
   const [option, setOption] = useState([
     {
       id: 1,
-      name: "Today's Audit",
-    },
-    {
-      id: 2,
-      name: 'Upcoming Audit',
-    },
-    {
-      id: 3,
-      name: 'Open Audit',
-    },
-    {
-      id: 6,
-      name: 'Pending Audit',
+      name: "Today's Review",
     },
     {
       id: 4,
-      name: 'Completed Audit',
+      name: 'Completed Review',
+    },
+    {
+      id: 2,
+      name: 'Upcoming Review',
+    },
+    {
+      id: 3,
+      name: 'Open Review',
+    },
+    {
+      id: 6,
+      name: 'Pending Review',
     },
     {
       id: 5,
-      name: 'Cancelled Audit',
+      name: 'Cancelled Review',
     },
   ]);
   const onPressSelectedTab = async index => {
@@ -186,14 +186,14 @@ const DashboardScreen = ({navigation}) => {
           apiEndPoints.CANCEL_AUDIT,
           params,
         );
-        Alert.alert('Audit Cancelled', response.data.message);
+        Alert.alert('Review Cancelled', response.data.message);
         setpopup(!popup);
         AuditList(tabBar);
       } catch (error) {
         console.log('error', error);
       }
     } else {
-      Alert.alert('Select Audit cancel');
+      Alert.alert('Select Review cancel');
     }
   };
   const StartAudit = async id => {
@@ -205,7 +205,7 @@ const DashboardScreen = ({navigation}) => {
 
     return true;
   };
- 
+
   const StartAuditCheck = id => {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
@@ -277,7 +277,7 @@ const DashboardScreen = ({navigation}) => {
     if (status == 1) {
       QuestionList(id, branch_manager, questions_id);
     } else {
-      const getresdistance = await StartAuditCheck(id);
+      const getresdistance = await StartAudit(id);
       console.log(
         '🚀 ~ file: index.js:219 ~ DashboardScreen ~ getres:',
         getresdistance,
@@ -434,9 +434,11 @@ const DashboardScreen = ({navigation}) => {
                 <Text style={styles.txt}>02 Members</Text>
               </View> */}
               <View>
-                <Text style={styles.s_txt}>Audit Status</Text>
+                <Text style={styles.s_txt}>Review Status</Text>
                 <Text style={styles.txt}>
-                  {audit.audit_type === 1 ? 'Virtual Audit' : 'Physical Audit'}
+                  {audit.audit_type === 1
+                    ? 'Virtual/online review'
+                    : 'Physical/In-branch review'}
                 </Text>
               </View>
             </View>
@@ -466,7 +468,7 @@ const DashboardScreen = ({navigation}) => {
                           fontSize: normalize(TINY_FONT_SIZE),
                           fontFamily: FONT_FAMILY_SEMI_BOLD,
                         }}>
-                        Cancel Audit
+                        Cancel Review
                       </Text>
                     </TouchableOpacity>
                   ) : null}
@@ -488,7 +490,7 @@ const DashboardScreen = ({navigation}) => {
                           fontSize: normalize(TINY_FONT_SIZE),
                           fontFamily: FONT_FAMILY_SEMI_BOLD,
                         }}>
-                        {audit.audit_status === 4 ? 'Started' : 'Start Audit'}
+                        {audit.audit_status === 4 ? 'Started' : 'Start Review'}
                       </Text>
                     </TouchableOpacity>
                   ) : null}
@@ -567,15 +569,15 @@ const DashboardScreen = ({navigation}) => {
       case 1:
         return 'Add New Schedule';
       case 2:
-        return 'No Upcoming Audit Found';
+        return 'No Upcoming Review Found';
       case 3:
-        return 'No Open Audit Found';
+        return 'No Open Review Found';
       case 4:
-        return 'No Close Audit Found';
+        return 'No Close Review Found';
       case 5:
-        return 'No Close Audit Found';
+        return 'No Close Review Found';
       case 6:
-        return 'No Pending Audit Found';
+        return 'No Pending Review Found';
       default:
         return 'Add New Schedule';
     }
@@ -607,7 +609,7 @@ const DashboardScreen = ({navigation}) => {
                 textAlign: 'center',
                 padding: 5,
               }}>
-              No Audit for today ,set new Schedule for new audit.
+             No Reviews for Today, Schedule a New Review here.
             </Text>
             <TouchableOpacity
               style={{

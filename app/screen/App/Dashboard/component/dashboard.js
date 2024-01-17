@@ -79,7 +79,7 @@ const DashboardView = (props) => {
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <Header
-        headerText={"Merchandising Audit"}
+        headerText={"TPP Review"}
         onPress={() => OnpressDrawer()}
       />
       <View style={{ flexGrow: 1 }}>

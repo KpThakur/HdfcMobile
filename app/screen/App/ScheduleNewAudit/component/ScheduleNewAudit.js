@@ -78,9 +78,9 @@ export default function ScheduleNewAudit(props) {
 
   const timeData = generateTimeData();
 
-  // useEffect(() => {
-  //   setdropDown(false);
-  // }, [navigation]);
+  useEffect(() => {
+    setdropDown(false);
+  }, [navigation]);
 
   const displayCityDropDown = ({item}) => {
     return (
@@ -104,6 +104,7 @@ export default function ScheduleNewAudit(props) {
     // setopenDate(false);
     setdropDown(!dropDown);
   };
+
   // for (var i = 10; i <= 18; i++) {
   //   for (var j = 0; j <= 55; j += 15) {
   //     if (j == 0) timeData.push(i + '-0' + j);
@@ -122,20 +123,20 @@ export default function ScheduleNewAudit(props) {
           keyboardShouldPersistTaps="always">
           <View style={styles.contianer}>
             <Header
-              headerText={'Schedule New Audit'}
+              headerText={'Schedule New Review'}
               leftImg={ARROW}
               onPress={() => {
                 navigation.navigate('DashboardScreen');
               }}
             />
             <TouchableOpacity
-               onPress={() => setdropDown(false)}
+              onPress={() => setdropDown(false)}
               style={{
                 padding: 20,
                 justifyContent: 'space-evenly',
               }}>
               <View>
-                <Text style={styles.txt_head}>Bank Details for Audit</Text>
+                <Text style={styles.txt_head}>Bank Details for Review</Text>
                 <DropDown
                   title={cityName ? cityName : 'City'}
                   data={cityBranch}
@@ -179,7 +180,7 @@ export default function ScheduleNewAudit(props) {
                     <TouchableOpacity
                       style={styles.date_time}
                       onPress={() => {
-                        // setdropDown(false);
+                        setdropDown(false);
                         setopenDate(true);
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
@@ -311,7 +312,7 @@ export default function ScheduleNewAudit(props) {
                     width: '50%',
                     height: 150,
                   }}>
-                  <Text style={styles.txt_head}>Audit Type:</Text>
+                  <Text style={styles.txt_head}>Review Type:</Text>
                   <TouchableOpacity
                     style={{
                       marginVertical: 10,
@@ -327,7 +328,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 2 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Physical Audit
+                      Physical/In-branch review
                     </Text>
                   </TouchableOpacity>
 
@@ -346,7 +347,7 @@ export default function ScheduleNewAudit(props) {
                       style={{
                         color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
                       }}>
-                      Virtual Audit
+                      Virtual/online review
                     </Text>
                   </TouchableOpacity>
                 </View>

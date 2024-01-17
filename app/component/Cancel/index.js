@@ -34,7 +34,7 @@ export default function index(props) {
           }}>
           <View style={{alignItems: 'center'}}>
             <Text style={{color: PRIMARY_BLUE_COLOR, fontSize: 26}}>
-              Cancel Audit
+              Cancel Review
             </Text>
             <TouchableOpacity
               onPress={() => togglePopUp()}
@@ -43,11 +43,11 @@ export default function index(props) {
             </TouchableOpacity>
           </View>
           <Text style={{color: '#000', fontSize: 18}}>
-            Let us know why you want to cancel the audit.
+            Let us know why you want to cancel the review.
           </Text>
-          <TextInput
-            placeholder="Reason for canceling the audit."
-            style={{
+          <TextInput                
+            placeholder="Reason for cancelling the review."
+            style={{                
               backgroundColor: '#eee',
               width: '100%',
               paddingHorizontal: 10,

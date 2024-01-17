@@ -9,7 +9,7 @@ import {socket} from '../../../utils/Client';
 import {UserContext} from '../../../utils/UserContext';
 import NetInfo from '@react-native-community/netinfo';
 import FormData from 'form-data';
-import { LoadingContext } from '../../../utils/LoadingContext';
+import {LoadingContext} from '../../../utils/LoadingContext';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -128,6 +128,7 @@ const Question = ({navigation, route}) => {
   };
 
   const SubmitAPI = async formdata => {
+    // console.log('que ========>', branchDetailData )
     try {
       setisLoading(true);
       const response = await apiCall(
@@ -179,7 +180,7 @@ const Question = ({navigation, route}) => {
         formdata.append('check_answer', checkedAns);
         formdata.append('show_actionable', showActionable);
         if (question?.data.image_capture === '1') {
-          if (camImg.length > 0 || !showCapIMG) {
+          if (camImg.length > 0 || showCapIMG) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
                 return formdata.append('question_image', {
@@ -197,9 +198,9 @@ const Question = ({navigation, route}) => {
             if (question.data.action_on_no) {
               !showCapIMG
                 ? SubmitAPI(formdata)
-                : alert('Please Capture The Image');
+                : Alert.alert('Please Capture Image');
             } else {
-              alert('Please Capture The Image');
+              Alert.alert('Please Capture Image');
             }
           }
         } else {

@@ -110,7 +110,7 @@ export default function RescheduleAudit(props) {
         <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.contianer}>
             <Header
-              headerText={'Reschedule Audit'}
+              headerText={'Reschedule Review'}
               leftImg={ARROW}
               onPress={() => {
                 navigation.goBack();
@@ -124,7 +124,7 @@ export default function RescheduleAudit(props) {
                 
               }}>
               <View>
-                <Text style={styles.txt_head}>Bank Details for Audit</Text>
+                <Text style={styles.txt_head}>Bank Details for Review</Text>
                 <DropDown
                   title={editAudit ? editAudit.city_name : 'City'}
                   data={cityBranch}
@@ -314,7 +314,7 @@ export default function RescheduleAudit(props) {
               </View>
               <View
                 style={{marginTop: 10, zIndex: -1, width: '50%', height: 150}}>
-                <Text style={styles.txt_head}>Audit Type:</Text>
+                <Text style={styles.txt_head}>Review Type:</Text>
 
                 <TouchableOpacity
                   style={{
@@ -336,7 +336,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                    Physical Audit
+                    Physical/In-branch review
                   </Text>
                 </TouchableOpacity>
 
@@ -360,7 +360,7 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                   Virtual Audit
+                   Virtual/online review
                   </Text>
                 </TouchableOpacity>
               </View>

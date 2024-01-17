@@ -4,6 +4,7 @@ import { styles } from "./styles";
 import Button from "../../../../component/Button";
 import moment from "moment";
 import { FONT_FAMILY_REGULAR } from "../../../../utils/constant";
+import Navigation from "../../../../navigation";
 
 export default function AuditScore(props) {
   console.log("🚀 ~ file: AuditScore.js:9 ~ AuditScore ~ props:", props)
@@ -13,16 +14,17 @@ export default function AuditScore(props) {
     <ScrollView contentContainerStyle={{ flexGrow: 1, marginLeft: 10 }}>
       <View style={styles.main}>
         <View style={{ alignItems: "center" }}>
-          <Text style={styles.heroic_txt}>Audit Questions Completed</Text>
-         {/*  <Text style={styles.heroic_txt}>Merchandising Audit Score</Text>
+          <Text style={styles.heroic_txt}>Congrats!</Text>
+          <Text style={styles.heroic_txt}>Your Review is Complete</Text>
+         {/*  <Text style={styles.heroic_txt}>Merchandising Review Score</Text>
           <View style={styles.score_board}>
             <Text style={styles.hsn_txt}>{totalScore?.score}</Text>
-            <Text style={styles.hs_txt}>Audit Score</Text>
+            <Text style={styles.hs_txt}>Review Score</Text>
           </View> */}
         </View>
         {totalScore?.previous[0].previous_score > 0 && (
           <View style={styles.prev_audit}>
-            <Text style={styles.txt}>Previous Audit Score :</Text>
+            <Text style={styles.txt}>Previous Review Score :</Text>
             <FlatList
               data={totalScore?.previous}
               renderItem={displayScoreAudit}
@@ -32,17 +34,19 @@ export default function AuditScore(props) {
         
         {props.type == 1 ? (
           <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
-            Note: Live streaming will be stopped after click on generate report.
+            Note: Live streaming will be stopped after click on Back to dashboard.
           </Text>
         ) : ( <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
-          Note: Make a video of max 30-45 secs showcasing the branch from outside and covering the marketing collaterals displayed.
+          You can access this Review Report under Completed Review Tab on your Dashboard.
         </Text>)}
         {props.type == 1 ? ( <Button
-            buttonText={"Generate Report"}
+            buttonText={"Back to dashboard"}
             onPress={() => handleViewActionable()}
           /> ): ( <Button
-            buttonText={"Start your Video Capture"}
-            onPress={() => startvideo()}
+            buttonText={"Back to dashboard"}
+            onPress={() => handleViewActionable()}
+           // onPress={() => startvideo()}
+            //onPress={()=> navigation.navigate('DashboardScreen')}
           />)}
           
          
