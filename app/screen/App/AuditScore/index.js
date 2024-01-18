@@ -4,7 +4,7 @@ import { QuestionContext } from "../../../utils/QuestionContext";
 import { apiCall } from "../../../utils/httpClient";
 import apiEndPoints from "../../../utils/apiEndPoints";
 import Loader from "../.../../../../utils/Loader";
-import { BackHandler } from "react-native";
+import { Alert, BackHandler } from "react-native";
 import { useNavigation } from "@react-navigation/core";
 import { LoadingContext } from "../../../utils/LoadingContext";
 export default function Index(props) {
@@ -54,7 +54,9 @@ export default function Index(props) {
     setisLoading(false);
     // props.setstartAudit(4)
     // navigation.navigate("ReviewAduit",{audit_id: question.audit_id,branch_manager:question.branch_manager})
-    navigation.navigate("DashboardScreen");
+    Alert.alert('Your Video is Uploaded and Audit is Complete !');
+    navigation.navigate("ScheduleNewAuditScreen");
+    // navigation.navigate("DashboardScreen");
   };
   return (
     <>

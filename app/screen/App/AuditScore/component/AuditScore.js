@@ -34,16 +34,19 @@ export default function AuditScore(props) {
           <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
             Note: Live streaming will be stopped after click on generate report.
           </Text>
-        ) : ( <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
-          Note: Make a video of max 30-45 secs showcasing the branch from outside and covering the marketing collaterals displayed.
-        </Text>)}
-        {props.type == 1 ? ( <Button
+        ) : null
+        //  ( <Text style={{ fontFamily: FONT_FAMILY_REGULAR, padding: 15 }}>
+        //   Note: Make a video of max 30-45 secs showcasing the branch from outside and covering the marketing collaterals displayed.
+        // </Text>)
+        }
+        {/* {props.type == 1 ? ( */}
+           <Button
             buttonText={"Generate Report"}
-            onPress={() => handleViewActionable()}
-          /> ): ( <Button
+            onPress={() => handleViewActionable()}/> 
+          {/* ): ( <Button
             buttonText={"Start your Video Capture"}
             onPress={() => startvideo()}
-          />)}
+          />)} */}
           
          
       </View>
