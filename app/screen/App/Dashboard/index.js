@@ -550,14 +550,16 @@ const DashboardScreen = ({navigation}) => {
                   ) : null}
                 </View>
               </View>
-              <View style={styles.download_View}>
-                {audit.audit_status === 3 ? (
-                  <Pressable
-                    onPress={() => handleReport(baseUrl + '' + audit.report)}>
-                    <Text style={styles.download_text}>Download Report</Text>
-                  </Pressable>
-                ) : null}
-              </View>
+              {tabBar === 4 || tabBar === 5 ? (
+                <View style={styles.download_View}>
+                  {audit.audit_status === 3 ? (
+                    <Pressable
+                      onPress={() => handleReport(baseUrl + '' + audit.report)}>
+                      <Text style={styles.download_text}>Download Report</Text>
+                    </Pressable>
+                  ) : null}
+                </View>
+              ) : null}
             </View>
           </View>
         </View>
@@ -609,7 +611,7 @@ const DashboardScreen = ({navigation}) => {
                 textAlign: 'center',
                 padding: 5,
               }}>
-             No Reviews for Today, Schedule a New Review here.
+              No Reviews for Today, Schedule a New Review here.
             </Text>
             <TouchableOpacity
               style={{

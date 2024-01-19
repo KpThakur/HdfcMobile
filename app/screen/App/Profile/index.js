@@ -40,13 +40,15 @@ export default function Index({navigation}) {
     if (profileData.firstName === '') {
       Alert.alert('Please enter name ');
       return false;
-    } else if (profileData.phone === '') {
-      Alert.alert('Please fill phone number');
-      return false;
-    } else if (profileData.phone.length !== 10) {
-      Alert.alert('Please enter proper number');
-      return false;
-    }
+    } 
+    // else if (profileData.phone === '') {
+    //   Alert.alert('Please fill phone number');
+    //   return false;
+    // }
+    //  else if (profileData.phone.length !== 10) {
+    //   Alert.alert('Please enter proper number');
+    //   return false;
+    // }
     return true;
   };
   async function _handleSubmit(params) {
