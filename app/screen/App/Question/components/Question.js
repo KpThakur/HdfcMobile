@@ -86,6 +86,9 @@ const Question = props => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   useEffect(() => {}, [props.camImg]);
+  useEffect(async ()=> {
+     await props.getPosition();
+  },[])
   const handleInfo = () => {
     setonInfo(!onInfo);
   };
@@ -265,7 +268,6 @@ const Question = props => {
       console.error('Error requesting camera permission:', error);
     }
   };
-
   const OpenCamera = async () => {
     setLoading(true);
     Geolocation.getCurrentPosition(
