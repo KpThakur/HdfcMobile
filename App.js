@@ -16,6 +16,7 @@ import {
 } from './app/utils/constant';
 import Geolocation from 'react-native-geolocation-service';
 import {LoadingProvider} from './app/utils/LoadingContext';
+import {LocationProvider} from './app/utils/LocationContext';
 function App() {
   useEffect(() => {
     const requestPermissions = async () => {
@@ -135,16 +136,18 @@ function App() {
   };
   return (
     <View style={{flex: 1}}>
-      <LoadingProvider>
-        <UserProvider>
-          <QuestionProvider>
-            <EditAuditProvider>
-              <NoNetworkBar />
-              <Navigation />
-            </EditAuditProvider>
-          </QuestionProvider>
-        </UserProvider>
-      </LoadingProvider>
+      <LocationProvider>
+        <LoadingProvider>
+          <UserProvider>
+            <QuestionProvider>
+              <EditAuditProvider>
+                <NoNetworkBar />
+                <Navigation />
+              </EditAuditProvider>
+            </QuestionProvider>
+          </UserProvider>
+        </LoadingProvider>
+      </LocationProvider>
       <FlashMessage
         position={'bottom'}
         style={{
