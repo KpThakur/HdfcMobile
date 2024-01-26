@@ -13,6 +13,7 @@ import FormData from 'form-data';
 import {LoadingContext} from '../../../utils/LoadingContext';
 import { LocationContext } from '../../../utils/LocationContext';
 import { requestGeolocationPermission } from '../../../utils/constant';
+import { showMessage } from 'react-native-flash-message';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -98,7 +99,20 @@ const Question = ({navigation, route}) => {
     socket.on('bmOnlineStatus', data => {
       if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
         if (data.data.bm_online == 0) {
-          alert(`BM is offline`);
+          showMessage({
+            message: "BM is offline",
+            type : 'warning',
+            duration : 7000
+          })
+          // Alert.alert(`BM is offline`);
+          setdisableBtn(data.data.bm_online);
+        }else{
+          showMessage({
+            message: "BM is Online",
+            type : 'success',
+            duration : 7000
+          })
+          // Alert.alert(`BM is offline`);
           setdisableBtn(data.data.bm_online);
         }
       }
@@ -384,7 +398,7 @@ const Question = ({navigation, route}) => {
     }, 5000);
   };
   const getIMG = async () => {
-    setisLoading(true);
+    // setisLoading(true);
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
