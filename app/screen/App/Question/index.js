@@ -69,13 +69,13 @@ const Question = ({navigation, route}) => {
       setshowCapIMG(true);
     }
   }, [question]);
-  useEffect(() => {
-    socket.on('image-sent', data => {
-      if (data.socketEvent == 'updateCaptureimage' + question?.audit_id) {
-        getIMG();
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on('image-sent', data => {
+  //     if (data.socketEvent == 'updateCaptureimage' + question?.audit_id) {
+  //       getIMG();
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     if (reviewValue > 0) {
       HandleActionable(0);
