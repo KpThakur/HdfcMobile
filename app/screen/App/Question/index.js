@@ -1,8 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, Platform, Share} from 'react-native';
 import QuestionView from './components/Question';
+import Geolocation from 'react-native-geolocation-service';
 import {QuestionContext} from '../../../utils/QuestionContext';
-import {apiCall} from '../../../utils/httpClient';
+import {apiCall, getLocation} from '../../../utils/httpClient';
 import apiEndPoints from '../../../utils/apiEndPoints';
 import Loader from '../../../utils/Loader';
 import {socket} from '../../../utils/Client';
@@ -10,6 +11,9 @@ import {UserContext} from '../../../utils/UserContext';
 import NetInfo from '@react-native-community/netinfo';
 import FormData from 'form-data';
 import {LoadingContext} from '../../../utils/LoadingContext';
+import { LocationContext } from '../../../utils/LocationContext';
+import { requestGeolocationPermission } from '../../../utils/constant';
+import { showMessage } from 'react-native-flash-message';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -40,6 +44,7 @@ const Question = ({navigation, route}) => {
   const [disableBtn, setdisableBtn] = useState();
   const [branchDetailData, setBranchDetailData] = useState();
   const [revActionable, setrevActionable] = useState(0);
+  const {location, setLocationCordinates} = useContext(LocationContext);
   useEffect(() => {
     console.log('🚀 ~ file: index.js:42 ~ useEffect ~ question:', question);
     setstartAudit(question?.audit_type == 0 ? 1 : 2);
@@ -65,13 +70,13 @@ const Question = ({navigation, route}) => {
       setshowCapIMG(true);
     }
   }, [question]);
-  useEffect(() => {
-    socket.on('image-sent', data => {
-      if (data.socketEvent == 'updateCaptureimage' + question?.audit_id) {
-        getIMG();
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket.on('image-sent', data => {
+  //     if (data.socketEvent == 'updateCaptureimage' + question?.audit_id) {
+  //       getIMG();
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
     if (reviewValue > 0) {
       HandleActionable(0);
@@ -94,7 +99,20 @@ const Question = ({navigation, route}) => {
     socket.on('bmOnlineStatus', data => {
       if (data.socketEvent == `pauseOnlineAudit${question?.audit_id}`) {
         if (data.data.bm_online == 0) {
-          alert(`BM is offline`);
+          showMessage({
+            message: "BM is offline",
+            type : 'warning',
+            duration : 7000
+          })
+          // Alert.alert(`BM is offline`);
+          setdisableBtn(data.data.bm_online);
+        }else{
+          showMessage({
+            message: "BM is Online",
+            type : 'success',
+            duration : 7000
+          })
+          // Alert.alert(`BM is offline`);
           setdisableBtn(data.data.bm_online);
         }
       }
@@ -154,7 +172,22 @@ const Question = ({navigation, route}) => {
       setisLoading(false);
     }
   };
+  const getPosition = async () => {
+    Geolocation.getCurrentPosition(async position => {
+      const {latitude, longitude} = position.coords;
+      const res = await getLocation(latitude, longitude);
+      setLocationCordinates(latitude,longitude,res);
+      console.log('Context Location ======>>>>',location.lat,location.long,location.adr);
+    }, error => {
+      console.log('This is the error', error);
+     
+      requestGeolocationPermission();
+
+    },
+    {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},);    
+}
   const handleSubmit = async () => {
+    await getPosition();
     NetInfo.fetch().then(async state => {
       if (state.isConnected) {
         setisLoading(true);
@@ -179,6 +212,9 @@ const Question = ({navigation, route}) => {
         formdata.append('check_box_data', checked_val);
         formdata.append('check_answer', checkedAns);
         formdata.append('show_actionable', showActionable);
+        formdata.append('clatitude',location.lat);
+        formdata.append('clongitude',location.long);
+        formdata.append('caddress',location.adr);
         if (question?.data.image_capture === '1') {
           if (camImg.length > 0 || showCapIMG) {
             if (question.audit_type !== 1) {
@@ -353,16 +389,16 @@ const Question = ({navigation, route}) => {
             getIMG();
             setCamImg([...data.image_data]);
           }
-          setisLoading(false);
+          // setisLoading(false);
         });
       }
     });
     setTimeout(() => {
       setisLoading(false);
-    }, 2000);
+    }, 5000);
   };
   const getIMG = async () => {
-    setisLoading(true);
+    // setisLoading(true);
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
@@ -711,6 +747,7 @@ const Question = ({navigation, route}) => {
         disableBtn={disableBtn}
         branchDetailData={branchDetailData}
         setshowCapIMG={setshowCapIMG}
+        getPosition={getPosition}
       />
     </>
   );

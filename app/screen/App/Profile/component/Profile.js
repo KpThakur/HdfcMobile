@@ -5,6 +5,7 @@ import { styles } from './styles'
 import Button from '../../../../component/Button';
 import Input from '../../../../component/Input';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { normalize } from '../../../../utils/scaleFontSize';
 
 export default function Profile(props) {
     const navigation = useNavigation()
@@ -47,7 +48,7 @@ export default function Profile(props) {
                         keyboardType={"number-pad"}
                         value={props.profileData.phone.toString()}
                     /> */}
-                    <View style={{ paddingTop: 290, paddingBottom: 10 }}>
+                    <View style={{ paddingTop: normalize(290), paddingBottom: 10 }}>
                         <Button
                             onPress={() => props._handleSubmit()}
                             buttonText={"Submit"} />

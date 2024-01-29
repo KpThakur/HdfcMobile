@@ -169,9 +169,20 @@ export default class JoinChannelVideo extends Component {
   };
   _toggleMic = () => {
     const { audio } = this.state;
-    // console.log("AUDIO:",audio)
-    this.setState({ audio: !audio });
-    this._engine.muteLocalAudioStream(this.state.audio);
+    console.log("AUDIO:",audio)
+    // this.setState({ audio: !audio });
+    // this._engine.muteLocalAudioStream(this.state.audio);
+    this.setState(prevState => {
+      const newAudioState = !prevState.audio;
+
+      console.log("AUDIO:====",newAudioState)
+      if (this._engine.muteLocalAudioStream) {
+      this._engine.muteLocalAudioStream(newAudioState);
+      }else{
+        console.warn('muteLocalAudioStream function not available');
+      }
+      return { audio: newAudioState };
+  });
     // console.log("SETAUDIO:",audio)
   };
   render() {
@@ -223,13 +234,17 @@ export default class JoinChannelVideo extends Component {
 
   _renderVideo = () => {
     const { remoteUid } = this.state;
+    console.log('====',remoteUid.length)
     return (
       <View style={styles.container} collapsable={false}>
         {/*<RtcLocalView.SurfaceView style={styles.local} /> */}
-        {remoteUid !== undefined && (
+        {(remoteUid !== undefined && remoteUid.length > 0) ? (
           <ScrollView horizontal={true} style={styles.remoteContainer}>
             <ViewShot ref={"ViewShot"}>
               <View collapsable={false}>
+                {
+                  console.log('====',remoteUid)
+                }
                 {remoteUid.map((value, index) => (
                   <TouchableOpacity
                     key={index}
@@ -246,7 +261,7 @@ export default class JoinChannelVideo extends Component {
               </View>
             </ViewShot>
           </ScrollView>
-        )}
+        ) : null}
       </View>
     );
   };
