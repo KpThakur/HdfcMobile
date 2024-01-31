@@ -35,7 +35,7 @@ export default function UpdateAlert() {
       } else {
         setlink(data.data.android_url);
         setupdateNotify(
-          data.data?.android_version < deviceInfoModule.getVersion()
+          data.data?.android_version > deviceInfoModule.getVersion()
             ? true
             : false
         );

@@ -20,7 +20,7 @@ export default function Index({ navigation }) {
     const [branchNameDropDown, setbranchNameDropDown] = useState(false)
     const [branchManagerName, setbranchManagerName] = useState()
     const [auditType, setauditType] = useState(2)
-    const [cityId, setcityId] = useState()
+    const [cityId, setcityId] = useState(null)
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
     useEffect(() => {
@@ -184,6 +184,7 @@ export default function Index({ navigation }) {
             auditType={auditType}
             setauditType={setauditType}
             handleSumbit={handleSumbit}
+            cityId = {cityId}
         />
         </>
     )

@@ -60,6 +60,7 @@ export default function ScheduleNewAudit(props) {
     settime,
     handleSumbit,
     currentTime,
+    cityId
   } = props;
 
   const generateTimeData = () => {
@@ -155,6 +156,7 @@ export default function ScheduleNewAudit(props) {
                   data_name={'brach_name'}
                   setdropDown={setbranchNameDropDown}
                   setTimeDropDown={setdropDown}
+                  cityId={cityId}
                 />
                 <Text
                   style={{
