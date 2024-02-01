@@ -14,7 +14,9 @@ const BranchName = (props) => {
     //     // alert(data)
     //     setjoined(data)
     // }
-
+  useEffect(() => {
+     props.logout();
+  },[])
     return (
         <View style={styles.container}>
             {/* <Header leftImg={''} headerText={"Start Review"} /> */}

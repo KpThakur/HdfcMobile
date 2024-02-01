@@ -89,6 +89,19 @@ const Question = props => {
   useEffect(async ()=> {
      await props.getPosition();
   },[])
+  // useEffect(() => {
+  //    logout();
+
+  // },[navigation])
+  const logout = () => {
+    if(startAudit==2)
+    {
+      setTimeout(() => {
+        // console.log("Vishalllll")
+      navigation.goBack()
+      },60000);
+    }
+  }
   const handleInfo = () => {
     setonInfo(!onInfo);
   };
@@ -1196,6 +1209,7 @@ const Question = props => {
                 joined={joined}
                 setstartAudit={setstartAudit}
                 bmJoined={props.bmJoined}
+                logout = {logout}
               />
             ) : startAudit === 3 ? (
               <AuditScoreScreen setstartAudit={setstartAudit} />
