@@ -444,19 +444,25 @@ const DashboardScreen = ({navigation}) => {
             </View>
             <View style={{marginVertical: 10}}>
               <Text style={styles.s_txt}>City</Text>
-
+              <View style={{marginTop: 3, marginBottom: 10}}>
+                 <Text style={styles.txt}>{audit.city_name}</Text>  
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }}>
-                <Text style={styles.txt}>{audit.city_name}</Text>
+                 
+                {/* <Text style={styles.txt}>{audit.city_name}</Text> */}
+               
                 <View
                   style={{
+                    flex: 1,
                     flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    justifyContent: 'center',
+                    justifyContent: 'space-between',
+                    alignItems : 'center',
+                    // justifyContent: 'center',
                   }}>
                   {tabBar === 1 || tabBar === 2 || tabBar === 6 ? (
                     <TouchableOpacity
@@ -534,9 +540,11 @@ const DashboardScreen = ({navigation}) => {
                     <View
                       style={{
                         // marginTop: 20,
+                        flex:1,
                         flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        justifyContent: 'flex-end',
                         alignItems: 'center',
+                        // backgroundColor: 'red'
                       }}>
                       <Text
                         style={{
