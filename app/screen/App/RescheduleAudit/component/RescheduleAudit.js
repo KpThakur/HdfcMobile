@@ -192,29 +192,15 @@ export default function RescheduleAudit(props) {
                       onConfirm={date => {
                         setopenDates(false);
                         if (
-                          moment(date).format('DD-MM-YYYY') <
+                          moment(date).format('DD-MM-YYYY') ==
                           moment(moment()).format('DD-MM-YYYY')
                         ) {
-                          Alert.alert('date', "You can't select previous date");
-                        } else {
                           if (
-                            moment(date).format('DD-MM-YYYY') ==
-                            moment(moment()).format('DD-MM-YYYY')
+                            editAudit.audit_time <
+                            moment(new Date()).format('H-mm')
                           ) {
-                            if (
-                              editAudit.audit_time <
-                              moment(new Date()).format('H-mm')
-                            ) {
-                              setopenDates(!openDates);
-                              Alert.alert('Please select vaild time.');
-                            } else {
-                              setopenDates(!openDates);
-                              ACDATE = moment(date).format('DD-MM-YYYY');
-                              seteditAudit({
-                                ...editAudit,
-                                audit_date: moment(date).format('DD-MM-YYYY'),
-                              });
-                            }
+                            setopenDates(!openDates);
+                            Alert.alert('Please select vaild time.');
                           } else {
                             setopenDates(!openDates);
                             ACDATE = moment(date).format('DD-MM-YYYY');
@@ -223,10 +209,54 @@ export default function RescheduleAudit(props) {
                               audit_date: moment(date).format('DD-MM-YYYY'),
                             });
                           }
+                        } else if(  moment(date)<
+                        moment(moment()))
+                        {
+                          Alert.alert('date', "You can't select previous date");
+                        } else {
+                          setopenDates(!openDates);
+                          ACDATE = moment(date).format('DD-MM-YYYY');
+                          seteditAudit({
+                            ...editAudit,
+                            audit_date: moment(date).format('DD-MM-YYYY'),
+                          });
+                        }
+                        // if (
+                        //   moment(date)<
+                        //   moment(moment())
+                        // ) {
+                        //   Alert.alert('date', "You can't select previous date");
+                        // } else {
+                        //   if (
+                        //     moment(date).format('DD-MM-YYYY') ==
+                        //     moment(moment()).format('DD-MM-YYYY')
+                        //   ) {
+                        //     if (
+                        //       editAudit.audit_time <
+                        //       moment(new Date()).format('H-mm')
+                        //     ) {
+                        //       setopenDates(!openDates);
+                        //       Alert.alert('Please select vaild time.');
+                        //     } else {
+                        //       setopenDates(!openDates);
+                        //       ACDATE = moment(date).format('DD-MM-YYYY');
+                        //       seteditAudit({
+                        //         ...editAudit,
+                        //         audit_date: moment(date).format('DD-MM-YYYY'),
+                        //       });
+                        //     }
+                        //   } else {
+                        //     setopenDates(!openDates);
+                        //     ACDATE = moment(date).format('DD-MM-YYYY');
+                        //     seteditAudit({
+                        //       ...editAudit,
+                        //       audit_date: moment(date).format('DD-MM-YYYY'),
+                        //     });
+                        //   }
 
                           // setopenDates(!openDates)
                           // seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
-                        }
+                        // }
                       }}
                       onCancel={() => {
                         setopenDates(false);

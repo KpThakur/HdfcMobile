@@ -60,7 +60,7 @@ export default function ScheduleNewAudit(props) {
     settime,
     handleSumbit,
     currentTime,
-    cityId
+    cityId,
   } = props;
 
   const generateTimeData = () => {
@@ -196,29 +196,64 @@ export default function ScheduleNewAudit(props) {
                       onConfirm={date => {
                         setopenDate(false);
                         if (
-                          moment(date).format('DD-MM-YYYY') <
+                          moment(date).format('DD-MM-YYYY') ==
                           moment(moment()).format('DD-MM-YYYY')
                         ) {
-                          Alert.alert('date', "You can't select previous date");
-                        } else {
-                          if (
-                            moment(date).format('DD-MM-YYYY') ==
-                            moment(moment()).format('DD-MM-YYYY')
-                          ) {
-                            if (time < moment(new Date()).format('H-mm')) {
-                              Alert.alert('Please select vaild time.');
-                              settime();
-                            } else {
-                              setopenDate(false);
-                              ACDATE = moment(date).format('DD-MM-YYYY');
-                              setdate(moment(date).format('DD-MM-YYYY'));
-                            }
+                          if (time < moment(new Date()).format('H-mm')) {
+                            Alert.alert('Please select vaild time.');
+                            settime();
                           } else {
                             setopenDate(false);
                             ACDATE = moment(date).format('DD-MM-YYYY');
                             setdate(moment(date).format('DD-MM-YYYY'));
                           }
+                        } else if (moment(date) < moment(moment())) {
+                          console.log(' Selected Date ======>>>', moment(date));
+                          console.log(
+                            'Current Date ======>>>',
+                            moment(moment()),
+                          );
+                          console.log('next ====>', moment(date).format('LL'));
+                          Alert.alert('date', "You can't select previous date");
+                        } else {
+                          setopenDate(false);
+                          ACDATE = moment(date).format('DD-MM-YYYY');
+                          setdate(moment(date).format('DD-MM-YYYY'));
                         }
+
+                        // if (
+                        // moment(date).startOf('day').format('DD-MM-YYYY') <
+                        // moment(moment()).startOf('day').format('DD-MM-YYYY')
+                        // moment(date).startOf('day').isSameOrBefore(moment().startOf('day'))
+                        // moment(date).format('LL')<moment(moment()).format('LL')
+                        //   moment(date) < moment(moment())
+                        // ) {
+                        //   console.log(' Selected Date ======>>>', moment(date));
+                        //   console.log(
+                        //     'Current Date ======>>>',
+                        //     moment(moment()),
+                        //   );
+                        //   console.log('next ====>', moment(date).format('LL'));
+                        //   Alert.alert('date', "You can't select previous date");
+                        // } else {
+                        //   if (
+                        //     moment(date).format('DD-MM-YYYY') ==
+                        //     moment(moment()).format('DD-MM-YYYY')
+                        //   ) {
+                        //     if (time < moment(new Date()).format('H-mm')) {
+                        //       Alert.alert('Please select vaild time.');
+                        //       settime();
+                        //     } else {
+                        //       setopenDate(false);
+                        //       ACDATE = moment(date).format('DD-MM-YYYY');
+                        //       setdate(moment(date).format('DD-MM-YYYY'));
+                        //     }
+                        //   } else {
+                        //     setopenDate(false);
+                        //     ACDATE = moment(date).format('DD-MM-YYYY');
+                        //     setdate(moment(date).format('DD-MM-YYYY'));
+                        //   }
+                        // }
                       }}
                       onCancel={() => {
                         setopenDate(false);
