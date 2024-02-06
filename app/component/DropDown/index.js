@@ -9,20 +9,22 @@ export default function index({ data, data_name, title, renderItem, dropDown, se
       useEffect(() => {
           setsearch('');
       },[])
+
+      console.log('---',data)
     const [search, setsearch] = useState('')
     const [filterData, setfilterData] = useState(null)
     const handleDropDown = () => {
-        if (data_name === 'brach_name' && cityId === null){
-            showMessage({
-                message: 'Please select city first !',
-                type:'danger',
-                duration: 3000
-            })
+        // if (data_name === 'brach_name' && cityId === null){
+        //     showMessage({
+        //         message: 'Please select city first !',
+        //         type:'danger',
+        //         duration: 3000
+        //     })
         //    Alert.alert('Select City First!')
-        }else{
+        // }else{
             setdropDown(!dropDown)
             setTimeDropDown(false)
-        }
+        // }
         
     }
     const handleSearch = (text) => {
@@ -33,6 +35,8 @@ export default function index({ data, data_name, title, renderItem, dropDown, se
             else
                 return city.branch_name.toLowerCase().includes(search.toLowerCase())
         })
+
+        console.log('00000',val)
         setfilterData(val);
     }
     const set = () => {

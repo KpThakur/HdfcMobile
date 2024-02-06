@@ -52,17 +52,34 @@ export default function RescheduleAudit(props) {
     seteditAudit,
   } = props;
 
+  // const generateTimeData = () => {
+  //   const newData = [];
+
+  //   for (let i = 10; i <= 18; i++) {
+  //     for (let j = 0; j <= 45; j += 15) {
+  //       const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+  //       newData.push(formattedTime);
+  //     }
+  //   }
+
+  //   newData.push('19-00');
+  //   return newData;
+  // };
   const generateTimeData = () => {
     const newData = [];
-
-    for (let i = 10; i <= 18; i++) {
-      for (let j = 0; j <= 45; j += 15) {
-        const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+  
+    for (let i = 8; i <= 21; i++) {
+      for (let j = 0; j <= 55; j += 5) {
+        if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
+          continue;
+        }
+  
+        const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
         newData.push(formattedTime);
       }
     }
-
-    newData.push('19-00');
+  
+    // newData.push('22-00');
     return newData;
   };
 
@@ -84,7 +101,7 @@ export default function RescheduleAudit(props) {
   const displaybranchDropDown = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => handleSelectBranch(item.branch_name, item.branch_id)}
+        onPress={() => handleSelectBranch(item.branch_name, item.branch_id, item.city,item.city_name)}
         style={styles.drop_down_item}>
         <Text style={styles.txt}>{item.branch_name}</Text>
       </TouchableOpacity>
@@ -126,16 +143,6 @@ export default function RescheduleAudit(props) {
               <View>
                 <Text style={styles.txt_head}>Bank Details for Review</Text>
                 <DropDown
-                  title={editAudit ? editAudit.city_name : 'City'}
-                  data={cityBranch}
-                  renderItem={displayCityDropDown}
-                  dropDown={citydropDown}
-                  data_name={'city_name'}
-                  setdropDown={setcitydropDown}
-                  setTimeDropDown={setdropDown}
-                />
-
-                <DropDown
                   title={
                     editAudit.branch_name
                       ? editAudit.branch_name
@@ -148,6 +155,28 @@ export default function RescheduleAudit(props) {
                   setdropDown={setbranchNameDropDown}
                   setTimeDropDown={setdropDown}
                 />
+                {/* <DropDown
+                  title={editAudit ? editAudit.city_name : 'City'}
+                  data={cityBranch}
+                  renderItem={displayCityDropDown}
+                  dropDown={citydropDown}
+                  data_name={'city_name'}
+                  setdropDown={setcitydropDown}
+                  setTimeDropDown={setdropDown}
+                /> */}
+                   <Text
+                  style={{
+                    backgroundColor: GREY_TEXT_COLOR,
+                    borderRadius: 5,
+                    paddingVertical: 10,
+                    paddingHorizontal: 10,
+                    marginVertical: 10,
+                  }}>
+                  {editAudit ? 
+                    editAudit.city_name
+                    : 'City'}
+                </Text>
+               
 
                 <Text
                   style={{

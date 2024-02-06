@@ -99,7 +99,7 @@ const Question = props => {
       setTimeout(() => {
         // console.log("Vishalllll")
       navigation.goBack()
-      },60000);
+      },300000);
     }
   }
   const handleInfo = () => {

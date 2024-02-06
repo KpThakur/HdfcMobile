@@ -38,10 +38,11 @@ export default function Index({ navigation }) {
         setbranchNameId(null);
         setbranchManagerId(null);
     }
-    const getCityName = async () => {
+    const getCityName = async (branch_id) => {
         try {
             setisLaoding(true)
-            const response = await apiCall('POST', apiEndPoints.GET_CITY_BRANCH)
+            const params = { branch_id }
+            const response = await apiCall('POST', apiEndPoints.GET_CITY_BRANCH, params)
             setisLaoding(false)
             if (response.status === 200) {
                 setcityBranch(response.data.data)
@@ -61,12 +62,15 @@ export default function Index({ navigation }) {
         setcitydropDown(!citydropDown)
         getBranchName(city_id)
     }
-    const handleSelectBranch = (branch_name, branch_id) => {
+    const handleSelectBranch = (branch_name, branch_id, city_id,city_name) => {
         setbranchName(branch_name)
         setbranchNameId(branch_id)
         setbranchNameDropDown(!branchNameDropDown)
         getManagerName(branch_id)
+        setCityName(city_name)
+        setcityId(city_id)
     }
+    
     const getManagerName = async (branch_id) => {
         try {
             setisLaoding(true)
@@ -82,14 +86,16 @@ export default function Index({ navigation }) {
             console.log(error)
         }
     }
-    const getBranchName = async (city_id) => {
+    const getBranchName = async (city_id = '') => {
+        console.log("city_id", city_id)
         try {
             setisLaoding(true)
             const params = { city_id }
-            const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME, params)
+            const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME)
             setisLaoding(false)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
+                console.log('BranchName>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', response)
             }
         } catch (error) {
             console.log(error.message)
@@ -158,8 +164,10 @@ export default function Index({ navigation }) {
     }
     useFocusEffect(React.useCallback(()=>{
          resetState();
-         getCityName();
+         //getCityName();
+         getBranchName();
     },[]))
+
     return (
         <>
         {/* {isLaoding&&<Loader/>} */}
