@@ -123,7 +123,7 @@ const Question = ({navigation, route}) => {
   }, [startAudit, managerJoin]);
 
   useEffect(() => {
-    getBranchDetail(question?.audit_id);
+    question?.audit_id ? getBranchDetail(question?.audit_id) : null
   }, [navigation]);
 
   const unsubscribe = NetInfo.fetch().then(state => {

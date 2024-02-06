@@ -23,7 +23,7 @@ export default function Index({ navigation }) {
     const [branchManagerId, setbranchManagerId] = useState()
     const [editAudit,seteditAudit]=useContext(EditAuditContext)
     useEffect(() => {
-        getCityName()
+        // getCityName()
         getBranchName(editAudit.city_id)
     }, [])
     const getCityName = async () => {
@@ -47,8 +47,8 @@ export default function Index({ navigation }) {
         setcitydropDown(!citydropDown)
         getBranchName(city_id)
     }
-    const handleSelectBranch = (branch_name, branch_id) => {
-        seteditAudit({...editAudit,branch_name,branch_id,branch_manager_id:null,branch_manager:null})
+    const handleSelectBranch = (branch_name, branch_id,city_id,city_name) => {
+        seteditAudit({...editAudit,city_id,city_name,branch_name,branch_id,branch_manager_id:null,branch_manager:null})
         setbranchNameDropDown(!branchNameDropDown)
         getManagerName(branch_id)
     }
@@ -70,7 +70,7 @@ export default function Index({ navigation }) {
     const getBranchName = async (city_id) => {
         try {
             const params = { city_id }
-            const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME, params)
+            const response = await apiCall('POST', apiEndPoints.GET_BRANCH_NAME)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
             }

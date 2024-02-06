@@ -63,20 +63,42 @@ export default function ScheduleNewAudit(props) {
     cityId,
   } = props;
 
+  // const generateTimeData = () => {
+  //   const newData = [];
+
+  //   for (let i = 10; i <= 18; i++) {
+  //     for (let j = 0; j <= 45; j += 15) {
+  //       const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+  //       newData.push(formattedTime);
+  //     }
+  //   }
+
+  //   newData.push('19-00');
+  //   return newData;
+  // };
+
+  // const timeData = generateTimeData();
+
+  
+
   const generateTimeData = () => {
     const newData = [];
-
-    for (let i = 10; i <= 18; i++) {
-      for (let j = 0; j <= 45; j += 15) {
-        const formattedTime = `${i}-${j < 10 ? '0' : ''}${j}`;
+  
+    for (let i = 8; i <= 21; i++) {
+      for (let j = 0; j <= 55; j += 5) {
+        if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
+          continue;
+        }
+  
+        const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
         newData.push(formattedTime);
       }
     }
-
-    newData.push('19-00');
+  
+    // newData.push('22-00');
     return newData;
   };
-
+  
   const timeData = generateTimeData();
 
   useEffect(() => {
@@ -95,7 +117,7 @@ export default function ScheduleNewAudit(props) {
   const displaybranchDropDown = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => handleSelectBranch(item.branch_name, item.branch_id)}
+        onPress={() => handleSelectBranch(item.branch_name, item.branch_id,item.city,item.city_name)}
         style={styles.drop_down_item}>
         <Text style={styles.txt}>{item.branch_name}</Text>
       </TouchableOpacity>
@@ -138,18 +160,9 @@ export default function ScheduleNewAudit(props) {
               }}>
               <View>
                 <Text style={styles.txt_head}>Bank Details for Review</Text>
-                <DropDown
-                  title={cityName ? cityName : 'City'}
-                  data={cityBranch}
-                  renderItem={displayCityDropDown}
-                  dropDown={citydropDown}
-                  data_name={'city_name'}
-                  setdropDown={setcitydropDown}
-                  setTimeDropDown={setdropDown}
-                />
 
                 <DropDown
-                  title={branchName ? branchName : 'Branch Name / ATM Name'}
+                  title={branchName ? branchName : 'Branch Name / ATM Code'}
                   data={branchDetail}
                   renderItem={displaybranchDropDown}
                   dropDown={branchNameDropDown}
@@ -158,6 +171,29 @@ export default function ScheduleNewAudit(props) {
                   setTimeDropDown={setdropDown}
                   cityId={cityId}
                 />
+
+                {/* <DropDown
+                  title={cityName ? cityName : 'City'}
+                  data={cityBranch}
+                  renderItem={displayCityDropDown}
+                  dropDown={citydropDown}
+                  data_name={'city_name'}
+                  setdropDown={setcitydropDown}
+                  setTimeDropDown={setdropDown}
+                /> */}
+                <Text
+                  style={{
+                    backgroundColor: GREY_TEXT_COLOR,
+                    borderRadius: 5,
+                    paddingVertical: 10,
+                    paddingHorizontal: 10,
+                    marginVertical: 10,
+                  }}>
+                  {cityName
+                    ? cityName
+                    : 'City'}
+                </Text>
+
                 <Text
                   style={{
                     backgroundColor: GREY_TEXT_COLOR,
@@ -195,6 +231,8 @@ export default function ScheduleNewAudit(props) {
                       date={Cdate}
                       onConfirm={date => {
                         setopenDate(false);
+                        console.log("The present date --->",moment())
+                        console.log("The 1 week ahead date --->",moment().add(1, 'week'));
                         if (
                           moment(date).format('DD-MM-YYYY') ==
                           moment(moment()).format('DD-MM-YYYY')
@@ -215,7 +253,13 @@ export default function ScheduleNewAudit(props) {
                           );
                           console.log('next ====>', moment(date).format('LL'));
                           Alert.alert('date', "You can't select previous date");
-                        } else {
+                        } 
+                        else if (!moment(date).isSameOrBefore(moment().add(1,'week')))
+                        {
+                            Alert.alert("You are restricted from choosing a date beyond one week.")
+                        }
+                        
+                        else {
                           setopenDate(false);
                           ACDATE = moment(date).format('DD-MM-YYYY');
                           setdate(moment(date).format('DD-MM-YYYY'));
@@ -322,7 +366,7 @@ export default function ScheduleNewAudit(props) {
                                       ) {
                                         //setdropDown(false);
                                         Alert.alert(
-                                          'Please Select Proper Time',
+                                          'Kindly choose an appropriate time.',
                                         );
                                       } else {
                                         settime(item);

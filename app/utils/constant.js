@@ -76,12 +76,12 @@ export const EXTRA_LARGE_FONT_SIZE = 24;
 export const MEGA_LARGE_FONT_SIZE = 26;
 
 //Base url
- export const BASEURL = 'https://dev.easycalls.in:3036';
+// export const BASEURL = 'https://dev.easycalls.in:3036';
 // export const BASEURL = 'https://easycalls.in:3000';
 // export const BASEURL = 'https://auditwebapi.easycalls.in';
 // export const BASEURL = 'https://auditwebapi.easycalls.in:3002';
 // export const BASEURL = 'http://192.168.43.177:3001';
-// export const BASEURL = 'http://192.168.1.21:3001'
+export const BASEURL = 'http://192.168.1.21:3001';
 //Google API key
 export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';
 
