@@ -20,7 +20,7 @@ const BranchName = (props) => {
     {
       setTimeout(() => {
         props.logout();
-      },3000000);
+      },300000);
     }
 
      
