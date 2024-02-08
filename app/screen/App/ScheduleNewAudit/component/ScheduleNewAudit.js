@@ -162,7 +162,7 @@ export default function ScheduleNewAudit(props) {
                 <Text style={styles.txt_head}>Bank Details for Review</Text>
 
                 <DropDown
-                  title={branchName ? branchName : 'Branch Name / ATM Code'}
+                  title={branchName ? branchName : 'Branch Name/Code'}
                   data={branchDetail}
                   renderItem={displaybranchDropDown}
                   dropDown={branchNameDropDown}
@@ -204,7 +204,7 @@ export default function ScheduleNewAudit(props) {
                   }}>
                   {branchManagerName
                     ? branchManagerName
-                    : 'Branch Manager Name / ATM Code'}
+                    : 'Branch Manager Name/Code'}
                 </Text>
               </View>
               <View>

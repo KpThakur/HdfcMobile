@@ -146,7 +146,7 @@ export default function RescheduleAudit(props) {
                   title={
                     editAudit.branch_name
                       ? editAudit.branch_name
-                      : 'Branch Name / ATM Name'
+                      : 'Branch Name/Code'
                   }
                   data={branchDetail}
                   renderItem={displaybranchDropDown}
@@ -188,7 +188,7 @@ export default function RescheduleAudit(props) {
                   }}>
                   {editAudit.branch_manager
                     ? editAudit.branch_manager
-                    : 'Branch Manager Name / ATM Code'}
+                    : 'Branch Manager Name/Code'}
                 </Text>
                 {/* <DropDown title="Branch Name / ATM Name" data={data} />
                                         <DropDown title="Branch Manager Name / ATM Code" data={data} /> */}
@@ -242,7 +242,12 @@ export default function RescheduleAudit(props) {
                         moment(moment()))
                         {
                           Alert.alert('date', "You can't select previous date");
-                        } else {
+                        } 
+                        else if (!moment(date).isSameOrBefore(moment().add(1,'week')))
+                        {
+                            Alert.alert("You are restricted from choosing a date beyond one week.")
+                        }
+                        else {
                           setopenDates(!openDates);
                           ACDATE = moment(date).format('DD-MM-YYYY');
                           seteditAudit({
@@ -346,7 +351,7 @@ export default function RescheduleAudit(props) {
                                       item < moment(new Date()).format('H-mm')
                                     ) {
                                       setdropDown(false);
-                                      Alert.alert('Please Select Proper Time');
+                                      Alert.alert('Kindly choose an appropriate time.');
                                     } else {
                                       seteditAudit({
                                         ...editAudit,
