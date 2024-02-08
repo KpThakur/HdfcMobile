@@ -94,13 +94,8 @@ const Question = props => {
 
   // },[navigation])
   const logout = () => {
-    if(startAudit==2)
-    {
-      setTimeout(() => {
-        // console.log("Vishalllll")
-      navigation.goBack()
-      },300000);
-    }
+    navigation.goBack()
+   
   }
   const handleInfo = () => {
     setonInfo(!onInfo);
@@ -637,13 +632,8 @@ const Question = props => {
             keyboardShouldPersistTaps={'always'}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{flexGrow: 1}}>
-            {question?.audit_type == 0 ? null : (
+            {question?.audit_type == 0 && !managerJoin ? null : (
               <View style={{height: 250}}>
-                {console.log(
-                  '🚀 ~ file: Question.js:408 ~ Question ~ question?.audit_type:',
-                  question?.audit_type,
-                )}
-
                 {
                   <JoinChannelVideo
                     handleManagerJoin={data => props.handleManagerJoin(data)}
@@ -1207,6 +1197,7 @@ const Question = props => {
               <Notify
                 managerJoin={managerJoin}
                 joined={joined}
+                startAudit={startAudit}
                 setstartAudit={setstartAudit}
                 bmJoined={props.bmJoined}
                 logout = {logout}

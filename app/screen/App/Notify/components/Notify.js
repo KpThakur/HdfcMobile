@@ -15,7 +15,15 @@ const BranchName = (props) => {
     //     setjoined(data)
     // }
   useEffect(() => {
-     props.logout();
+
+    if(props.startAudit==2)
+    {
+      setTimeout(() => {
+        props.logout();
+      },300000);
+    }
+
+     
   },[])
     return (
         <View style={styles.container}>

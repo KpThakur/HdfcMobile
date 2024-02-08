@@ -81,7 +81,9 @@ export const MEGA_LARGE_FONT_SIZE = 26;
 // export const BASEURL = 'https://auditwebapi.easycalls.in';
 // export const BASEURL = 'https://auditwebapi.easycalls.in:3002';
 // export const BASEURL = 'http://192.168.43.177:3001';
-export const BASEURL = 'http://192.168.1.21:3001';
+// export const BASEURL = 'http://192.168.1.21:3001';
+// export const BASEURL = 'http://192.168.215.241:3001';
+export const BASEURL = 'https://stageauditapi.easycalls.in:3003';
 //Google API key
 export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';
 
