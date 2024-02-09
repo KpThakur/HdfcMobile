@@ -50,7 +50,7 @@ export default class JoinChannelVideo extends Component {
       remoteUid: [],
       switchCamera: false,
       switchRender: true,
-      audio: true,
+      audio: false,
       pause:false,
       token: this.props.token,
     };
@@ -85,6 +85,7 @@ export default class JoinChannelVideo extends Component {
     this._addListeners();
 
     await this._engine.enableVideo();
+    await this._engine.muteLocalAudioStream(false);
     await this._engine.startPreview();
     await this._engine.setChannelProfile(ChannelProfile.LiveBroadcasting);
     await this._engine.setClientRole(ClientRole.Broadcaster);
@@ -92,23 +93,32 @@ export default class JoinChannelVideo extends Component {
 
   _addListeners = () => {
     this._engine?.addListener("Warning", (warningCode) => {
-      console.log("Warning", warningCode);
+      //console.log("Warning==", warningCode);
     });
     this._engine?.addListener("Error", (errorCode) => {
-      console.log("Error", errorCode);
+      console.log("Error===", errorCode);
     });
     this._engine?.addListener("JoinChannelSuccess", (channel, uid, elapsed) => {
-      console.log("JoinChannelSuccess", channel, uid, elapsed);
+      console.log("JoinChannelSuccess===", channel, uid, elapsed);
+      this._engine.muteLocalAudioStream(false);
+      this.setState({ audio: false })
       this.setState({ isJoined: true });
       this.props.handleJoin(true);
     });
     this._engine?.addListener("UserJoined", (uid, elapsed) => {
-      console.log("UserJoined", uid, elapsed);
+      console.log("UserJoined===", uid, elapsed);
       this.props.handleManagerJoin(true);
+      setTimeout(() => {
+        console.log("audio===", uid, elapsed);
+        this._engine.muteLocalAudioStream(false);
+        this.setState({ audio: false })
+      }, 3000);
+     
+      
       this.setState({ remoteUid: [...this.state.remoteUid, uid] });
     });
     this._engine?.addListener("UserOffline", (uid, reason) => {
-      console.log("UserOffline", uid, reason);
+      console.log("UserOffline===", uid, reason);
       
       this.props.handleManagerJoin(false);
       this.setState({
@@ -116,7 +126,7 @@ export default class JoinChannelVideo extends Component {
       });
     });
     this._engine?.addListener("LeaveChannel", (stats) => {
-      console.log("LeaveChannel", stats);
+      console.log("LeaveChannel===", stats);
       this.setState({ isJoined: false, remoteUid: [] });
       this.props.handleJoin(false);
       this.props.handleManagerJoin(false);
@@ -124,7 +134,7 @@ export default class JoinChannelVideo extends Component {
   };
 
   _joinChannel = async () => {
-    console.log("AGORA:", this.state.channelId, " ", this.state.token);
+    console.log("AGORA:===", this.state.channelId, " ", this.state.token);
     if (Platform.OS === "android") {
       await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
@@ -142,6 +152,7 @@ export default class JoinChannelVideo extends Component {
       null,
       config.uid
     );
+    
   };
 
   _leaveChannel = async () => {
@@ -169,13 +180,13 @@ export default class JoinChannelVideo extends Component {
   };
   _toggleMic = () => {
     const { audio } = this.state;
-    console.log("AUDIO:",audio)
+    console.log("AUDIO:===",audio)
     // this.setState({ audio: !audio });
     // this._engine.muteLocalAudioStream(this.state.audio);
     this.setState(prevState => {
       const newAudioState = !prevState.audio;
 
-      console.log("AUDIO:====",newAudioState)
+      console.log("AUDIO:=====",newAudioState)
       if (this._engine.muteLocalAudioStream) {
       this._engine.muteLocalAudioStream(newAudioState);
       }else{
@@ -203,6 +214,7 @@ export default class JoinChannelVideo extends Component {
         </View>
         {this._renderVideo()}
         <View style={styles.float}>
+
           <TouchableOpacity
             onPress={() => this._toggleMic()}
             style={{
@@ -211,7 +223,7 @@ export default class JoinChannelVideo extends Component {
               borderRadius: 100,
             }}
           >
-            {this.state.audio ? (
+            {!this.state.audio ? (
               <Image
                 source={MICON}
                 style={{ width: 20, height: 20, tintColor: "#fff" }}
@@ -234,7 +246,6 @@ export default class JoinChannelVideo extends Component {
 
   _renderVideo = () => {
     const { remoteUid } = this.state;
-    console.log('====',remoteUid.length)
     return (
       <View style={styles.container} collapsable={false}>
         {/*<RtcLocalView.SurfaceView style={styles.local} /> */}
@@ -242,9 +253,7 @@ export default class JoinChannelVideo extends Component {
           <ScrollView horizontal={true} style={styles.remoteContainer}>
             <ViewShot ref={"ViewShot"}>
               <View collapsable={false}>
-                {
-                  console.log('====',remoteUid)
-                }
+               
                 {remoteUid.map((value, index) => (
                   <TouchableOpacity
                     key={index}

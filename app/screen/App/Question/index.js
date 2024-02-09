@@ -102,7 +102,7 @@ const Question = ({navigation, route}) => {
           showMessage({
             message: "BM is offline",
             type : 'warning',
-            duration : 7000
+            duration : 3000
           })
           // Alert.alert(`BM is offline`);
           setdisableBtn(data.data.bm_online);
@@ -110,7 +110,7 @@ const Question = ({navigation, route}) => {
           showMessage({
             message: "BM is Online",
             type : 'success',
-            duration : 7000
+            duration : 3000
           })
           // Alert.alert(`BM is offline`);
           setdisableBtn(data.data.bm_online);
@@ -395,7 +395,7 @@ const Question = ({navigation, route}) => {
     });
     setTimeout(() => {
       setisLoading(false);
-    }, 5000);
+    }, 9000);
   };
   const getIMG = async () => {
     // setisLoading(true);
