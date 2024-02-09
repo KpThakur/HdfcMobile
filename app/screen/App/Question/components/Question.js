@@ -145,6 +145,7 @@ const Question = props => {
     }
   }
   const handleRemark = val => {
+    console.log("The Remark =====>>>",val)
     setremark(val);
     props.emitRemark(val);
   };
@@ -684,7 +685,7 @@ const Question = props => {
                             props.setyesNo('YES');
                             props.setshowCapIMG(false);
                             props.setrevActionable(0);
-                            handleRemark(question.data.remark_yes);
+                            // handleRemark(question.data.remark_yes);
                             props.handleShowActionable(false);
                             if (question.data.score_range == 1)
                               props.showSetRange(true);
@@ -705,7 +706,7 @@ const Question = props => {
                               props.setshowCapIMG(true);
                               props.setrevActionable(1);
                               props.setCamImg([]);
-                              handleRemark(question.data.remark_no);
+                              // handleRemark(question.data.remark_no);
                               props.handleShowActionable(true);
                               if (question.data.score_range == 1)
                                 props.showSetRange(false);
@@ -1153,6 +1154,7 @@ const Question = props => {
                 {question?.data?.remark === '1' && (
                   <View style={{marginTop: 10}}>
                     <Text style={styles.branname}>Actionable/ Remarks </Text>
+                    {/* <Text style={styles.branname}>{remark} </Text> */}
                     <TextInput
                       placeholder="Type Your Remarks.... "
                       multiline
