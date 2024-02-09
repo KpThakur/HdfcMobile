@@ -7,7 +7,7 @@ import Loader from "../../../utils/Loader";
 import { QuestionContext } from "../../../utils/QuestionContext";
 import NotifyView from './components/Notify';
 import { LoadingContext } from "../../../utils/LoadingContext";
-const Notify = ({managerJoin,joined,setstartAudit,bmJoined,logout}) =>{
+const Notify = ({managerJoin,joined,setstartAudit,bmJoined,logout,startAudit}) =>{
     console.log("🚀 ~ Notify ~ managerJoin:", managerJoin)
     const navigation=useNavigation()
     const [question, setquestion] = useContext(QuestionContext)
@@ -52,6 +52,7 @@ const Notify = ({managerJoin,joined,setstartAudit,bmJoined,logout}) =>{
             question={question} bmJoined={bmJoined} 
             managerJoin={managerJoin} 
             joined={joined} 
+            startAudit={startAudit}
             setstartAudit={setstartAudit}
             logout={logout}
             />
