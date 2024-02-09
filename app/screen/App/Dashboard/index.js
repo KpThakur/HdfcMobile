@@ -333,12 +333,13 @@ const DashboardScreen = ({navigation}) => {
     navigation.navigate('RescheduleAudit');
   };
   const HandleSearch = text => {
+    console.log("The audit array ====>",auditArray)
     setsearch(text);
     if (text.length > 0) {
       var val = [];
-      val = auditArray.filter(item => {
-        return item.city_name.toLowerCase().includes(search.toLowerCase());
-      });
+      // val = auditArray.filter(item => {
+      //   return item.branch_manager.toLowerCase().includes(search.toLowerCase());
+      // });
       const val1 = auditArray.filter(item => {
         return item.branch_manager.toLowerCase().includes(search.toLowerCase());
       });
