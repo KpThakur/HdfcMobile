@@ -117,6 +117,15 @@ const Question = ({navigation, route}) => {
         }
       }
     });
+    socket.on('sendhandelBmStatus', data => {
+      if (data.socketEvent == `handelBmStatus${question?.audit_id}`) {
+        showMessage({
+            message: data?.message,
+            type : 'warning',
+            duration : 3000
+          })
+       }
+    });
     // if (!managerJoin && question?.audit_type == 1) {
     //   alert(`BM is offline`);
     // }
