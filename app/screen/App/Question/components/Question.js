@@ -632,7 +632,7 @@ const Question = props => {
             keyboardShouldPersistTaps={'always'}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{flexGrow: 1}}>
-            {question?.audit_type == 0 && !managerJoin ? null : (
+            {question?.audit_type == 0 ? null : (
               <View style={{height: 250}}>
                 {
                   <JoinChannelVideo

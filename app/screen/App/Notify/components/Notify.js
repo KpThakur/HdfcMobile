@@ -14,9 +14,9 @@ const BranchName = (props) => {
     //     // alert(data)
     //     setjoined(data)
     // }
-  useEffect(() => {
+ /*  useEffect(() => {
 
-    if(props.startAudit==2)
+    if(props.startAudit == 2)
     {
       setTimeout(() => {
         props.logout();
@@ -24,7 +24,7 @@ const BranchName = (props) => {
     }
 
      
-  },[])
+  },[]) */
     return (
         <View style={styles.container}>
             {/* <Header leftImg={''} headerText={"Start Review"} /> */}
