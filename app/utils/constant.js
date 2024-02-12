@@ -64,6 +64,7 @@ export const VIDEO = require('../assets/images/start.png');
 export const STOP_VIDEO = require('../assets/images/stopIcon.png');
 export const FLASH_ON = require('../assets/images/flashOn.png');
 export const FLASH_OFF = require('../assets/images/flashOff.png');
+export const WHATSAPP = require('../assets/images/whatsapp.png');
 
 // FontSize
 export const TINY_FONT_SIZE = 10;

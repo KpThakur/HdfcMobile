@@ -28,6 +28,7 @@ import ForgetPasswordScreen from '../screen/App/ForgetPassword';
 import Loader from '../utils/Loader';
 import Video from '../screen/App/Video/component/VideoComponent';
 import { LoadingContext } from '../utils/LoadingContext';
+import Invitation from '../screen/App/Invitation';
 const App = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,6 +68,7 @@ function AppStack() {
       <App.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <App.Screen name="RescheduleAudit" component={RescheduleAuditScreen} />
       <App.Screen name="QuestionScreen" component={QuestionScreen} />
+      <App.Screen name="InvitationScreen" component={Invitation}/>
       <App.Screen name="VideoScreen" component={Video} />
       <App.Screen name="AuditWelcomeScreen" component={AuditWelcomeScreen} />
       <App.Screen name="NotifyScreen" component={NotifyScreen} />

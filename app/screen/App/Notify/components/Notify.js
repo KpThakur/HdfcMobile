@@ -1,13 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, TouchableOpacity, Share} from 'react-native';
+import { useNavigation } from "@react-navigation/core";
+import {Text, View, TouchableOpacity, Share, Modal} from 'react-native';
 import Header from '../../../../component/Header';
 import Button from '../../../../component/Button';
 import {styles} from './styles';
 import {UserContext} from '../../../../utils/UserContext';
 import JoinChannelVideo from '../../../../component/Streaming/App_agora';
+import Invite from '../../../../component/Invite';
+import Invitation from '../../Invitation';
 const BranchName = props => {
-  const {handleStartCall, question, managerJoin, joined, setstartAudit} = props;
+  const {
+    handleStartCall,
+    question,
+    managerJoin,
+    joined,
+    setstartAudit,
+    onShare,
+  } = props;
   const [userData, setUserData] = useContext(UserContext);
+  const [popup, setPopup] = useState(false);
+  const navigation = useNavigation();
   // const [joined, setjoined] = useState(true)
   // const [managerJoin, setmanagerJoin] = useState(true)
   // const handleJoin=(data)=>{
@@ -18,9 +30,15 @@ const BranchName = props => {
     if (props.startAudit == 2) {
       setTimeout(() => {
         props.logout();
-      }, 300000);
+      }, 3000000);
     }
   }, []);
+  const togglePopUp = () => {
+    setPopup(!popup);
+  };
+  const handleInvitation = () => {
+      navigation.navigate("InvitationScreen");
+  }
   return (
     <View style={styles.container}>
       {/* <Header leftImg={''} headerText={"Start Review"} /> */}
@@ -117,7 +135,9 @@ const BranchName = props => {
                 </View> */}
           <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 15}}>
             <TouchableOpacity
-              onPress={() => props.onShare()}
+               onPress={() => handleInvitation()}
+              // onPress={() => setPopup(!popup)}
+              // onPress={() => props.onShare()}
               style={{
                 backgroundColor: '#1b7dec',
                 justifyContent: 'center',
@@ -148,6 +168,8 @@ const BranchName = props => {
           </View>
         </View>
       </View>
+      {/* {popup ? (<Invitation/>): null} */}
+      {/* <Invite popup={popup} togglePopUp={togglePopUp} onShare={onShare} /> */}
     </View>
   );
 };
