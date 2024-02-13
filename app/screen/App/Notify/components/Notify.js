@@ -6,7 +6,6 @@ import Button from '../../../../component/Button';
 import {styles} from './styles';
 import {UserContext} from '../../../../utils/UserContext';
 import JoinChannelVideo from '../../../../component/Streaming/App_agora';
-import Invite from '../../../../component/Invite';
 import Invitation from '../../Invitation';
 const BranchName = props => {
   const {
