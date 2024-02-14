@@ -35,8 +35,10 @@ export default function index({
   useEffect(() => {
     setsearch('');
   }, []);
+  useEffect(() => {
 
-  console.log('The search data --->>', data);
+  }, [filterData])
+
   const [search, setsearch] = useState('');
   const [filterData, setfilterData] = useState(null);
   const handleDropDown = () => {
@@ -54,27 +56,17 @@ export default function index({
   };
   const handleSearch = text => {
     setsearch(text);
-    console.log("The search text ====>>",text);
     const val = data.filter(city => {
-      console.log('City.branch_code ===>>', city.branch_code.toString());
-      console.log('Search ==>>', search);
-      console.log(
-        'The result ===>',
-        city.branch_code.toString().includes(search.toLowerCase()),
-      );
-      return (
-        city.branch_name.toLowerCase().includes(search.toLowerCase()) ||
-        city.branch_code.toString().includes(search.toLowerCase())
+       return (
+        city.branch_name.toLowerCase().includes(text.toLowerCase()) ||
+        city.branch_code.toString().includes(text.toLowerCase())
       );
     });
 
-    console.log('The value ---->>>>', val);
     setfilterData(val);
-    if(!text)
-    {
-        setfilterData(data);
+    if (!text) {
+      setfilterData(data);
     }
-    
   };
   const set = () => {
     setdropDown(!dropDown);

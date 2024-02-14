@@ -587,7 +587,7 @@ const Question = props => {
                 {question?.data?.question_id === 569 ||
                 question?.data?.question_id === 571
                   ? null
-                  : `Insurer : ${branchDetailData?.insurance_com}`}
+                  : `Insurer : ${branchDetailData?.insurance_com ? branchDetailData?.insurance_com : ""}`}
               </Text>
             </View>
           </>
