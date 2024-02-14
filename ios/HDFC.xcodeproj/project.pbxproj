@@ -606,7 +606,7 @@
 				CODE_SIGN_ENTITLEMENTS = HDFC/HDFC.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = L6K53HTKSQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HDFC/Info.plist;
@@ -616,7 +616,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -641,7 +641,7 @@
 				CODE_SIGN_ENTITLEMENTS = HDFC/HDFC.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = L6K53HTKSQ;
 				INFOPLIST_FILE = HDFC/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Virtual Audit Application";
@@ -650,7 +650,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 3.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

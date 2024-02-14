@@ -2,20 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>User Location shall be used to identify their audit location precisely as most of the features in the app need the user to be within a specific location while conducting the audit. Without this location, the user cannot confirm the venue from which the audit process is conducted</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>Kreate Communication</string>
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-	</array>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>TPP Review</string>
+	<string>AUDIT</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,6 +18,11 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Application Require Permission to tag image location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Application Require Permission to tag image location</string>
+
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -50,11 +45,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>User Camera shall be used to capture the images that can be recorded during your audit process. Without Camera Usage, user cannot take any pics of the elements they are auditing.</string>
+	<string>Camera Permission</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>User Location shall be used to identify their audit location precisely as most of the features in the app need the user to be within a specific location while conducting the audit. Without this location, the user cannot confirm the venue from which the audit process is conducted</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>User Location shall be used to identify their audit location precisely as most of the features in the app need the user to be within a specific location while conducting the audit. Without this location, the user cannot confirm the venue from which the audit process is conducted</string>
+	<string>Your usage description here</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone Permission</string>
 	<key>NSPhotoLibraryUsageDescription</key>
