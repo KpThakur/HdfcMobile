@@ -65,14 +65,19 @@ export default function RescheduleAudit(props) {
   //   newData.push('19-00');
   //   return newData;
   // };
+  const data = {
+    startTime : 0,
+    endTime : 23,
+    interval : 5
+  }
   const generateTimeData = () => {
     const newData = [];
   
-    for (let i = 8; i <= 21; i++) {
-      for (let j = 0; j <= 55; j += 5) {
-        if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
-          continue;
-        }
+    for (let i = data.startTime; i <= data.endTime; i++) {
+      for (let j = 0; j <= 55; j += data.interval) {
+        // if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
+        //   continue;
+        // }
   
         const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
         newData.push(formattedTime);

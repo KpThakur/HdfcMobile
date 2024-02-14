@@ -23,6 +23,11 @@ export default function Index({ navigation }) {
     const [cityId, setcityId] = useState(null)
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
+    const [availability, setAvailability] = useState();
+    const [employeName, setEmployeeName] = useState();
+    const [employeEmail, setEmployeeEmail] = useState();
+    const [employeeRole, setEmployeeRole] = useState();
+    const [employeeDesignation, setEmployeeDesignation] = useState();
     useEffect(() => {
         // getCityName()
         resetState();
@@ -109,6 +114,7 @@ export default function Index({ navigation }) {
         )
     }
     const validation = () => {
+        let reg = /^\s*\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+\s*$/;
         if (!cityId) {
             ShowAlert('Select City Name')
             return false
@@ -117,7 +123,7 @@ export default function Index({ navigation }) {
             ShowAlert('Select Branch Name')
             return false
         }
-        if (!time) {
+        if (!time) {    
             ShowAlert('Select Time')
             return false
         }
@@ -128,6 +134,42 @@ export default function Index({ navigation }) {
         if(date<moment(moment()).format('DD-MM-YYYY'))
         {
             ShowAlert("You can't select previous date")
+            return false
+        }
+        if(auditType === 1 && !availability )
+        {
+            ShowAlert("Please select BM availability");
+            return false
+        }
+        if(auditType === 1 && !employeName)
+        {
+            ShowAlert("Please enter employee name");
+            return false
+        }if(auditType === 1 && employeName.trim() === '')
+        {
+            ShowAlert("Please enter valid employee name");
+            return false
+        }
+        if(auditType === 1 && !employeEmail)
+        {
+            ShowAlert("Please enter employee email");
+            return false
+        }if(auditType === 1 && (reg.test(employeEmail) === false || employeEmail.trim() === ''))
+        {
+            ShowAlert("Please enter valid email address");
+            return false
+        } if(auditType === 1 && !employeeRole)
+        {
+            ShowAlert("Please select employee role");
+            return false
+        }
+        if(auditType === 1 && employeeRole === 'Other' && !employeeDesignation)
+        {
+            ShowAlert("Please enter employee designation");
+            return false
+        }if(auditType === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
+        {
+            ShowAlert("Please enter valid employee designation");
             return false
         }
         
@@ -193,6 +235,16 @@ export default function Index({ navigation }) {
             setauditType={setauditType}
             handleSumbit={handleSumbit}
             cityId = {cityId}
+            availability = {availability}
+            setAvailability= {setAvailability}
+            employeName = {employeName}
+            setEmployeeName = {setEmployeeName}
+            employeEmail = {employeEmail}
+            setEmployeeEmail = {setEmployeeEmail}
+            employeeRole = {employeeRole}
+            setEmployeeRole = {setEmployeeRole}
+            employeeDesignation = {employeeDesignation}
+            setEmployeeDesignation = {setEmployeeDesignation}
         />
         </>
     )
