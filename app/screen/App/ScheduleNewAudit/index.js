@@ -141,38 +141,41 @@ export default function Index({ navigation }) {
             ShowAlert("Please select BM availability");
             return false
         }
-        if(auditType === 1 && !employeName)
-        {
-            ShowAlert("Please enter employee name");
-            return false
-        }if(auditType === 1 && employeName.trim() === '')
-        {
-            ShowAlert("Please enter valid employee name");
-            return false
+        if(availability === 2 ){
+            if(auditType === 1 && !employeName)
+            {
+                ShowAlert("Please enter employee name");
+                return false
+            }if(auditType === 1 && employeName.trim() === '')
+            {
+                ShowAlert("Please enter valid employee name");
+                return false
+            }
+            if(auditType === 1 && !employeEmail)
+            {
+                ShowAlert("Please enter employee email");
+                return false
+            }if(auditType === 1 && (reg.test(employeEmail) === false || employeEmail.trim() === ''))
+            {
+                ShowAlert("Please enter valid email address");
+                return false
+            } if(auditType === 1 && !employeeRole)
+            {
+                ShowAlert("Please select employee role");
+                return false
+            }
+            if(auditType === 1 && employeeRole === 'Other' && !employeeDesignation)
+            {
+                ShowAlert("Please enter employee designation");
+                return false
+            }if(auditType === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
+            {
+                ShowAlert("Please enter valid employee designation");
+                return false
+            }
+            
         }
-        if(auditType === 1 && !employeEmail)
-        {
-            ShowAlert("Please enter employee email");
-            return false
-        }if(auditType === 1 && (reg.test(employeEmail) === false || employeEmail.trim() === ''))
-        {
-            ShowAlert("Please enter valid email address");
-            return false
-        } if(auditType === 1 && !employeeRole)
-        {
-            ShowAlert("Please select employee role");
-            return false
-        }
-        if(auditType === 1 && employeeRole === 'Other' && !employeeDesignation)
-        {
-            ShowAlert("Please enter employee designation");
-            return false
-        }if(auditType === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
-        {
-            ShowAlert("Please enter valid employee designation");
-            return false
-        }
-        
+       
         return true
     }
     const handleSumbit = async () => {

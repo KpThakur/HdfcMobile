@@ -22,6 +22,11 @@ export default function Index({ navigation }) {
     const [branchNameId, setbranchNameId] = useState()
     const [branchManagerId, setbranchManagerId] = useState()
     const [editAudit,seteditAudit]=useContext(EditAuditContext)
+    const [availability, setAvailability] = useState();
+    const [employeName, setEmployeeName] = useState();
+    const [employeEmail, setEmployeeEmail] = useState();
+    const [employeeRole, setEmployeeRole] = useState();
+    const [employeeDesignation, setEmployeeDesignation] = useState();
     useEffect(() => {
         // getCityName()
         getBranchName(editAudit.city_id)
@@ -85,6 +90,7 @@ export default function Index({ navigation }) {
         )
     }
     const validation = () => {
+        let reg = /^\s*\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+\s*$/;
         if (!editAudit.city_id) {
             ShowAlert('Select City Name')
             return false
@@ -97,7 +103,46 @@ export default function Index({ navigation }) {
         {
             ShowAlert("You can't select previous date")
             return false
+        } 
+        if(editAudit.audit_type === 1 && !availability )
+        {
+            ShowAlert("Please select BM availability");
+            return false
         }
+        if(availability === 2){
+            if(editAudit.audit_type === 1 && !employeName)
+            {
+                ShowAlert("Please enter employee name");
+                return false
+            }if(editAudit.audit_type === 1 && employeName.trim() === '')
+            {
+                ShowAlert("Please enter valid employee name");
+                return false
+            }
+            if(editAudit.audit_type === 1 && !employeEmail)
+            {
+                ShowAlert("Please enter employee email");
+                return false
+            }if(editAudit.audit_type === 1 && (reg.test(employeEmail) === false || employeEmail.trim() === ''))
+            {
+                ShowAlert("Please enter valid email address");
+                return false
+            }if(editAudit.audit_type === 1 && !employeeRole)
+            {
+                ShowAlert("Please select employee role");
+                return false
+            }
+            if(editAudit.audit_type === 1 && employeeRole === 'Other' && !employeeDesignation)
+            {
+                ShowAlert("Please enter employee designation");
+                return false
+            }if(editAudit.audit_type === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
+            {
+                ShowAlert("Please enter valid employee designation");
+                return false
+            }
+        }
+       
         
         return true
     }
@@ -139,6 +184,16 @@ export default function Index({ navigation }) {
             branchManagerName={branchManagerName}
             handleSumbit={handleSumbit}
             editAudit={editAudit} seteditAudit={seteditAudit}
+            availability = {availability}
+            setAvailability= {setAvailability}
+            employeName = {employeName}
+            setEmployeeName = {setEmployeeName}
+            employeEmail = {employeEmail}
+            setEmployeeEmail = {setEmployeeEmail}
+            employeeRole = {employeeRole}
+            setEmployeeRole = {setEmployeeRole}
+            employeeDesignation = {employeeDesignation}
+            setEmployeeDesignation = {setEmployeeDesignation}
         />
         </>
     )

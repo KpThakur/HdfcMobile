@@ -479,9 +479,8 @@ export default function ScheduleNewAudit(props) {
                           }}>
                           <View>
                             <Text>
-                              {availability
-                                ? availability
-                                : 'Select BM availability'}
+                            { availability ===1 ? 'BM Available': (availability === 2 ? 'BM Not Available':'Select BM availability')}
+                              
                             </Text>
                           </View>
 
@@ -509,7 +508,7 @@ export default function ScheduleNewAudit(props) {
                             <TouchableOpacity
                               onPress={() => {
                                 setBmDropDown(!bmDropDown);
-                                setAvailability('BM Available');
+                                setAvailability(1);
                               }}
                               style={[styles.drop_down_item, {zIndex: 10}]}>
                               <Text>BM Available</Text>
@@ -517,7 +516,7 @@ export default function ScheduleNewAudit(props) {
                             <TouchableOpacity
                               onPress={() => {
                                 setBmDropDown(!bmDropDown);
-                                setAvailability('BM Not Available');
+                                setAvailability(2);
                               }}
                               style={[styles.drop_down_item, {zIndex: 10}]}>
                               <Text>BM Not Available</Text>
@@ -525,7 +524,7 @@ export default function ScheduleNewAudit(props) {
                           </View>
                         ) : null}
                       </View>
-                      {availability === 'BM Not Available' ? (
+                      {availability === 2 ? (
                         <>
                           <View
                             style={{flex: 1, marginTop: 20, marginBottom: 10}}>

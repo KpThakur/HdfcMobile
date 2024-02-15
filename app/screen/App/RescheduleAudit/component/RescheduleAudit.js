@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
+  TextInput
 } from 'react-native';
 import {styles} from './styles';
 import DropDown from '../../../../component/DropDown';
@@ -33,6 +34,8 @@ export default function RescheduleAudit(props) {
   const [openDates, setopenDates] = useState(false);
   const [openTime, setopenTime] = useState(false);
   const [dropDown, setdropDown] = useState(false);
+  const [bmDropDown, setBmDropDown] = useState(false);
+  const [roleDropDown, setRoleDropDown] = useState(false);
   const {
     handleSchedule,
     cityBranch,
@@ -50,8 +53,23 @@ export default function RescheduleAudit(props) {
     handleSumbit,
     editAudit,
     seteditAudit,
+    availability,
+    setAvailability,
+    employeName ,
+    setEmployeeName,
+    employeEmail,
+    setEmployeeEmail,
+    employeeRole,
+    setEmployeeRole,
+    employeeDesignation,
+    setEmployeeDesignation 
   } = props;
-
+  function handleBMDropdown() {
+    setBmDropDown(!bmDropDown);
+  }
+  function handleRoleDropdown() {
+    setRoleDropDown(!roleDropDown);
+  }
   // const generateTimeData = () => {
   //   const newData = [];
 
@@ -433,6 +451,178 @@ export default function RescheduleAudit(props) {
                   </Text>
                 </TouchableOpacity>
               </View>
+              {editAudit.audit_type === 1 ? (
+                  <>
+                    <View style={{flex: 1}}>
+                      <View style={{}}>
+                        <TouchableOpacity
+                          onPress={() => handleBMDropdown()}
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            backgroundColor: GREY_TEXT_COLOR,
+                            paddingVertical: 10,
+                            paddingHorizontal: 10,
+                            width: '60%',
+                          }}>
+                          <View>
+                            <Text>
+                              { availability ===1 ? 'BM Available': (availability === 2 ? 'BM Not Available':'Select BM availability')}
+                            
+                            </Text>
+                          </View>
+
+                          {bmDropDown ? (
+                            <Image
+                            source={DOWNARROW}
+                    
+                              style={{transform: [{rotateZ: '180deg'}]}}
+                            />
+                          ) : (
+                            <Image source={DOWNARROW} />
+                          )}
+                        </TouchableOpacity>
+                        {bmDropDown ? (
+                          <View
+                            style={{
+                              flex: 1,
+                              flexDirection: 'column',
+                              paddingHorizontal: 10,
+                              top: 5,
+                              left: 0,
+                              marginRight: 160,
+                              backgroundColor: GREY_TEXT_COLOR,
+                              zIndex: 1,
+                            }}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setBmDropDown(!bmDropDown);
+                                setAvailability(1);
+                              }}
+                              style={[styles.drop_down_item, {zIndex: 10}]}>
+                              <Text>BM Available</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setBmDropDown(!bmDropDown);
+                                setAvailability(2);
+                              }}
+                              style={[styles.drop_down_item, {zIndex: 10}]}>
+                              <Text>BM Not Available</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ) : null}
+                      </View>
+                      {availability === 2 ? (
+                        <>
+                          <View
+                            style={{flex: 1, marginTop: 20, marginBottom: 10}}>
+                            <Text style={styles.txt_head}>
+                              Employee Details:
+                            </Text>
+                            <TextInput
+                              style={{
+                                backgroundColor: GREY_TEXT_COLOR,
+                                borderRadius: 5,
+                                paddingVertical: 10,
+                                paddingHorizontal: 10,
+                                marginVertical: 10,
+                              }}
+                              value={employeName}
+                              placeholder="Employee name"
+                              onChangeText={text => setEmployeeName(text)}
+                            />
+                            <TextInput
+                              style={{
+                                backgroundColor: GREY_TEXT_COLOR,
+                                borderRadius: 5,
+                                paddingVertical: 10,
+                                paddingHorizontal: 10,
+                                marginVertical: 5,
+                              }}
+                              value={employeEmail}
+                              placeholder="Employee email"
+                              onChangeText={text => setEmployeeEmail(text)}
+                            />
+                            <TouchableOpacity
+                              onPress={() => handleRoleDropdown()}
+                              style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                backgroundColor: GREY_TEXT_COLOR,
+                                paddingVertical: 12,
+                                paddingHorizontal: 10,
+                                marginVertical: 10,
+                                width: '100%',
+                                borderRadius: 5,
+                              }}>
+                              <View>
+                                <Text>
+                                  {employeeRole
+                                    ? employeeRole
+                                    : 'Employee role'}
+                                </Text>
+                              </View>
+
+                              {roleDropDown ? (
+                                <Image
+                                  source={DOWNARROW}
+                                  style={{transform: [{rotateZ: '180deg'}]}}
+                                />
+                              ) : (
+                                <Image source={DOWNARROW} />
+                              )}
+                            </TouchableOpacity>
+                            {roleDropDown ? (
+                              <View
+                                style={{
+                                  flex: 1,
+                                  flexDirection: 'column',
+                                  paddingHorizontal: 10,
+                                  top: -5,
+                                  left: 0,
+                                  marginRight: 160,
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  zIndex: 1,
+                                }}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setRoleDropDown(!roleDropDown);
+                                    setEmployeeRole('Breakup BM');
+                                  }}
+                                  style={[styles.drop_down_item, {zIndex: 10}]}>
+                                  <Text>Breakup BM</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setRoleDropDown(!roleDropDown);
+                                    setEmployeeRole('Other');
+                                  }}
+                                  style={[styles.drop_down_item, {zIndex: 10}]}>
+                                  <Text>Other</Text>
+                                </TouchableOpacity>
+                              </View>
+                            ) : null}
+                            {employeeRole === 'Other' ? (
+                              <TextInput
+                                style={{
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  borderRadius: 5,
+                                  paddingVertical: 10,
+                                  paddingHorizontal: 10,
+                                  marginVertical: 5,
+                                }}
+                                value = { employeeDesignation}
+                                placeholder="Employee designation"
+                                onChangeText={(text) => setEmployeeDesignation(text)}
+                              />
+                            ) : null}
+                          </View>
+                        </>
+                      ) : null}
+                    </View>
+                  </>
+                ) : null}
             </View>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
