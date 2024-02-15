@@ -92,7 +92,6 @@ export default function Index({ navigation }) {
         }
     }
     const getBranchName = async (city_id = '') => {
-        console.log("city_id", city_id)
         try {
             setisLaoding(true)
             const params = { city_id }
@@ -100,7 +99,6 @@ export default function Index({ navigation }) {
             setisLaoding(false)
             if (response.status === 200) {
                 setbranchDetail(response.data.data)
-                console.log('BranchName>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', response)
             }
         } catch (error) {
             console.log(error.message)

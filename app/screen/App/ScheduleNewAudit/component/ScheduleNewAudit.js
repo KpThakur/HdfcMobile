@@ -98,7 +98,7 @@ export default function ScheduleNewAudit(props) {
 
   // const timeData = generateTimeData();
 
-  const data = {
+   const data = {
     startTime: 0,
     endTime: 23,
     interval: 5,
@@ -111,6 +111,9 @@ export default function ScheduleNewAudit(props) {
         // if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
         //   continue;
         // }
+        if ((i === 0 && j === 0) ) {
+          continue;
+        }
 
         const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
         newData.push(formattedTime);
@@ -122,6 +125,26 @@ export default function ScheduleNewAudit(props) {
   };
 
   const timeData = generateTimeData();
+
+  // const generateTimeData = () => {
+  //   const newData = [];
+  
+  //   for (let i = 8; i <= 21; i++) {
+  //     for (let j = 0; j <= 55; j += 5) {
+  //       if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
+  //         continue;
+  //       }
+  
+  //       const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
+  //       newData.push(formattedTime);
+  //     }
+  //   }
+  
+  //   // newData.push('22-00');
+  //   return newData;
+  // };
+  
+  // const timeData = generateTimeData();
 
   useEffect(() => {
     setdropDown(false);
@@ -148,7 +171,7 @@ export default function ScheduleNewAudit(props) {
           )
         }
         style={styles.drop_down_item}>
-        <Text style={styles.txt}>{item.branch_name}</Text>
+        <Text style={styles.txt}>{item.branch_code} - {item.branch_name}</Text>
       </TouchableOpacity>
     );
   };
