@@ -7,6 +7,7 @@ import {
   Alert,
   Platform,
   TextInput,
+  TouchableWithoutFeedback
 } from 'react-native';
 import {styles} from './styles';
 import DropDown from '../../../../component/DropDown';
@@ -79,7 +80,7 @@ export default function ScheduleNewAudit(props) {
     employeeRole,
     setEmployeeRole,
     employeeDesignation,
-    setEmployeeDesignation
+    setEmployeeDesignation,
   } = props;
 
   // const generateTimeData = () => {
@@ -98,7 +99,7 @@ export default function ScheduleNewAudit(props) {
 
   // const timeData = generateTimeData();
 
-   const data = {
+  const data = {
     startTime: 0,
     endTime: 23,
     interval: 5,
@@ -111,7 +112,7 @@ export default function ScheduleNewAudit(props) {
         // if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
         //   continue;
         // }
-        if ((i === 0 && j === 0) ) {
+        if (i === 0 && j === 0) {
           continue;
         }
 
@@ -128,22 +129,22 @@ export default function ScheduleNewAudit(props) {
 
   // const generateTimeData = () => {
   //   const newData = [];
-  
+
   //   for (let i = 8; i <= 21; i++) {
   //     for (let j = 0; j <= 55; j += 5) {
   //       if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
   //         continue;
   //       }
-  
+
   //       const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
   //       newData.push(formattedTime);
   //     }
   //   }
-  
+
   //   // newData.push('22-00');
   //   return newData;
   // };
-  
+
   // const timeData = generateTimeData();
 
   useEffect(() => {
@@ -171,7 +172,9 @@ export default function ScheduleNewAudit(props) {
           )
         }
         style={styles.drop_down_item}>
-        <Text style={styles.txt}>{item.branch_code} - {item.branch_name}</Text>
+        <Text style={styles.txt}>
+          {item.branch_code} - {item.branch_name}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -188,6 +191,11 @@ export default function ScheduleNewAudit(props) {
   // }
   // timeData.push('19-00');
   const navigation = useNavigation();
+  const setAllDropDown = () => {
+    setdropDown(false)
+    setBmDropDown(false)
+    setRoleDropDown(false)
+  }
   return (
     <>
       {isLoading ? (
@@ -205,9 +213,10 @@ export default function ScheduleNewAudit(props) {
               }}
             />
 
-            <TouchableOpacity
-              onPress={() => setdropDown(false)}
-              style={{
+            <TouchableWithoutFeedback
+              onPress={() => setAllDropDown()}
+             >
+                <View style={{
                 padding: 20,
                 justifyContent: 'space-evenly',
               }}>
@@ -370,6 +379,7 @@ export default function ScheduleNewAudit(props) {
                         justifyContent: 'space-between',
                         paddingVertical: 10,
                         paddingHorizontal: 10,
+                        
                       }}>
                       <Image source={CLOCK} />
                       <Text style={{marginHorizontal: 10}}>
@@ -395,14 +405,14 @@ export default function ScheduleNewAudit(props) {
                           width: '100%',
                           backgroundColor: GREY_TEXT_COLOR,
                           height: Platform.OS == 'ios' ? 150 : 200,
-                          zIndex: 1,
+                          zIndex: 100,
                         }}>
                         {timeData &&
                           timeData.map((item, index) => {
                             return (
                               <TouchableOpacity
                                 key={index}
-                                style={[styles.drop_down_item, {zIndex: 1}]}
+                                style={[styles.drop_down_item, {zIndex: 100}]}
                                 onPress={() => {
                                   if (
                                     date ==
@@ -432,7 +442,7 @@ export default function ScheduleNewAudit(props) {
                                     setdropDown(false);
                                   }
                                 }}>
-                                <Text style={styles.drop_down_txt}>{item}</Text>
+                                <Text style={[styles.drop_down_txt,{zIndex: 999}]}>{item}</Text>
                               </TouchableOpacity>
                             );
                           })}
@@ -488,43 +498,52 @@ export default function ScheduleNewAudit(props) {
                 </View>
                 {auditType === 1 ? (
                   <>
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1, marginTop: -30}}>
                       <View style={{}}>
                         <TouchableOpacity
-                          onPress={() => handleBMDropdown()}
+                          onPress={() => {handleBMDropdown() ;setdropDown(false); setRoleDropDown(false)}}
                           style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             backgroundColor: GREY_TEXT_COLOR,
                             paddingVertical: 10,
                             paddingHorizontal: 10,
-                            width: '60%',
+                            width: '100%',
+                            zIndex: 0
                           }}>
                           <View>
                             <Text>
-                            { availability ===1 ? 'BM Available': (availability === 2 ? 'BM Not Available':'Select BM availability')}
-                              
+                              {availability === 1
+                                ? 'BM Available'
+                                : availability === 2
+                                ? 'BM Not Available'
+                                : 'Select BM availability'}
                             </Text>
                           </View>
-
-                          {bmDropDown ? (
-                            <Image
-                              source={DOWNARROW}
-                              style={{transform: [{rotateZ: '180deg'}]}}
-                            />
-                          ) : (
-                            <Image source={DOWNARROW} />
-                          )}
+                          <View
+                            style={{
+                              flexDirection: 'column',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            {bmDropDown ? (
+                              <Image
+                                source={DOWNARROW}
+                                style={{transform: [{rotateZ: '180deg'}]}}
+                              />
+                            ) : (
+                              <Image source={DOWNARROW} />
+                            )}
+                          </View>
                         </TouchableOpacity>
                         {bmDropDown ? (
                           <View
                             style={{
                               flex: 1,
                               flexDirection: 'column',
-                              paddingHorizontal: 10,
-                              top: 5,
+                              top: 0,
                               left: 0,
-                              marginRight: 160,
+                              // marginRight: 160,
                               backgroundColor: GREY_TEXT_COLOR,
                               zIndex: 1,
                             }}>
@@ -552,8 +571,9 @@ export default function ScheduleNewAudit(props) {
                           <View
                             style={{flex: 1, marginTop: 20, marginBottom: 10}}>
                             <Text style={styles.txt_head}>
-                              Employee Details:
+                              Backup BM Detail
                             </Text>
+                            <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
                             <TextInput
                               style={{
                                 backgroundColor: GREY_TEXT_COLOR,
@@ -564,8 +584,11 @@ export default function ScheduleNewAudit(props) {
                               }}
                               value={employeName}
                               placeholder="Employee name"
-                              onChangeText={text => setEmployeeName(text)}
+                              onFocus={()=> setAllDropDown()}
+                              onChangeText={text => {setEmployeeName(text) }}
                             />
+                            </TouchableWithoutFeedback>
+                            <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
                             <TextInput
                               style={{
                                 backgroundColor: GREY_TEXT_COLOR,
@@ -576,68 +599,77 @@ export default function ScheduleNewAudit(props) {
                               }}
                               value={employeEmail}
                               placeholder="Employee email"
+                              onFocus={()=> setAllDropDown()}
                               onChangeText={text => setEmployeeEmail(text)}
                             />
+                            </TouchableWithoutFeedback>
+                            <Text style={{...styles.txt_head, top: 15}}>
+                              Employee Designation
+                            </Text>
                             <TouchableOpacity
-                              onPress={() => handleRoleDropdown()}
+                              onPress={() => {handleRoleDropdown(); setBmDropDown(false); setdropDown(false)}}
                               style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                                 backgroundColor: GREY_TEXT_COLOR,
                                 paddingVertical: 12,
                                 paddingHorizontal: 10,
-                                marginVertical: 10,
+                                marginVertical: 20,
                                 width: '100%',
                                 borderRadius: 5,
                               }}>
                               <View>
                                 <Text>
-                                  {employeeRole
-                                    ? employeeRole
-                                    : 'Employee role'}
+                                  {employeeRole === 1 ? 'Backup BM' : 'Other'}
                                 </Text>
                               </View>
-
-                              {roleDropDown ? (
-                                <Image
-                                  source={DOWNARROW}
-                                  style={{transform: [{rotateZ: '180deg'}]}}
-                                />
-                              ) : (
-                                <Image source={DOWNARROW} />
-                              )}
+                              <View
+                                style={{
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                {roleDropDown ? (
+                                  <Image
+                                    source={DOWNARROW}
+                                    style={{transform: [{rotateZ: '180deg'}]}}
+                                  />
+                                ) : (
+                                  <Image source={DOWNARROW} />
+                                )}
+                              </View>
                             </TouchableOpacity>
                             {roleDropDown ? (
                               <View
                                 style={{
                                   flex: 1,
                                   flexDirection: 'column',
-                                  paddingHorizontal: 10,
-                                  top: -5,
+                                  // paddingHorizontal: 10,
+                                  top: -20,
                                   left: 0,
-                                  marginRight: 160,
+                                  // marginRight: 160,
                                   backgroundColor: GREY_TEXT_COLOR,
                                   zIndex: 1,
                                 }}>
                                 <TouchableOpacity
                                   onPress={() => {
                                     setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole('Breakup BM');
+                                    setEmployeeRole(1);
                                   }}
                                   style={[styles.drop_down_item, {zIndex: 10}]}>
-                                  <Text>Breakup BM</Text>
+                                  <Text>Backup BM</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                   onPress={() => {
                                     setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole('Other');
+                                    setEmployeeRole(2);
                                   }}
                                   style={[styles.drop_down_item, {zIndex: 10}]}>
                                   <Text>Other</Text>
                                 </TouchableOpacity>
                               </View>
                             ) : null}
-                            {employeeRole === 'Other' ? (
+                            {employeeRole === 2 ? (
                               <TextInput
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
@@ -646,9 +678,12 @@ export default function ScheduleNewAudit(props) {
                                   paddingHorizontal: 10,
                                   marginVertical: 5,
                                 }}
-                                value = { employeeDesignation}
+                                value={employeeDesignation}
                                 placeholder="Employee designation"
-                                onChangeText={(text) => setEmployeeDesignation(text)}
+                                onFocus={()=> setAllDropDown()}
+                                onChangeText={text =>
+                                  setEmployeeDesignation(text)
+                                }
                               />
                             ) : null}
                           </View>
@@ -658,8 +693,9 @@ export default function ScheduleNewAudit(props) {
                   </>
                 ) : null}
               </View>
+              </View>
               {/* </ScrollView> */}
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
               <Button buttonText="Schedule" onPress={() => handleSumbit()} />

@@ -26,7 +26,7 @@ export default function Index({ navigation }) {
     const [availability, setAvailability] = useState();
     const [employeName, setEmployeeName] = useState();
     const [employeEmail, setEmployeeEmail] = useState();
-    const [employeeRole, setEmployeeRole] = useState();
+    const [employeeRole, setEmployeeRole] = useState(1);
     const [employeeDesignation, setEmployeeDesignation] = useState();
     useEffect(() => {
         // getCityName()
@@ -162,11 +162,11 @@ export default function Index({ navigation }) {
                 ShowAlert("Please select employee role");
                 return false
             }
-            if(auditType === 1 && employeeRole === 'Other' && !employeeDesignation)
+            if(auditType === 1 && employeeRole === 2 && !employeeDesignation)
             {
                 ShowAlert("Please enter employee designation");
                 return false
-            }if(auditType === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
+            }if(auditType === 1 && employeeRole === 2 && employeeDesignation.trim() === '')
             {
                 ShowAlert("Please enter valid employee designation");
                 return false
@@ -184,8 +184,14 @@ export default function Index({ navigation }) {
                 branch_id: branchNameId,
                 branch_manager: branchManagerName,
                 audit_date: date,
-                audit_time: time, audit_type: auditType,
-                branch_manager_id: branchManagerId
+                audit_time: time, 
+                audit_type: auditType,
+                branch_manager_id: branchManagerId,
+                bm_availability : auditType === 1 ? availability : null,
+                emp_name : auditType === 1 ? employeName : null,
+                emp_email : auditType === 1 ? employeEmail : null,
+                emp_role_type : auditType === 1 ? employeeRole : null,
+                emp_role : auditType === 1 && employeeRole === 2 ? employeeDesignation : null
             }
             try {
                 setisLaoding(true)

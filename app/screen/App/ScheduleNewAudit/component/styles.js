@@ -22,8 +22,10 @@ export const styles = StyleSheet.create({
     drop_down_item: {
         marginVertical: 5,
         padding: 10,
-        borderBottomColor: "gray",
-        borderBottomWidth: 1,
+        borderTopColor: 'gray',
+        borderTopWidth: 1,
+        // borderBottomColor: "gray",
+        // borderBottomWidth: 1,
         zIndex:1
         // shadowColor:"#000",
         // shadowOffset: {

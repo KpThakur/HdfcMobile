@@ -25,7 +25,7 @@ export default function Index({ navigation }) {
     const [availability, setAvailability] = useState();
     const [employeName, setEmployeeName] = useState();
     const [employeEmail, setEmployeeEmail] = useState();
-    const [employeeRole, setEmployeeRole] = useState();
+    const [employeeRole, setEmployeeRole] = useState(1);
     const [employeeDesignation, setEmployeeDesignation] = useState();
     useEffect(() => {
         // getCityName()
@@ -132,11 +132,11 @@ export default function Index({ navigation }) {
                 ShowAlert("Please select employee role");
                 return false
             }
-            if(editAudit.audit_type === 1 && employeeRole === 'Other' && !employeeDesignation)
+            if(editAudit.audit_type === 1 && employeeRole === 2 && !employeeDesignation)
             {
                 ShowAlert("Please enter employee designation");
                 return false
-            }if(editAudit.audit_type === 1 && employeeRole === 'Other' && employeeDesignation.trim() === '')
+            }if(editAudit.audit_type === 1 && employeeRole === 2 && employeeDesignation.trim() === '')
             {
                 ShowAlert("Please enter valid employee designation");
                 return false

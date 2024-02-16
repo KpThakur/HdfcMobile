@@ -477,7 +477,7 @@ export default function RescheduleAudit(props) {
               </View>
               {editAudit.audit_type === 1 ? (
                   <>
-                    <View style={{flex: 1}}>
+                    <View style={{flex: 1,marginTop: -30}}>
                       <View style={{}}>
                         <TouchableOpacity
                           onPress={() => handleBMDropdown()}
@@ -487,7 +487,7 @@ export default function RescheduleAudit(props) {
                             backgroundColor: GREY_TEXT_COLOR,
                             paddingVertical: 10,
                             paddingHorizontal: 10,
-                            width: '60%',
+                            width: '100%',
                           }}>
                           <View>
                             <Text>
@@ -495,7 +495,7 @@ export default function RescheduleAudit(props) {
                             
                             </Text>
                           </View>
-
+                          <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                           {bmDropDown ? (
                             <Image
                             source={DOWNARROW}
@@ -504,17 +504,16 @@ export default function RescheduleAudit(props) {
                             />
                           ) : (
                             <Image source={DOWNARROW} />
-                          )}
+                          )}</View>
                         </TouchableOpacity>
                         {bmDropDown ? (
                           <View
                             style={{
                               flex: 1,
                               flexDirection: 'column',
-                              paddingHorizontal: 10,
-                              top: 5,
+                              top: 0,
                               left: 0,
-                              marginRight: 160,
+                              // marginRight: 160,
                               backgroundColor: GREY_TEXT_COLOR,
                               zIndex: 1,
                             }}>
@@ -542,7 +541,7 @@ export default function RescheduleAudit(props) {
                           <View
                             style={{flex: 1, marginTop: 20, marginBottom: 10}}>
                             <Text style={styles.txt_head}>
-                              Employee Details:
+                            Backup BM Detail:
                             </Text>
                             <TextInput
                               style={{
@@ -568,6 +567,9 @@ export default function RescheduleAudit(props) {
                               placeholder="Employee email"
                               onChangeText={text => setEmployeeEmail(text)}
                             />
+                             <Text style={{...styles.txt_head,top:15}}>
+                              Employee Designation
+                            </Text>
                             <TouchableOpacity
                               onPress={() => handleRoleDropdown()}
                               style={{
@@ -576,18 +578,16 @@ export default function RescheduleAudit(props) {
                                 backgroundColor: GREY_TEXT_COLOR,
                                 paddingVertical: 12,
                                 paddingHorizontal: 10,
-                                marginVertical: 10,
+                                marginVertical: 20,
                                 width: '100%',
                                 borderRadius: 5,
                               }}>
                               <View>
                                 <Text>
-                                  {employeeRole
-                                    ? employeeRole
-                                    : 'Employee role'}
+                                { employeeRole ===1 ? 'Backup BM':'Other'}
                                 </Text>
                               </View>
-
+                              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                               {roleDropDown ? (
                                 <Image
                                   source={DOWNARROW}
@@ -595,39 +595,39 @@ export default function RescheduleAudit(props) {
                                 />
                               ) : (
                                 <Image source={DOWNARROW} />
-                              )}
+                              )} </View>
                             </TouchableOpacity>
                             {roleDropDown ? (
                               <View
                                 style={{
                                   flex: 1,
                                   flexDirection: 'column',
-                                  paddingHorizontal: 10,
-                                  top: -5,
+                                  // paddingHorizontal: 10,
+                                  top: -20,
                                   left: 0,
-                                  marginRight: 160,
+                                  // marginRight: 160,
                                   backgroundColor: GREY_TEXT_COLOR,
                                   zIndex: 1,
                                 }}>
                                 <TouchableOpacity
                                   onPress={() => {
                                     setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole('Breakup BM');
+                                    setEmployeeRole(1);
                                   }}
                                   style={[styles.drop_down_item, {zIndex: 10}]}>
-                                  <Text>Breakup BM</Text>
+                                  <Text>Backup BM</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                   onPress={() => {
                                     setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole('Other');
+                                    setEmployeeRole(2);
                                   }}
                                   style={[styles.drop_down_item, {zIndex: 10}]}>
                                   <Text>Other</Text>
                                 </TouchableOpacity>
                               </View>
                             ) : null}
-                            {employeeRole === 'Other' ? (
+                            {employeeRole === 2 ? (
                               <TextInput
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
