@@ -104,39 +104,39 @@ export default function Index({ navigation }) {
             ShowAlert("You can't select previous date")
             return false
         } 
-        if(editAudit.audit_type === 1 && !availability )
+        if(editAudit.audit_type === 1 && !editAudit.bm_availability )
         {
             ShowAlert("Please select BM availability");
             return false
         }
-        if(availability === 2){
-            if(editAudit.audit_type === 1 && !employeName)
+        if(editAudit.bm_availability === 2){
+            if(editAudit.audit_type === 1 && !editAudit.emp_name)
             {
                 ShowAlert("Please enter employee name");
                 return false
-            }if(editAudit.audit_type === 1 && employeName.trim() === '')
+            }if(editAudit.audit_type === 1 && editAudit.emp_name.trim() === '')
             {
                 ShowAlert("Please enter valid employee name");
                 return false
             }
-            if(editAudit.audit_type === 1 && !employeEmail)
+            if(editAudit.audit_type === 1 && !editAudit.emp_email)
             {
                 ShowAlert("Please enter employee email");
                 return false
-            }if(editAudit.audit_type === 1 && (reg.test(employeEmail) === false || employeEmail.trim() === ''))
+            }if(editAudit.audit_type === 1 && (reg.test(editAudit.emp_email) === false || editAudit.emp_email.trim() === ''))
             {
                 ShowAlert("Please enter valid email address");
                 return false
-            }if(editAudit.audit_type === 1 && !employeeRole)
+            }if(editAudit.audit_type === 1 && !editAudit.emp_role_type)
             {
                 ShowAlert("Please select employee role");
                 return false
             }
-            if(editAudit.audit_type === 1 && employeeRole === 2 && !employeeDesignation)
+            if(editAudit.audit_type === 1 && editAudit.emp_role_type === "2" && !editAudit.emp_role)
             {
                 ShowAlert("Please enter employee designation");
                 return false
-            }if(editAudit.audit_type === 1 && employeeRole === 2 && employeeDesignation.trim() === '')
+            }if(editAudit.audit_type === 1 && editAudit.emp_role_type === "2" && editAudit.emp_role.trim() === '')
             {
                 ShowAlert("Please enter valid employee designation");
                 return false

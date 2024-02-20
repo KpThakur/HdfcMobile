@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   Alert,
   FlatList,
-  TextInput
+  TextInput,
+  TouchableWithoutFeedback
 } from 'react-native';
 import {styles} from './styles';
 import DropDown from '../../../../component/DropDown';
@@ -55,20 +56,30 @@ export default function RescheduleAudit(props) {
     seteditAudit,
     availability,
     setAvailability,
-    employeName ,
+    employeName,
     setEmployeeName,
     employeEmail,
     setEmployeeEmail,
     employeeRole,
     setEmployeeRole,
     employeeDesignation,
-    setEmployeeDesignation 
+    setEmployeeDesignation,
   } = props;
+  console.log('The bm availabitty ====>>>', editAudit.bm_availability);
+  // useEffect(() => {
+  //     setAvailability((prev) => prev=editAudit.bm_availability)
+  // })
+
   function handleBMDropdown() {
     setBmDropDown(!bmDropDown);
+    setdropDown(false);
+    setRoleDropDown(false)
+    
   }
   function handleRoleDropdown() {
     setRoleDropDown(!roleDropDown);
+    setdropDown(false);
+    setBmDropDown(false)
   }
   // const generateTimeData = () => {
   //   const newData = [];
@@ -86,18 +97,18 @@ export default function RescheduleAudit(props) {
 
   // const generateTimeData = () => {
   //   const newData = [];
-  
+
   //   for (let i = 8; i <= 21; i++) {
   //     for (let j = 0; j <= 55; j += 5) {
   //       if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
   //         continue;
   //       }
-  
+
   //       const formattedTime = `${i < 10 ? '0' + i : i}-${j < 10 ? '0' + j : j}`;
   //       newData.push(formattedTime);
   //     }
   //   }
-  
+
   //   // newData.push('22-00');
   //   return newData;
   // };
@@ -117,7 +128,7 @@ export default function RescheduleAudit(props) {
         // if ((i === 8 && j < 30) || (i === 21 && j > 30)) {
         //   continue;
         // }
-        if ((i === 0 && j === 0) ) {
+        if (i === 0 && j === 0) {
           continue;
         }
 
@@ -148,15 +159,26 @@ export default function RescheduleAudit(props) {
   const displaybranchDropDown = ({item}) => {
     return (
       <TouchableOpacity
-        onPress={() => handleSelectBranch(item.branch_name, item.branch_id, item.city,item.city_name)}
+        onPress={() =>
+          handleSelectBranch(
+            item.branch_name,
+            item.branch_id,
+            item.city,
+            item.city_name,
+          )
+        }
         style={styles.drop_down_item}>
-        <Text style={styles.txt}>{item.branch_code} - {item.branch_name}</Text>
+        <Text style={styles.txt}>
+          {item.branch_code} - {item.branch_name}
+        </Text>
       </TouchableOpacity>
     );
   };
   const handleDropDown = () => {
-   // setopenDates(false);
+    // setopenDates(false);
     setdropDown(!dropDown);
+    setBmDropDown(false)
+    setRoleDropDown(false)
   };
   // for (var i = 10; i <= 18; i++) {
   //   for (var j = 0; j <= 55; j += 15) {
@@ -166,6 +188,11 @@ export default function RescheduleAudit(props) {
   // }
   // timeData.push('19-00');
   const navigation = useNavigation();
+  const setAllDropDown = () => {
+    setdropDown(false)
+    setBmDropDown(false)
+    setRoleDropDown(false)
+  }
   return (
     <>
       {isLoading ? (
@@ -180,12 +207,14 @@ export default function RescheduleAudit(props) {
                 navigation.goBack();
               }}
             />
+              <TouchableWithoutFeedback
+              onPress={() => setAllDropDown()}
+             >
             <View
               style={{
                 padding: 20,
-               // padding: 20,
+                // padding: 20,
                 justifyContent: 'space-evenly',
-                
               }}>
               <View>
                 <Text style={styles.txt_head}>Bank Details for Review</Text>
@@ -211,7 +240,7 @@ export default function RescheduleAudit(props) {
                   setdropDown={setcitydropDown}
                   setTimeDropDown={setdropDown}
                 /> */}
-                   <Text
+                <Text
                   style={{
                     backgroundColor: GREY_TEXT_COLOR,
                     borderRadius: 5,
@@ -219,11 +248,8 @@ export default function RescheduleAudit(props) {
                     paddingHorizontal: 10,
                     marginVertical: 10,
                   }}>
-                  {editAudit ? 
-                    editAudit.city_name
-                    : 'City'}
+                  {editAudit ? editAudit.city_name : 'City'}
                 </Text>
-               
 
                 <Text
                   style={{
@@ -252,6 +278,7 @@ export default function RescheduleAudit(props) {
                       style={styles.date_time}
                       onPress={() => {
                         setopenDates(true);
+                        setAllDropDown();
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
                       {editAudit ? (
@@ -285,16 +312,15 @@ export default function RescheduleAudit(props) {
                               audit_date: moment(date).format('DD-MM-YYYY'),
                             });
                           }
-                        } else if(  moment(date)<
-                        moment(moment()))
-                        {
+                        } else if (moment(date) < moment(moment())) {
                           Alert.alert('date', "You can't select previous date");
-                        } 
-                        else if (!moment(date).isSameOrBefore(moment().add(1,'week')))
-                        {
-                            Alert.alert("You are restricted from choosing a date beyond one week.")
-                        }
-                        else {
+                        } else if (
+                          !moment(date).isSameOrBefore(moment().add(1, 'week'))
+                        ) {
+                          Alert.alert(
+                            'You are restricted from choosing a date beyond one week.',
+                          );
+                        } else {
                           setopenDates(!openDates);
                           ACDATE = moment(date).format('DD-MM-YYYY');
                           seteditAudit({
@@ -335,8 +361,8 @@ export default function RescheduleAudit(props) {
                         //     });
                         //   }
 
-                          // setopenDates(!openDates)
-                          // seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
+                        // setopenDates(!openDates)
+                        // seteditAudit({...editAudit,audit_date:moment(date).format('DD-MM-YYYY')})
                         // }
                       }}
                       onCancel={() => {
@@ -380,7 +406,7 @@ export default function RescheduleAudit(props) {
                           top: 35,
                           width: '100%',
                           backgroundColor: GREY_TEXT_COLOR,
-                          height: Platform.OS == 'ios' ? 150 : 200,
+                          height: Platform.OS == 'ios' ? (editAudit.audit_type === 1 ? 115: 150): (editAudit.audit_type === 1 ? 115: 200),
                           zIndex: 1,
                         }}>
                         {timeData &&
@@ -398,7 +424,9 @@ export default function RescheduleAudit(props) {
                                       item < moment(new Date()).format('H-mm')
                                     ) {
                                       setdropDown(false);
-                                      Alert.alert('Kindly choose an appropriate time.');
+                                      Alert.alert(
+                                        'Kindly choose an appropriate time.',
+                                      );
                                     } else {
                                       seteditAudit({
                                         ...editAudit,
@@ -471,123 +499,144 @@ export default function RescheduleAudit(props) {
                           ? PRIMARY_BLUE_COLOR
                           : 'gray',
                     }}>
-                   Virtual/online review
+                    Virtual/online review
                   </Text>
                 </TouchableOpacity>
               </View>
               {editAudit.audit_type === 1 ? (
-                  <>
-                    <View style={{flex: 1,marginTop: -30}}>
-                      <View style={{}}>
-                        <TouchableOpacity
-                          onPress={() => handleBMDropdown()}
+                <>
+                  <View style={{flex: 1, marginTop: -30}}>
+                    <View style={{}}>
+                      <TouchableOpacity
+                        onPress={() => handleBMDropdown()}
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          backgroundColor: GREY_TEXT_COLOR,
+                          paddingVertical: 10,
+                          paddingHorizontal: 10,
+                          width: '100%',
+                        }}>
+                        <View>
+                          <Text>
+                            {editAudit.bm_availability === 1
+                              ? 'BM Available'
+                              : editAudit.bm_availability === 2
+                              ? 'BM Not Available'
+                              : 'Select BM availability'}
+                          </Text>
+                        </View>
+                        <View
                           style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            backgroundColor: GREY_TEXT_COLOR,
-                            paddingVertical: 10,
-                            paddingHorizontal: 10,
-                            width: '100%',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                           }}>
-                          <View>
-                            <Text>
-                              { availability ===1 ? 'BM Available': (availability === 2 ? 'BM Not Available':'Select BM availability')}
-                            
-                            </Text>
-                          </View>
-                          <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                           {bmDropDown ? (
                             <Image
-                            source={DOWNARROW}
-                    
+                              source={DOWNARROW}
                               style={{transform: [{rotateZ: '180deg'}]}}
                             />
                           ) : (
                             <Image source={DOWNARROW} />
-                          )}</View>
-                        </TouchableOpacity>
-                        {bmDropDown ? (
-                          <View
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      {bmDropDown ? (
+                        <View
+                          style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            top: 0,
+                            left: 0,
+                            // marginRight: 160,
+                            backgroundColor: GREY_TEXT_COLOR,
+                            zIndex: 1,
+                          }}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setBmDropDown(!bmDropDown);
+                              setAvailability(1);
+                              seteditAudit({...editAudit, bm_availability: 1});
+                            }}
+                            style={[styles.drop_down_item, {zIndex: 10}]}>
+                            <Text>BM Available</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setBmDropDown(!bmDropDown);
+                              setAvailability(2);
+                              seteditAudit({...editAudit, bm_availability: 2});
+                            }}
+                            style={[styles.drop_down_item, {zIndex: 10}]}>
+                            <Text>BM Not Available</Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
+                    </View>
+                    {editAudit.bm_availability === 2 ? (
+                      <>
+                        <View
+                          style={{flex: 1, marginTop: 20, marginBottom: 10}}>
+                          <Text style={styles.txt_head}>Backup BM Detail:</Text>
+                          <TextInput
                             style={{
-                              flex: 1,
-                              flexDirection: 'column',
-                              top: 0,
-                              left: 0,
-                              // marginRight: 160,
                               backgroundColor: GREY_TEXT_COLOR,
-                              zIndex: 1,
+                              borderRadius: 5,
+                              paddingVertical: 10,
+                              paddingHorizontal: 10,
+                              marginVertical: 10,
+                            }}
+                            value={editAudit.emp_name}
+                            placeholder={'Employee name'}
+                            onFocus={()=> setAllDropDown()}
+                            onChangeText={text =>
+                              seteditAudit({...editAudit, emp_name: text})
+                            }
+                          />
+                          <TextInput
+                            style={{
+                              backgroundColor: GREY_TEXT_COLOR,
+                              borderRadius: 5,
+                              paddingVertical: 10,
+                              paddingHorizontal: 10,
+                              marginVertical: 5,
+                            }}
+                            value={editAudit.emp_email}
+                            placeholder={'Employee email'}
+                            onFocus={()=> setAllDropDown()}
+                            onChangeText={text =>
+                              seteditAudit({...editAudit, emp_email: text})
+                            }
+                          />
+                          <Text style={{...styles.txt_head, top: 15}}>
+                            Employee Designation
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => handleRoleDropdown()}
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              backgroundColor: GREY_TEXT_COLOR,
+                              paddingVertical: 12,
+                              paddingHorizontal: 10,
+                              marginVertical: 20,
+                              width: '100%',
+                              borderRadius: 5,
                             }}>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setBmDropDown(!bmDropDown);
-                                setAvailability(1);
-                              }}
-                              style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>BM Available</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setBmDropDown(!bmDropDown);
-                                setAvailability(2);
-                              }}
-                              style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>BM Not Available</Text>
-                            </TouchableOpacity>
-                          </View>
-                        ) : null}
-                      </View>
-                      {availability === 2 ? (
-                        <>
-                          <View
-                            style={{flex: 1, marginTop: 20, marginBottom: 10}}>
-                            <Text style={styles.txt_head}>
-                            Backup BM Detail:
-                            </Text>
-                            <TextInput
+                            <View>
+                              <Text>
+                                {editAudit.emp_role_type === '1'
+                                  ? 'Backup BM'
+                                  : 'Other'}
+                              </Text>
+                            </View>
+                            <View
                               style={{
-                                backgroundColor: GREY_TEXT_COLOR,
-                                borderRadius: 5,
-                                paddingVertical: 10,
-                                paddingHorizontal: 10,
-                                marginVertical: 10,
-                              }}
-                              value={employeName}
-                              placeholder="Employee name"
-                              onChangeText={text => setEmployeeName(text)}
-                            />
-                            <TextInput
-                              style={{
-                                backgroundColor: GREY_TEXT_COLOR,
-                                borderRadius: 5,
-                                paddingVertical: 10,
-                                paddingHorizontal: 10,
-                                marginVertical: 5,
-                              }}
-                              value={employeEmail}
-                              placeholder="Employee email"
-                              onChangeText={text => setEmployeeEmail(text)}
-                            />
-                             <Text style={{...styles.txt_head,top:15}}>
-                              Employee Designation
-                            </Text>
-                            <TouchableOpacity
-                              onPress={() => handleRoleDropdown()}
-                              style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                backgroundColor: GREY_TEXT_COLOR,
-                                paddingVertical: 12,
-                                paddingHorizontal: 10,
-                                marginVertical: 20,
-                                width: '100%',
-                                borderRadius: 5,
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
                               }}>
-                              <View>
-                                <Text>
-                                { employeeRole ===1 ? 'Backup BM':'Other'}
-                                </Text>
-                              </View>
-                              <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                               {roleDropDown ? (
                                 <Image
                                   source={DOWNARROW}
@@ -595,59 +644,72 @@ export default function RescheduleAudit(props) {
                                 />
                               ) : (
                                 <Image source={DOWNARROW} />
-                              )} </View>
-                            </TouchableOpacity>
-                            {roleDropDown ? (
-                              <View
-                                style={{
-                                  flex: 1,
-                                  flexDirection: 'column',
-                                  // paddingHorizontal: 10,
-                                  top: -20,
-                                  left: 0,
-                                  // marginRight: 160,
-                                  backgroundColor: GREY_TEXT_COLOR,
-                                  zIndex: 1,
-                                }}>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole(1);
-                                  }}
-                                  style={[styles.drop_down_item, {zIndex: 10}]}>
-                                  <Text>Backup BM</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setRoleDropDown(!roleDropDown);
-                                    setEmployeeRole(2);
-                                  }}
-                                  style={[styles.drop_down_item, {zIndex: 10}]}>
-                                  <Text>Other</Text>
-                                </TouchableOpacity>
-                              </View>
-                            ) : null}
-                            {employeeRole === 2 ? (
-                              <TextInput
-                                style={{
-                                  backgroundColor: GREY_TEXT_COLOR,
-                                  borderRadius: 5,
-                                  paddingVertical: 10,
-                                  paddingHorizontal: 10,
-                                  marginVertical: 5,
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                          {roleDropDown ? (
+                            <View
+                              style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                                // paddingHorizontal: 10,
+                                top: -20,
+                                left: 0,
+                                // marginRight: 160,
+                                backgroundColor: GREY_TEXT_COLOR,
+                                zIndex: 1,
+                              }}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setRoleDropDown(!roleDropDown);
+                                  setEmployeeRole(1);
+                                  seteditAudit({
+                                    ...editAudit,
+                                    emp_role_type: '1',
+                                  });
                                 }}
-                                value = { employeeDesignation}
-                                placeholder="Employee designation"
-                                onChangeText={(text) => setEmployeeDesignation(text)}
-                              />
-                            ) : null}
-                          </View>
-                        </>
-                      ) : null}
-                    </View>
-                  </>
-                ) : null}
+                                style={[styles.drop_down_item, {zIndex: 10}]}>
+                                <Text>Backup BM</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setRoleDropDown(!roleDropDown);
+                                  setEmployeeRole(2);
+                                  seteditAudit({
+                                    ...editAudit,
+                                    emp_role_type: '2',
+                                  });
+                                }}
+                                style={[styles.drop_down_item, {zIndex: 10}]}>
+                                <Text>Other</Text>
+                              </TouchableOpacity>
+                            </View>
+                          ) : null}
+                          {editAudit.emp_role_type === '2' ? (
+                            <TextInput
+                              style={{
+                                backgroundColor: GREY_TEXT_COLOR,
+                                borderRadius: 5,
+                                paddingVertical: 10,
+                                paddingHorizontal: 10,
+                                marginVertical: 1,
+                              }}
+                              value={editAudit.emp_role}
+                              placeholder={'Employee designation'}
+                              onFocus={()=> setAllDropDown()}
+                              onChangeText={text =>
+                                seteditAudit({...editAudit, emp_role: text})
+                              }
+                            />
+                          ) : null}
+                        </View>
+                      </>
+                    ) : null}
+                  </View>
+                </>
+              ) : null}
             </View>
+            </TouchableWithoutFeedback>
             <View
               style={{flex: 1, justifyContent: 'flex-end', marginBottom: 10}}>
               <Button title="Schedule" onPress={() => handleSumbit()} />

@@ -42,6 +42,11 @@ export default function Index({ navigation }) {
         setcityId(null);
         setbranchNameId(null);
         setbranchManagerId(null);
+        setAvailability(null)
+        setEmployeeName(null)
+        setEmployeeEmail(null)
+        setEmployeeRole(null)
+        setEmployeeDesignation(null)
     }
     const getCityName = async (branch_id) => {
         try {
@@ -190,7 +195,7 @@ export default function Index({ navigation }) {
                 bm_availability : auditType === 1 ? availability : null,
                 emp_name : auditType === 1 ? employeName : null,
                 emp_email : auditType === 1 ? employeEmail : null,
-                emp_role_type : auditType === 1 ? employeeRole : null,
+                emp_role_type : auditType === 1 && availability === 2 ? employeeRole : null,
                 emp_role : auditType === 1 && employeeRole === 2 ? employeeDesignation : null
             }
             try {

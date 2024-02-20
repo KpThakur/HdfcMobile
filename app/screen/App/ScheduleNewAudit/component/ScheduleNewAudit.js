@@ -278,8 +278,8 @@ export default function ScheduleNewAudit(props) {
                     <TouchableOpacity
                       style={styles.date_time}
                       onPress={() => {
-                        setdropDown(false);
                         setopenDate(true);
+                        setAllDropDown();
                       }}>
                       <Image source={CALENDAR} style={{marginRight: 10}} />
                       {date ? <Text>{date}</Text> : <Text>Date</Text>}
@@ -368,7 +368,7 @@ export default function ScheduleNewAudit(props) {
                     />
                   </View>
 
-                  <View style={{}}>
+                  <View style={{zIndex:999}}>
                     <TouchableOpacity
                       onPress={() => handleDropDown()}
                       style={{
@@ -404,7 +404,7 @@ export default function ScheduleNewAudit(props) {
                           top: 35,
                           width: '100%',
                           backgroundColor: GREY_TEXT_COLOR,
-                          height: Platform.OS == 'ios' ? 150 : 200,
+                          height: Platform.OS == 'ios' ? (auditType === 1 ? 115: 150): (auditType === 1 ? 115: 200),
                           zIndex: 100,
                         }}>
                         {timeData &&
@@ -509,7 +509,7 @@ export default function ScheduleNewAudit(props) {
                             paddingVertical: 10,
                             paddingHorizontal: 10,
                             width: '100%',
-                            zIndex: 0
+                            zIndex: 0,
                           }}>
                           <View>
                             <Text>
