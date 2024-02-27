@@ -26,8 +26,10 @@ export default function Index({ navigation }) {
     const [availability, setAvailability] = useState();
     const [employeName, setEmployeeName] = useState();
     const [employeEmail, setEmployeeEmail] = useState();
-    const [employeeRole, setEmployeeRole] = useState(1);
+    const [employeeRole, setEmployeeRole] = useState(2);
     const [employeeDesignation, setEmployeeDesignation] = useState();
+    const [managerMobile, setManagerMobile] = useState(null);
+    const [employeeMobile, setEmployeeMobile] = useState();
     useEffect(() => {
         // getCityName()
         resetState();
@@ -196,7 +198,9 @@ export default function Index({ navigation }) {
                 emp_name : auditType === 1 ? employeName : null,
                 emp_email : auditType === 1 ? employeEmail : null,
                 emp_role_type : auditType === 1 && availability === 2 ? employeeRole : null,
-                emp_role : auditType === 1 && employeeRole === 2 ? employeeDesignation : null
+                emp_role : auditType === 1 && employeeRole === 2 ? employeeDesignation : null,
+                bm_mobile: auditType === 1 ? managerMobile : null,
+            
             }
             try {
                 setisLaoding(true)
@@ -257,6 +261,10 @@ export default function Index({ navigation }) {
             setEmployeeRole = {setEmployeeRole}
             employeeDesignation = {employeeDesignation}
             setEmployeeDesignation = {setEmployeeDesignation}
+            managerMobile={managerMobile}
+            setManagerMobile={setManagerMobile}
+            employeeMobile={employeeMobile}
+            setEmployeeMobile={setEmployeeMobile}
         />
         </>
     )

@@ -23,11 +23,14 @@ import {
   GREY_TEXT_COLOR,
   FONT_FAMILY_REGULAR,
   DOWNARROW,
+  SMALL_FONT_SIZE,
+  TINY_FONT_SIZE,
 } from '../../../../utils/constant';
 import Header from '../../../../component/Header';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
+import { normalize } from '../../../../utils/scaleFontSize';
 
 let ACDATE;
 let timeData = [];
@@ -81,6 +84,10 @@ export default function ScheduleNewAudit(props) {
     setEmployeeRole,
     employeeDesignation,
     setEmployeeDesignation,
+    managerMobile,
+    setManagerMobile,
+    employeeMobile,
+    setEmployeeMobile
   } = props;
 
   // const generateTimeData = () => {
@@ -514,10 +521,10 @@ export default function ScheduleNewAudit(props) {
                           <View>
                             <Text>
                               {availability === 1
-                                ? 'BM Available'
+                                ? 'Branch Manager Available'
                                 : availability === 2
-                                ? 'BM Not Available'
-                                : 'Select BM availability'}
+                                ? 'Branch Manager Unavailable'
+                                : 'Branch Manager Availability'}
                             </Text>
                           </View>
                           <View
@@ -553,7 +560,7 @@ export default function ScheduleNewAudit(props) {
                                 setAvailability(1);
                               }}
                               style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>BM Available</Text>
+                              <Text>Branch Manager Available</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                               onPress={() => {
@@ -561,7 +568,7 @@ export default function ScheduleNewAudit(props) {
                                 setAvailability(2);
                               }}
                               style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>BM Not Available</Text>
+                              <Text>Branch Manager Unavailable</Text>
                             </TouchableOpacity>
                           </View>
                         ) : null}
@@ -571,7 +578,7 @@ export default function ScheduleNewAudit(props) {
                           <View
                             style={{flex: 1, marginTop: 20, marginBottom: 10}}>
                             <Text style={styles.txt_head}>
-                              Backup BM Detail
+                              Employee Details
                             </Text>
                             <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
                             <TextInput
@@ -603,10 +610,29 @@ export default function ScheduleNewAudit(props) {
                               onChangeText={text => setEmployeeEmail(text)}
                             />
                             </TouchableWithoutFeedback>
-                            <Text style={{...styles.txt_head, top: 15}}>
+                            <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE), marginTop:7}}>
+                              Enter employee mobile number to share review link via SMS
+                          </Text>
+                          <TextInput
+                                 keyboardType="numeric" 
+                                style={{
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  borderRadius: 5,
+                                  paddingVertical: 10,
+                                  paddingHorizontal: 10,
+                                  marginVertical: 8,
+                                }}
+                                value={employeeMobile}
+                                placeholder="Employee Mobile"
+                                onFocus={()=> setAllDropDown()}
+                                onChangeText={text =>
+                                  setEmployeeMobile(text)
+                                }
+                              />
+                            {/* <Text style={{...styles.txt_head, top: 15}}>
                               Employee Designation
-                            </Text>
-                            <TouchableOpacity
+                            </Text> */}
+                            {/* <TouchableOpacity
                               onPress={() => {handleRoleDropdown(); setBmDropDown(false); setdropDown(false)}}
                               style={{
                                 flexDirection: 'row',
@@ -638,8 +664,8 @@ export default function ScheduleNewAudit(props) {
                                   <Image source={DOWNARROW} />
                                 )}
                               </View>
-                            </TouchableOpacity>
-                            {roleDropDown ? (
+                            </TouchableOpacity> */}
+                            {/* {roleDropDown ? (
                               <View
                                 style={{
                                   flex: 1,
@@ -668,15 +694,15 @@ export default function ScheduleNewAudit(props) {
                                   <Text>Other</Text>
                                 </TouchableOpacity>
                               </View>
-                            ) : null}
-                            {employeeRole === 2 ? (
+                            ) : null} */}
+                            {/* {employeeRole === 2 ? ( */}
                               <TextInput
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
                                   borderRadius: 5,
                                   paddingVertical: 10,
                                   paddingHorizontal: 10,
-                                  marginVertical: 5,
+                                  marginVertical: 10,
                                 }}
                                 value={employeeDesignation}
                                 placeholder="Employee designation"
@@ -685,10 +711,30 @@ export default function ScheduleNewAudit(props) {
                                   setEmployeeDesignation(text)
                                 }
                               />
-                            ) : null}
+                            {/* ) : null} */}
                           </View>
                         </>
-                      ) : null}
+                      ) : availability === 1 && (<View style={{flex: 1, marginTop: 20, marginBottom: 10}}>
+                         <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE)}}>
+                              Enter BM's mobile number to share review link via SMS
+                          </Text>
+                          <TextInput
+                                 keyboardType="numeric" 
+                                style={{
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  borderRadius: 5,
+                                  paddingVertical: 10,
+                                  paddingHorizontal: 10,
+                                  marginVertical: 8,
+                                }}
+                                value={managerMobile}
+                                placeholder="Branch Manager Mobile"
+                                onFocus={()=> setAllDropDown()}
+                                onChangeText={text =>
+                                  setManagerMobile(text)
+                                }
+                              />
+                      </View>)}
                     </View>
                   </>
                 ) : null}

@@ -22,11 +22,13 @@ import {
   CLOCK,
   GREY_TEXT_COLOR,
   DOWNARROW,
+  TINY_FONT_SIZE,
 } from '../../../../utils/constant';
 import Header from '../../../../component/Header';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
+import { normalize } from '../../../../utils/scaleFontSize';
 
 let ACDATE;
 let timeData = [];
@@ -520,10 +522,10 @@ export default function RescheduleAudit(props) {
                         <View>
                           <Text>
                             {editAudit.bm_availability === 1
-                              ? 'BM Available'
+                              ? 'Branch Manager Available'
                               : editAudit.bm_availability === 2
-                              ? 'BM Not Available'
-                              : 'Select BM availability'}
+                              ? 'Branch Manager Unavailable'
+                              : 'Branch Manager Availability'}
                           </Text>
                         </View>
                         <View
@@ -560,7 +562,7 @@ export default function RescheduleAudit(props) {
                               seteditAudit({...editAudit, bm_availability: 1});
                             }}
                             style={[styles.drop_down_item, {zIndex: 10}]}>
-                            <Text>BM Available</Text>
+                            <Text>Branch Manager Available</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => {
@@ -569,7 +571,7 @@ export default function RescheduleAudit(props) {
                               seteditAudit({...editAudit, bm_availability: 2});
                             }}
                             style={[styles.drop_down_item, {zIndex: 10}]}>
-                            <Text>BM Not Available</Text>
+                            <Text>Branch Manager Unavailable</Text>
                           </TouchableOpacity>
                         </View>
                       ) : null}
@@ -578,7 +580,7 @@ export default function RescheduleAudit(props) {
                       <>
                         <View
                           style={{flex: 1, marginTop: 20, marginBottom: 10}}>
-                          <Text style={styles.txt_head}>Backup BM Detail:</Text>
+                          <Text style={styles.txt_head}>Employee Details</Text>
                           <TextInput
                             style={{
                               backgroundColor: GREY_TEXT_COLOR,
@@ -609,10 +611,29 @@ export default function RescheduleAudit(props) {
                               seteditAudit({...editAudit, emp_email: text})
                             }
                           />
-                          <Text style={{...styles.txt_head, top: 15}}>
-                            Employee Designation
+                           <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE), marginTop:7}}>
+                              Enter employee mobile number to share review link via SMS
                           </Text>
-                          <TouchableOpacity
+                          <TextInput
+                                 keyboardType="numeric" 
+                                style={{
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  borderRadius: 5,
+                                  paddingVertical: 10,
+                                  paddingHorizontal: 10,
+                                  marginVertical: 8,
+                                }}
+                                value={editAudit?.emp_mobile}
+                                placeholder="Employee Mobile"
+                                onFocus={()=> setAllDropDown()}
+                                onChangeText={text =>
+                                 seteditAudit({...editAudit, emp_mobile: text})
+                                }
+                              />
+                          {/* <Text style={{...styles.txt_head, top: 15}}>
+                            Employee Designation
+                          </Text> */}
+                          {/* <TouchableOpacity
                             onPress={() => handleRoleDropdown()}
                             style={{
                               flexDirection: 'row',
@@ -652,10 +673,10 @@ export default function RescheduleAudit(props) {
                               style={{
                                 flex: 1,
                                 flexDirection: 'column',
-                                // paddingHorizontal: 10,
+                              
                                 top: -20,
                                 left: 0,
-                                // marginRight: 160,
+                              
                                 backgroundColor: GREY_TEXT_COLOR,
                                 zIndex: 1,
                               }}>
@@ -684,15 +705,15 @@ export default function RescheduleAudit(props) {
                                 <Text>Other</Text>
                               </TouchableOpacity>
                             </View>
-                          ) : null}
-                          {editAudit.emp_role_type === '2' ? (
+                          ) : null} */}
+                          {/* {editAudit.emp_role_type === '2' ? ( */}
                             <TextInput
                               style={{
                                 backgroundColor: GREY_TEXT_COLOR,
                                 borderRadius: 5,
                                 paddingVertical: 10,
                                 paddingHorizontal: 10,
-                                marginVertical: 1,
+                                marginVertical: 5,
                               }}
                               value={editAudit.emp_role}
                               placeholder={'Employee designation'}
@@ -701,10 +722,32 @@ export default function RescheduleAudit(props) {
                                 seteditAudit({...editAudit, emp_role: text})
                               }
                             />
-                          ) : null}
+                          {/* ) : null} */}
                         </View>
                       </>
-                    ) : null}
+                    ) : 
+                    editAudit.bm_availability 
+                    === 1 && (<View style={{flex: 1, marginTop: 20, marginBottom: 10}}> 
+                      <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE)}}>
+                           Enter BM's mobile number to share review link via SMS
+                       </Text>
+                       <TextInput
+                              keyboardType="numeric" 
+                             style={{
+                               backgroundColor: GREY_TEXT_COLOR,
+                               borderRadius: 5,
+                               paddingVertical: 10,
+                               paddingHorizontal: 10,
+                               marginVertical: 8,
+                             }}
+                             value={editAudit.bm_mobile}
+                             placeholder="Branch Manager Mobile"
+                             onFocus={()=> setAllDropDown()}
+                             onChangeText={text =>
+                              seteditAudit({...editAudit, bm_mobile: text})
+                             }
+                           />
+                   </View>)}
                   </View>
                 </>
               ) : null}
