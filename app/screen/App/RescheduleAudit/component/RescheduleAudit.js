@@ -224,7 +224,7 @@ export default function RescheduleAudit(props) {
                   title={
                     editAudit.branch_name
                       ? editAudit.branch_name
-                      : 'Branch Name/Code'
+                      : 'Branch Name/Code *'
                   }
                   data={branchDetail}
                   renderItem={displaybranchDropDown}
@@ -263,7 +263,7 @@ export default function RescheduleAudit(props) {
                   }}>
                   {editAudit.branch_manager
                     ? editAudit.branch_manager
-                    : 'Branch Manager Name/Code'}
+                    : 'Branch Manager Name/Code *'}
                 </Text>
                 {/* <DropDown title="Branch Name / ATM Name" data={data} />
                                         <DropDown title="Branch Manager Name / ATM Code" data={data} /> */}
@@ -525,7 +525,7 @@ export default function RescheduleAudit(props) {
                               ? 'Branch Manager Available'
                               : editAudit.bm_availability === 2
                               ? 'Branch Manager Unavailable'
-                              : 'Branch Manager Availability'}
+                              : 'Branch Manager Availability *'}
                           </Text>
                         </View>
                         <View
@@ -590,7 +590,7 @@ export default function RescheduleAudit(props) {
                               marginVertical: 10,
                             }}
                             value={editAudit.emp_name}
-                            placeholder={'Employee name'}
+                            placeholder={'Employee name *'}
                             onFocus={()=> setAllDropDown()}
                             onChangeText={text =>
                               seteditAudit({...editAudit, emp_name: text})
@@ -605,7 +605,7 @@ export default function RescheduleAudit(props) {
                               marginVertical: 5,
                             }}
                             value={editAudit.emp_email}
-                            placeholder={'Employee email'}
+                            placeholder={'Employee email *'}
                             onFocus={()=> setAllDropDown()}
                             onChangeText={text =>
                               seteditAudit({...editAudit, emp_email: text})
@@ -623,11 +623,11 @@ export default function RescheduleAudit(props) {
                                   paddingHorizontal: 10,
                                   marginVertical: 8,
                                 }}
-                                value={editAudit?.emp_mobile}
+                                value={editAudit?.bm_mobile}
                                 placeholder="Employee Mobile"
                                 onFocus={()=> setAllDropDown()}
                                 onChangeText={text =>
-                                 seteditAudit({...editAudit, emp_mobile: text})
+                                 seteditAudit({...editAudit, bm_mobile: text})
                                 }
                               />
                           {/* <Text style={{...styles.txt_head, top: 15}}>
@@ -716,7 +716,7 @@ export default function RescheduleAudit(props) {
                                 marginVertical: 5,
                               }}
                               value={editAudit.emp_role}
-                              placeholder={'Employee designation'}
+                              placeholder={'Employee designation *'}
                               onFocus={()=> setAllDropDown()}
                               onChangeText={text =>
                                 seteditAudit({...editAudit, emp_role: text})

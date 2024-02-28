@@ -127,16 +127,17 @@ export default function Index({ navigation }) {
             {
                 ShowAlert("Please enter valid email address");
                 return false
-            }if(editAudit.audit_type === 1 && !editAudit.emp_role_type)
-            {
-                ShowAlert("Please select employee role");
-                return false
             }
-            if(editAudit.audit_type === 1 && editAudit.emp_role_type === "2" && !editAudit.emp_role)
+            // if(editAudit.audit_type === 1 && !editAudit.emp_role_type)
+            // {
+            //     ShowAlert("Please select employee role");
+            //     return false
+            // }
+            if(editAudit.audit_type === 1  && !editAudit.emp_role)
             {
                 ShowAlert("Please enter employee designation");
                 return false
-            }if(editAudit.audit_type === 1 && editAudit.emp_role_type === "2" && editAudit.emp_role.trim() === '')
+            }if(editAudit.audit_type === 1 && editAudit.emp_role.trim() === '')
             {
                 ShowAlert("Please enter valid employee designation");
                 return false

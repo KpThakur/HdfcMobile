@@ -80,8 +80,8 @@ export const MEGA_LARGE_FONT_SIZE = 26;
 // export const BASEURL = 'https://auditwebapi.easycalls.in:3002';
 //export const BASEURL = 'http://192.168.1.21:3001';
 // export const BASEURL = 'http://192.168.215.241:3001';
-export const BASEURL = 'https://stageauditapi.easycalls.in:3003';
-// export const BASEURL = 'http://192.168.1.83:3001';
+// export const BASEURL = 'https://stageauditapi.easycalls.in:3003';
+export const BASEURL = 'http://192.168.1.83:3001';
 //Google API key
 export const MAP_KEY = 'AIzaSyCbDx7Lk4eTMzptrQKXZvOPYgEMggrq8o4';
 

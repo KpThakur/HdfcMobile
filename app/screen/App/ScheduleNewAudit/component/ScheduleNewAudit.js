@@ -42,9 +42,7 @@ export default function ScheduleNewAudit(props) {
   const [bmDropDown, setBmDropDown] = useState(false);
   const [roleDropDown, setRoleDropDown] = useState(false);
 
-  function _handleSelect(params) {
-    setauditType(params);
-  }
+ 
   function handleBMDropdown() {
     setBmDropDown(!bmDropDown);
   }
@@ -89,7 +87,14 @@ export default function ScheduleNewAudit(props) {
     employeeMobile,
     setEmployeeMobile
   } = props;
-
+  function _handleSelect(params) {
+    setauditType(params);
+    setAvailability(null);
+    setEmployeeName(null);
+    setEmployeeEmail(null);
+    setEmployeeDesignation(null);
+    setManagerMobile(null);
+  }
   // const generateTimeData = () => {
   //   const newData = [];
 
@@ -231,7 +236,7 @@ export default function ScheduleNewAudit(props) {
                 <Text style={styles.txt_head}>Bank Details for Review</Text>
 
                 <DropDown
-                  title={branchName ? branchName : 'Branch Name/Code'}
+                  title={branchName ? branchName : 'Branch Name/Code *'}
                   data={branchDetail}
                   renderItem={displaybranchDropDown}
                   dropDown={branchNameDropDown}
@@ -258,7 +263,7 @@ export default function ScheduleNewAudit(props) {
                     paddingHorizontal: 10,
                     marginVertical: 10,
                   }}>
-                  {cityName ? cityName : 'City'}
+                  {cityName ? cityName : 'City *'}
                 </Text>
 
                 <Text
@@ -271,7 +276,7 @@ export default function ScheduleNewAudit(props) {
                   }}>
                   {branchManagerName
                     ? branchManagerName
-                    : 'Branch Manager Name/Code'}
+                    : 'Branch Manager Name/Code *'}
                 </Text>
               </View>
               <View>
@@ -524,7 +529,7 @@ export default function ScheduleNewAudit(props) {
                                 ? 'Branch Manager Available'
                                 : availability === 2
                                 ? 'Branch Manager Unavailable'
-                                : 'Branch Manager Availability'}
+                                : 'Branch Manager Availability *'}
                             </Text>
                           </View>
                           <View
@@ -590,7 +595,7 @@ export default function ScheduleNewAudit(props) {
                                 marginVertical: 10,
                               }}
                               value={employeName}
-                              placeholder="Employee name"
+                              placeholder="Employee name *"
                               onFocus={()=> setAllDropDown()}
                               onChangeText={text => {setEmployeeName(text) }}
                             />
@@ -605,7 +610,7 @@ export default function ScheduleNewAudit(props) {
                                 marginVertical: 5,
                               }}
                               value={employeEmail}
-                              placeholder="Employee email"
+                              placeholder="Employee email *"
                               onFocus={()=> setAllDropDown()}
                               onChangeText={text => setEmployeeEmail(text)}
                             />
@@ -622,11 +627,12 @@ export default function ScheduleNewAudit(props) {
                                   paddingHorizontal: 10,
                                   marginVertical: 8,
                                 }}
-                                value={employeeMobile}
+                                value={managerMobile}
                                 placeholder="Employee Mobile"
                                 onFocus={()=> setAllDropDown()}
                                 onChangeText={text =>
-                                  setEmployeeMobile(text)
+                                  setManagerMobile(text)
+                                  // setEmployeeMobile(text)
                                 }
                               />
                             {/* <Text style={{...styles.txt_head, top: 15}}>
@@ -705,7 +711,7 @@ export default function ScheduleNewAudit(props) {
                                   marginVertical: 10,
                                 }}
                                 value={employeeDesignation}
-                                placeholder="Employee designation"
+                                placeholder="Employee designation *"
                                 onFocus={()=> setAllDropDown()}
                                 onChangeText={text =>
                                   setEmployeeDesignation(text)

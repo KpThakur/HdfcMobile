@@ -164,11 +164,12 @@ export default function Index({ navigation }) {
             {
                 ShowAlert("Please enter valid email address");
                 return false
-            } if(auditType === 1 && !employeeRole)
-            {
-                ShowAlert("Please select employee role");
-                return false
             }
+            //  if(auditType === 1 && !employeeRole)
+            // {
+            //     ShowAlert("Please select employee role");
+            //     return false
+            // }
             if(auditType === 1 && employeeRole === 2 && !employeeDesignation)
             {
                 ShowAlert("Please enter employee designation");
@@ -197,8 +198,8 @@ export default function Index({ navigation }) {
                 bm_availability : auditType === 1 ? availability : null,
                 emp_name : auditType === 1 ? employeName : null,
                 emp_email : auditType === 1 ? employeEmail : null,
-                emp_role_type : auditType === 1 && availability === 2 ? employeeRole : null,
-                emp_role : auditType === 1 && employeeRole === 2 ? employeeDesignation : null,
+                // emp_role_type : auditType === 1 && availability === 2 ? employeeRole : null,
+                emp_role : auditType === 1 && availability === 2 ? employeeDesignation : null,
                 bm_mobile: auditType === 1 ? managerMobile : null,
             
             }
