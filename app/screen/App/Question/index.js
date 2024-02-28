@@ -225,7 +225,7 @@ const Question = ({navigation, route}) => {
         formdata.append('clongitude',location.long);
         formdata.append('caddress',location.adr);
         if (question?.data.image_capture === '1') {
-          if (camImg.length > 0 || showCapIMG) {
+          if (camImg.length > 0 || !showCapIMG) {
             if (question.audit_type !== 1) {
               camImg?.map((img, index) => {
                 return formdata.append('question_image', {

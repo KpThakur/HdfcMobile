@@ -683,7 +683,7 @@ const Question = props => {
                           }}
                           onPress={() => {
                             props.setyesNo('YES');
-                            props.setshowCapIMG(false);
+                            props.setshowCapIMG(true);
                             props.setrevActionable(0);
                             // handleRemark(question.data.remark_yes);
                             props.handleShowActionable(false);
@@ -703,7 +703,7 @@ const Question = props => {
                             }}
                             onPress={() => {
                               props.setyesNo('NO');
-                              props.setshowCapIMG(true);
+                              props.setshowCapIMG(false);
                               props.setrevActionable(1);
                               props.setCamImg([]);
                               // handleRemark(question.data.remark_no);
@@ -721,7 +721,7 @@ const Question = props => {
                       </View>
                     )}
                     <View style={styles.brnchmannme}>
-                      {!props.showCapIMG ? (
+                      {props.yesNo === 'YES'? (
                         <TouchableOpacity
                           onPress={() => {
                             question?.audit_type == 0
