@@ -7,7 +7,7 @@ import {
   Alert,
   Platform,
   TextInput,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {styles} from './styles';
 import DropDown from '../../../../component/DropDown';
@@ -30,7 +30,7 @@ import Header from '../../../../component/Header';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import {ScrollView} from 'react-native-gesture-handler';
-import { normalize } from '../../../../utils/scaleFontSize';
+import {normalize} from '../../../../utils/scaleFontSize';
 
 let ACDATE;
 let timeData = [];
@@ -41,7 +41,6 @@ export default function ScheduleNewAudit(props) {
   const [dropDown, setdropDown] = useState(false);
   const [bmDropDown, setBmDropDown] = useState(false);
   const [roleDropDown, setRoleDropDown] = useState(false);
-
  
   function handleBMDropdown() {
     setBmDropDown(!bmDropDown);
@@ -85,7 +84,9 @@ export default function ScheduleNewAudit(props) {
     managerMobile,
     setManagerMobile,
     employeeMobile,
-    setEmployeeMobile
+    setEmployeeMobile,
+    employeeId, 
+    setEmployeeID
   } = props;
   function _handleSelect(params) {
     setauditType(params);
@@ -95,6 +96,14 @@ export default function ScheduleNewAudit(props) {
     setEmployeeDesignation(null);
     setManagerMobile(null);
   }
+  const handleEmail = (text) => {
+    setEmployeeID(text);
+    const value = `${text}@hdfcbank.com`;
+    setEmployeeEmail((prev) => prev = value);
+      console.log("The value is",value);
+      console.log("The employee email",employeEmail);
+  }
+  console.log("The employee email outside",employeEmail);
   // const generateTimeData = () => {
   //   const newData = [];
 
@@ -204,10 +213,10 @@ export default function ScheduleNewAudit(props) {
   // timeData.push('19-00');
   const navigation = useNavigation();
   const setAllDropDown = () => {
-    setdropDown(false)
-    setBmDropDown(false)
-    setRoleDropDown(false)
-  }
+    setdropDown(false);
+    setBmDropDown(false);
+    setRoleDropDown(false);
+  };
   return (
     <>
       {isLoading ? (
@@ -225,28 +234,27 @@ export default function ScheduleNewAudit(props) {
               }}
             />
 
-            <TouchableWithoutFeedback
-              onPress={() => setAllDropDown()}
-             >
-                <View style={{
-                padding: 20,
-                justifyContent: 'space-evenly',
-              }}>
-              <View>
-                <Text style={styles.txt_head}>Bank Details for Review</Text>
+            <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
+              <View
+                style={{
+                  padding: 20,
+                  justifyContent: 'space-evenly',
+                }}>
+                <View>
+                  <Text style={styles.txt_head}>Bank Details for Review</Text>
 
-                <DropDown
-                  title={branchName ? branchName : 'Branch Name/Code *'}
-                  data={branchDetail}
-                  renderItem={displaybranchDropDown}
-                  dropDown={branchNameDropDown}
-                  data_name={'brach_name'}
-                  setdropDown={setbranchNameDropDown}
-                  setTimeDropDown={setdropDown}
-                  cityId={cityId}
-                />
+                  <DropDown
+                    title={branchName ? branchName : 'Branch Name/Code *'}
+                    data={branchDetail}
+                    renderItem={displaybranchDropDown}
+                    dropDown={branchNameDropDown}
+                    data_name={'brach_name'}
+                    setdropDown={setbranchNameDropDown}
+                    setTimeDropDown={setdropDown}
+                    cityId={cityId}
+                  />
 
-                {/* <DropDown
+                  {/* <DropDown
                   title={cityName ? cityName : 'City'}
                   data={cityBranch}
                   renderItem={displayCityDropDown}
@@ -255,371 +263,433 @@ export default function ScheduleNewAudit(props) {
                   setdropDown={setcitydropDown}
                   setTimeDropDown={setdropDown}
                 /> */}
-                <Text
-                  style={{
-                    backgroundColor: GREY_TEXT_COLOR,
-                    borderRadius: 5,
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    marginVertical: 10,
-                  }}>
-                  {cityName ? cityName : 'City *'}
-                </Text>
+                  <Text
+                    style={{
+                      backgroundColor: GREY_TEXT_COLOR,
+                      borderRadius: 5,
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      marginVertical: 10,
+                    }}>
+                    {cityName ? cityName : 'City *'}
+                  </Text>
 
-                <Text
-                  style={{
-                    backgroundColor: GREY_TEXT_COLOR,
-                    borderRadius: 5,
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    marginVertical: 10,
-                  }}>
-                  {branchManagerName
-                    ? branchManagerName
-                    : 'Branch Manager Name/Code *'}
-                </Text>
-              </View>
-              <View>
-                <Text style={styles.txt_head}>Schedule on:</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <View style={{}}>
-                    <TouchableOpacity
-                      style={styles.date_time}
-                      onPress={() => {
-                        setopenDate(true);
-                        setAllDropDown();
-                      }}>
-                      <Image source={CALENDAR} style={{marginRight: 10}} />
-                      {date ? <Text>{date}</Text> : <Text>Date</Text>}
-                    </TouchableOpacity>
-                    <DatePicker
-                      modal
-                      open={openDate}
-                      mode="date"
-                      date={Cdate}
-                      onConfirm={date => {
-                        setopenDate(false);
-                        console.log('The present date --->', moment());
-                        console.log(
-                          'The 1 week ahead date --->',
-                          moment().add(1, 'week'),
-                        );
-                        if (
-                          moment(date).format('DD-MM-YYYY') ==
-                          moment(moment()).format('DD-MM-YYYY')
-                        ) {
-                          if (time < moment(new Date()).format('H-mm')) {
-                            Alert.alert('Please select vaild time.');
-                            settime();
+                  <Text
+                    style={{
+                      backgroundColor: GREY_TEXT_COLOR,
+                      borderRadius: 5,
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      marginVertical: 10,
+                    }}>
+                    {branchManagerName
+                      ? branchManagerName
+                      : 'Branch Manager Name/Code *'}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.txt_head}>Schedule on:</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={{}}>
+                      <TouchableOpacity
+                        style={styles.date_time}
+                        onPress={() => {
+                          setopenDate(true);
+                          setAllDropDown();
+                        }}>
+                        <Image source={CALENDAR} style={{marginRight: 10}} />
+                        {date ? <Text>{date}</Text> : <Text>Date</Text>}
+                      </TouchableOpacity>
+                      <DatePicker
+                        modal
+                        open={openDate}
+                        mode="date"
+                        date={Cdate}
+                        onConfirm={date => {
+                          setopenDate(false);
+                          console.log('The present date --->', moment());
+                          console.log(
+                            'The 1 week ahead date --->',
+                            moment().add(1, 'week'),
+                          );
+                          if (
+                            moment(date).format('DD-MM-YYYY') ==
+                            moment(moment()).format('DD-MM-YYYY')
+                          ) {
+                            if (time < moment(new Date()).format('H-mm')) {
+                              Alert.alert('Please select vaild time.');
+                              settime();
+                            } else {
+                              setopenDate(false);
+                              ACDATE = moment(date).format('DD-MM-YYYY');
+                              setdate(moment(date).format('DD-MM-YYYY'));
+                            }
+                          } else if (moment(date) < moment(moment())) {
+                            console.log(
+                              ' Selected Date ======>>>',
+                              moment(date),
+                            );
+                            console.log(
+                              'Current Date ======>>>',
+                              moment(moment()),
+                            );
+                            console.log(
+                              'next ====>',
+                              moment(date).format('LL'),
+                            );
+                            Alert.alert(
+                              'date',
+                              "You can't select previous date",
+                            );
+                          } else if (
+                            !moment(date).isSameOrBefore(
+                              moment().add(1, 'week'),
+                            )
+                          ) {
+                            Alert.alert(
+                              'You are restricted from choosing a date beyond one week.',
+                            );
                           } else {
                             setopenDate(false);
                             ACDATE = moment(date).format('DD-MM-YYYY');
                             setdate(moment(date).format('DD-MM-YYYY'));
                           }
-                        } else if (moment(date) < moment(moment())) {
-                          console.log(' Selected Date ======>>>', moment(date));
-                          console.log(
-                            'Current Date ======>>>',
-                            moment(moment()),
-                          );
-                          console.log('next ====>', moment(date).format('LL'));
-                          Alert.alert('date', "You can't select previous date");
-                        } else if (
-                          !moment(date).isSameOrBefore(moment().add(1, 'week'))
-                        ) {
-                          Alert.alert(
-                            'You are restricted from choosing a date beyond one week.',
-                          );
-                        } else {
+
+                          // if (
+                          // moment(date).startOf('day').format('DD-MM-YYYY') <
+                          // moment(moment()).startOf('day').format('DD-MM-YYYY')
+                          // moment(date).startOf('day').isSameOrBefore(moment().startOf('day'))
+                          // moment(date).format('LL')<moment(moment()).format('LL')
+                          //   moment(date) < moment(moment())
+                          // ) {
+                          //   console.log(' Selected Date ======>>>', moment(date));
+                          //   console.log(
+                          //     'Current Date ======>>>',
+                          //     moment(moment()),
+                          //   );
+                          //   console.log('next ====>', moment(date).format('LL'));
+                          //   Alert.alert('date', "You can't select previous date");
+                          // } else {
+                          //   if (
+                          //     moment(date).format('DD-MM-YYYY') ==
+                          //     moment(moment()).format('DD-MM-YYYY')
+                          //   ) {
+                          //     if (time < moment(new Date()).format('H-mm')) {
+                          //       Alert.alert('Please select vaild time.');
+                          //       settime();
+                          //     } else {
+                          //       setopenDate(false);
+                          //       ACDATE = moment(date).format('DD-MM-YYYY');
+                          //       setdate(moment(date).format('DD-MM-YYYY'));
+                          //     }
+                          //   } else {
+                          //     setopenDate(false);
+                          //     ACDATE = moment(date).format('DD-MM-YYYY');
+                          //     setdate(moment(date).format('DD-MM-YYYY'));
+                          //   }
+                          // }
+                        }}
+                        onCancel={() => {
                           setopenDate(false);
-                          ACDATE = moment(date).format('DD-MM-YYYY');
-                          setdate(moment(date).format('DD-MM-YYYY'));
-                        }
+                        }}
+                      />
+                    </View>
 
-                        // if (
-                        // moment(date).startOf('day').format('DD-MM-YYYY') <
-                        // moment(moment()).startOf('day').format('DD-MM-YYYY')
-                        // moment(date).startOf('day').isSameOrBefore(moment().startOf('day'))
-                        // moment(date).format('LL')<moment(moment()).format('LL')
-                        //   moment(date) < moment(moment())
-                        // ) {
-                        //   console.log(' Selected Date ======>>>', moment(date));
-                        //   console.log(
-                        //     'Current Date ======>>>',
-                        //     moment(moment()),
-                        //   );
-                        //   console.log('next ====>', moment(date).format('LL'));
-                        //   Alert.alert('date', "You can't select previous date");
-                        // } else {
-                        //   if (
-                        //     moment(date).format('DD-MM-YYYY') ==
-                        //     moment(moment()).format('DD-MM-YYYY')
-                        //   ) {
-                        //     if (time < moment(new Date()).format('H-mm')) {
-                        //       Alert.alert('Please select vaild time.');
-                        //       settime();
-                        //     } else {
-                        //       setopenDate(false);
-                        //       ACDATE = moment(date).format('DD-MM-YYYY');
-                        //       setdate(moment(date).format('DD-MM-YYYY'));
-                        //     }
-                        //   } else {
-                        //     setopenDate(false);
-                        //     ACDATE = moment(date).format('DD-MM-YYYY');
-                        //     setdate(moment(date).format('DD-MM-YYYY'));
-                        //   }
-                        // }
-                      }}
-                      onCancel={() => {
-                        setopenDate(false);
-                      }}
-                    />
-                  </View>
-
-                  <View style={{zIndex:999}}>
-                    <TouchableOpacity
-                      onPress={() => handleDropDown()}
-                      style={{
-                        backgroundColor: GREY_TEXT_COLOR,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        justifyContent: 'space-between',
-                        paddingVertical: 10,
-                        paddingHorizontal: 10,
-                        
-                      }}>
-                      <Image source={CLOCK} />
-                      <Text style={{marginHorizontal: 10}}>
-                        {time ? time : 'Time'}
-                      </Text>
-                      {dropDown ? (
-                        <Image
-                          source={DOWNARROW}
-                          style={{transform: [{rotateZ: '180deg'}]}}
-                        />
-                      ) : (
-                        <Image source={DOWNARROW} />
-                      )}
-                    </TouchableOpacity>
-                    {dropDown && (
-                      <ScrollView
-                        showsVerticalScrollIndicator={false}
+                    <View style={{zIndex: 999}}>
+                      <TouchableOpacity
+                        onPress={() => handleDropDown()}
                         style={{
-                          flexGrow: 1,
-                          position: 'absolute',
-                          right: 0,
-                          top: 35,
-                          width: '100%',
                           backgroundColor: GREY_TEXT_COLOR,
-                          height: Platform.OS == 'ios' ? (auditType === 1 ? 115: 150): (auditType === 1 ? 115: 200),
-                          zIndex: 100,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          borderRadius: 5,
+                          justifyContent: 'space-between',
+                          paddingVertical: 10,
+                          paddingHorizontal: 10,
                         }}>
-                        {timeData &&
-                          timeData.map((item, index) => {
-                            return (
-                              <TouchableOpacity
-                                key={index}
-                                style={[styles.drop_down_item, {zIndex: 100}]}
-                                onPress={() => {
-                                  if (
-                                    date ==
-                                    moment(new Date()).format('DD-MM-YYYY')
-                                  ) {
+                        <Image source={CLOCK} />
+                        <Text style={{marginHorizontal: 10}}>
+                          {time ? time : 'Time'}
+                        </Text>
+                        {dropDown ? (
+                          <Image
+                            source={DOWNARROW}
+                            style={{transform: [{rotateZ: '180deg'}]}}
+                          />
+                        ) : (
+                          <Image source={DOWNARROW} />
+                        )}
+                      </TouchableOpacity>
+                      {dropDown && (
+                        <ScrollView
+                          showsVerticalScrollIndicator={false}
+                          style={{
+                            flexGrow: 1,
+                            position: 'absolute',
+                            right: 0,
+                            top: 35,
+                            width: '100%',
+                            backgroundColor: GREY_TEXT_COLOR,
+                            height:
+                              Platform.OS == 'ios'
+                                ? auditType === 1
+                                  ? 115
+                                  : 150
+                                : auditType === 1
+                                ? 115
+                                : 200,
+                            zIndex: 100,
+                          }}>
+                          {timeData &&
+                            timeData.map((item, index) => {
+                              return (
+                                <TouchableOpacity
+                                  key={index}
+                                  style={[styles.drop_down_item, {zIndex: 100}]}
+                                  onPress={() => {
                                     if (
-                                      moment(new Date()).format('HH-mm') <
-                                      '10-00'
+                                      date ==
+                                      moment(new Date()).format('DD-MM-YYYY')
                                     ) {
-                                      settime(item);
-                                      setdropDown(false);
-                                    } else {
                                       if (
-                                        item < moment(new Date()).format('H-mm')
+                                        moment(new Date()).format('HH-mm') <
+                                        '10-00'
                                       ) {
-                                        //setdropDown(false);
-                                        Alert.alert(
-                                          'Kindly choose an appropriate time.',
-                                        );
-                                      } else {
                                         settime(item);
                                         setdropDown(false);
+                                      } else {
+                                        if (
+                                          item <
+                                          moment(new Date()).format('H-mm')
+                                        ) {
+                                          //setdropDown(false);
+                                          Alert.alert(
+                                            'Kindly choose an appropriate time.',
+                                          );
+                                        } else {
+                                          settime(item);
+                                          setdropDown(false);
+                                        }
                                       }
+                                    } else {
+                                      settime(item);
+                                      setdropDown(false);
                                     }
-                                  } else {
-                                    settime(item);
-                                    setdropDown(false);
-                                  }
-                                }}>
-                                <Text style={[styles.drop_down_txt,{zIndex: 999}]}>{item}</Text>
-                              </TouchableOpacity>
-                            );
-                          })}
-                      </ScrollView>
-                    )}
+                                  }}>
+                                  <Text
+                                    style={[
+                                      styles.drop_down_txt,
+                                      {zIndex: 999},
+                                    ]}>
+                                    {item}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            })}
+                        </ScrollView>
+                      )}
+                    </View>
                   </View>
-                </View>
-                <View
-                  style={{
-                    marginTop: 10,
-                    zIndex: -1,
-                    width: '50%',
-                    height: 150,
-                  }}>
-                  <Text style={styles.txt_head}>Review Type:</Text>
-                  <TouchableOpacity
+                  <View
                     style={{
-                      marginVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                    onPress={() => _handleSelect(2)}>
-                    <Image
-                      source={auditType === 2 ? CHECKED_ICON : UNCHECKED_ICON}
-                      style={{marginRight: 5}}
-                    />
-                    <Text
+                      marginTop: 10,
+                      zIndex: -1,
+                      width: '50%',
+                      height: 150,
+                    }}>
+                    <Text style={styles.txt_head}>Review Type:</Text>
+                    <TouchableOpacity
                       style={{
-                        color: auditType === 2 ? PRIMARY_BLUE_COLOR : 'gray',
-                      }}>
-                      Physical/In-branch review
-                    </Text>
-                  </TouchableOpacity>
+                        marginVertical: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => _handleSelect(2)}>
+                      <Image
+                        source={auditType === 2 ? CHECKED_ICON : UNCHECKED_ICON}
+                        style={{marginRight: 5}}
+                      />
+                      <Text
+                        style={{
+                          color: auditType === 2 ? PRIMARY_BLUE_COLOR : 'gray',
+                        }}>
+                        Physical/In-branch review
+                      </Text>
+                    </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={{
-                      marginVertical: 10,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                    onPress={() => _handleSelect(1)}>
-                    <Image
-                      source={auditType === 1 ? CHECKED_ICON : UNCHECKED_ICON}
-                      style={{marginRight: 5}}
-                    />
-                    <Text
+                    <TouchableOpacity
                       style={{
-                        color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
-                      }}>
-                      Virtual/online review
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                {auditType === 1 ? (
-                  <>
-                    <View style={{flex: 1, marginTop: -30}}>
-                      <View style={{}}>
-                        <TouchableOpacity
-                          onPress={() => {handleBMDropdown() ;setdropDown(false); setRoleDropDown(false)}}
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            backgroundColor: GREY_TEXT_COLOR,
-                            paddingVertical: 10,
-                            paddingHorizontal: 10,
-                            width: '100%',
-                            zIndex: 0,
-                          }}>
-                          <View>
-                            <Text>
-                              {availability === 1
-                                ? 'Branch Manager Available'
-                                : availability === 2
-                                ? 'Branch Manager Unavailable'
-                                : 'Branch Manager Availability *'}
-                            </Text>
-                          </View>
-                          <View
+                        marginVertical: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}
+                      onPress={() => _handleSelect(1)}>
+                      <Image
+                        source={auditType === 1 ? CHECKED_ICON : UNCHECKED_ICON}
+                        style={{marginRight: 5}}
+                      />
+                      <Text
+                        style={{
+                          color: auditType === 1 ? PRIMARY_BLUE_COLOR : 'gray',
+                        }}>
+                        Virtual/online review
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  {auditType === 1 ? (
+                    <>
+                      <View style={{flex: 1, marginTop: -30}}>
+                        <View style={{}}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              handleBMDropdown();
+                              setdropDown(false);
+                              setRoleDropDown(false);
+                            }}
                             style={{
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                            }}>
-                            {bmDropDown ? (
-                              <Image
-                                source={DOWNARROW}
-                                style={{transform: [{rotateZ: '180deg'}]}}
-                              />
-                            ) : (
-                              <Image source={DOWNARROW} />
-                            )}
-                          </View>
-                        </TouchableOpacity>
-                        {bmDropDown ? (
-                          <View
-                            style={{
-                              flex: 1,
-                              flexDirection: 'column',
-                              top: 0,
-                              left: 0,
-                              // marginRight: 160,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
                               backgroundColor: GREY_TEXT_COLOR,
-                              zIndex: 1,
+                              paddingVertical: 10,
+                              paddingHorizontal: 10,
+                              width: '100%',
+                              zIndex: 0,
                             }}>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setBmDropDown(!bmDropDown);
-                                setAvailability(1);
-                              }}
-                              style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>Branch Manager Available</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={() => {
-                                setBmDropDown(!bmDropDown);
-                                setAvailability(2);
-                              }}
-                              style={[styles.drop_down_item, {zIndex: 10}]}>
-                              <Text>Branch Manager Unavailable</Text>
-                            </TouchableOpacity>
-                          </View>
-                        ) : null}
-                      </View>
-                      {availability === 2 ? (
-                        <>
-                          <View
-                            style={{flex: 1, marginTop: 20, marginBottom: 10}}>
-                            <Text style={styles.txt_head}>
-                              Employee Details
-                            </Text>
-                            <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
-                            <TextInput
+                            <View>
+                              <Text>
+                                {availability === 1
+                                  ? 'Branch Manager Available'
+                                  : availability === 2
+                                  ? 'Branch Manager Unavailable'
+                                  : 'Branch Manager Availability *'}
+                              </Text>
+                            </View>
+                            <View
                               style={{
-                                backgroundColor: GREY_TEXT_COLOR,
-                                borderRadius: 5,
-                                paddingVertical: 10,
-                                paddingHorizontal: 10,
-                                marginVertical: 10,
-                              }}
-                              value={employeName}
-                              placeholder="Employee name *"
-                              onFocus={()=> setAllDropDown()}
-                              onChangeText={text => {setEmployeeName(text) }}
-                            />
-                            </TouchableWithoutFeedback>
-                            <TouchableWithoutFeedback onPress={() => setAllDropDown()}>
-                            <TextInput
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              {bmDropDown ? (
+                                <Image
+                                  source={DOWNARROW}
+                                  style={{transform: [{rotateZ: '180deg'}]}}
+                                />
+                              ) : (
+                                <Image source={DOWNARROW} />
+                              )}
+                            </View>
+                          </TouchableOpacity>
+                          {bmDropDown ? (
+                            <View
                               style={{
+                                flex: 1,
+                                flexDirection: 'column',
+                                top: 0,
+                                left: 0,
+                                // marginRight: 160,
                                 backgroundColor: GREY_TEXT_COLOR,
-                                borderRadius: 5,
-                                paddingVertical: 10,
-                                paddingHorizontal: 10,
-                                marginVertical: 5,
-                              }}
-                              value={employeEmail}
-                              placeholder="Employee email *"
-                              onFocus={()=> setAllDropDown()}
-                              onChangeText={text => setEmployeeEmail(text)}
-                            />
-                            </TouchableWithoutFeedback>
-                            <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE), marginTop:7}}>
-                              Enter employee mobile number to share review link via SMS
-                          </Text>
-                          <TextInput
-                                 keyboardType="numeric" 
+                                zIndex: 1,
+                              }}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setBmDropDown(!bmDropDown);
+                                  setAvailability(1);
+                                }}
+                                style={[styles.drop_down_item, {zIndex: 10}]}>
+                                <Text>Branch Manager Available</Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setBmDropDown(!bmDropDown);
+                                  setAvailability(2);
+                                }}
+                                style={[styles.drop_down_item, {zIndex: 10}]}>
+                                <Text>Branch Manager Unavailable</Text>
+                              </TouchableOpacity>
+                            </View>
+                          ) : null}
+                        </View>
+                        {availability === 2 ? (
+                          <>
+                            <View
+                              style={{
+                                flex: 1,
+                                marginTop: 20,
+                                marginBottom: 10,
+                              }}>
+                              <Text style={styles.txt_head}>
+                                Employee Details
+                              </Text>
+
+                              <TextInput
+                                style={{
+                                  backgroundColor: GREY_TEXT_COLOR,
+                                  borderRadius: 5,
+                                  paddingVertical: 10,
+                                  paddingHorizontal: 10,
+                                  marginVertical: 10,
+                                }}
+                                value={employeName}
+                                placeholder="Employee name *"
+                                onFocus={() => setAllDropDown()}
+                                onChangeText={text => {
+                                  setEmployeeName(text);
+                                }}
+                              />
+
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                }}>
+                                <TextInput
+                                  style={{
+                                    backgroundColor: GREY_TEXT_COLOR,
+                                    borderRadius: 5,
+                                    // borderTopLeftRadius: 5,
+                                    // borderBottomLeftRadius: 5,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 10,
+                                    marginVertical: 5,
+                                    width : '60%'
+                                  }}
+                                  value={employeeId}
+                                  placeholder="Employee email *"
+                                  onFocus={() => setAllDropDown()}
+                                  onChangeText={text => 
+                                    handleEmail(text)
+                                  }
+                                />
+                                <Text
+                                  style={{
+                                    backgroundColor: GREY_TEXT_COLOR,
+                                    borderRadius: 5,
+                                    // borderTopRightRadius: 5,
+                                    // borderBottomRightRadius :5,
+                                    paddingVertical: 15,
+                                    paddingHorizontal: 10,
+                                    marginVertical: 10,
+                                  }}>
+                                  @hdfcbank.com
+                                </Text>
+                              </View>
+                              <Text
+                                style={{
+                                  ...styles.txt_head,
+                                  fontSize: normalize(TINY_FONT_SIZE),
+                                  marginTop: 7,
+                                }}>
+                                Enter employee mobile number to share review
+                                link via SMS
+                              </Text>
+                              <TextInput
+                                keyboardType="numeric"
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
                                   borderRadius: 5,
@@ -629,16 +699,16 @@ export default function ScheduleNewAudit(props) {
                                 }}
                                 value={managerMobile}
                                 placeholder="Employee Mobile"
-                                onFocus={()=> setAllDropDown()}
-                                onChangeText={text =>
-                                  setManagerMobile(text)
+                                onFocus={() => setAllDropDown()}
+                                onChangeText={
+                                  text => setManagerMobile(text)
                                   // setEmployeeMobile(text)
                                 }
                               />
-                            {/* <Text style={{...styles.txt_head, top: 15}}>
+                              {/* <Text style={{...styles.txt_head, top: 15}}>
                               Employee Designation
                             </Text> */}
-                            {/* <TouchableOpacity
+                              {/* <TouchableOpacity
                               onPress={() => {handleRoleDropdown(); setBmDropDown(false); setdropDown(false)}}
                               style={{
                                 flexDirection: 'row',
@@ -671,7 +741,7 @@ export default function ScheduleNewAudit(props) {
                                 )}
                               </View>
                             </TouchableOpacity> */}
-                            {/* {roleDropDown ? (
+                              {/* {roleDropDown ? (
                               <View
                                 style={{
                                   flex: 1,
@@ -701,7 +771,7 @@ export default function ScheduleNewAudit(props) {
                                 </TouchableOpacity>
                               </View>
                             ) : null} */}
-                            {/* {employeeRole === 2 ? ( */}
+                              {/* {employeeRole === 2 ? ( */}
                               <TextInput
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
@@ -712,20 +782,32 @@ export default function ScheduleNewAudit(props) {
                                 }}
                                 value={employeeDesignation}
                                 placeholder="Employee designation *"
-                                onFocus={()=> setAllDropDown()}
+                                onFocus={() => setAllDropDown()}
                                 onChangeText={text =>
                                   setEmployeeDesignation(text)
                                 }
                               />
-                            {/* ) : null} */}
-                          </View>
-                        </>
-                      ) : availability === 1 && (<View style={{flex: 1, marginTop: 20, marginBottom: 10}}>
-                         <Text style={{...styles.txt_head, fontSize: normalize(TINY_FONT_SIZE)}}>
-                              Enter BM's mobile number to share review link via SMS
-                          </Text>
-                          <TextInput
-                                 keyboardType="numeric" 
+                              {/* ) : null} */}
+                            </View>
+                          </>
+                        ) : (
+                          availability === 1 && (
+                            <View
+                              style={{
+                                flex: 1,
+                                marginTop: 20,
+                                marginBottom: 10,
+                              }}>
+                              <Text
+                                style={{
+                                  ...styles.txt_head,
+                                  fontSize: normalize(TINY_FONT_SIZE),
+                                }}>
+                                Enter BM's mobile number to share review link
+                                via SMS
+                              </Text>
+                              <TextInput
+                                keyboardType="numeric"
                                 style={{
                                   backgroundColor: GREY_TEXT_COLOR,
                                   borderRadius: 5,
@@ -735,16 +817,16 @@ export default function ScheduleNewAudit(props) {
                                 }}
                                 value={managerMobile}
                                 placeholder="Branch Manager Mobile"
-                                onFocus={()=> setAllDropDown()}
-                                onChangeText={text =>
-                                  setManagerMobile(text)
-                                }
+                                onFocus={() => setAllDropDown()}
+                                onChangeText={text => setManagerMobile(text)}
                               />
-                      </View>)}
-                    </View>
-                  </>
-                ) : null}
-              </View>
+                            </View>
+                          )
+                        )}
+                      </View>
+                    </>
+                  ) : null}
+                </View>
               </View>
               {/* </ScrollView> */}
             </TouchableWithoutFeedback>

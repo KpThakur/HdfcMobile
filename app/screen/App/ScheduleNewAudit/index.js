@@ -30,6 +30,7 @@ export default function Index({ navigation }) {
     const [employeeDesignation, setEmployeeDesignation] = useState();
     const [managerMobile, setManagerMobile] = useState(null);
     const [employeeMobile, setEmployeeMobile] = useState();
+    const [employeeId, setEmployeeID] = useState();
     useEffect(() => {
         // getCityName()
         resetState();
@@ -49,6 +50,7 @@ export default function Index({ navigation }) {
         setEmployeeEmail(null)
         setEmployeeRole(null)
         setEmployeeDesignation(null)
+        setEmployeeID(null)
     }
     const getCityName = async (branch_id) => {
         try {
@@ -136,11 +138,11 @@ export default function Index({ navigation }) {
             ShowAlert('Select Date')
             return false
         }
-        if(date<moment(moment()).format('DD-MM-YYYY'))
-        {
-            ShowAlert("You can't select previous date")
-            return false
-        }
+        // if(date<moment(moment()).format('DD-MM-YYYY'))
+        // {
+        //     ShowAlert("You can't select previous date")
+        //     return false
+        // }
         if(auditType === 1 && !availability )
         {
             ShowAlert("Please select BM availability");
@@ -266,6 +268,8 @@ export default function Index({ navigation }) {
             setManagerMobile={setManagerMobile}
             employeeMobile={employeeMobile}
             setEmployeeMobile={setEmployeeMobile}
+            employeeId={employeeId}
+            setEmployeeID={setEmployeeID}
         />
         </>
     )
