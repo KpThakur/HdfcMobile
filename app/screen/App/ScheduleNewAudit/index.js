@@ -123,11 +123,11 @@ export default function Index({ navigation }) {
             ShowAlert('Select Date')
             return false
         }
-        if(date<moment(moment()).format('DD-MM-YYYY'))
-        {
-            ShowAlert("You can't select previous date")
-            return false
-        }
+        // if(date<moment(moment()).format('DD-MM-YYYY'))
+        // {
+        //     ShowAlert("You can't select previous date")
+        //     return false
+        // }
         
         return true
     }
