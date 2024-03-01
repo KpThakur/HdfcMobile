@@ -279,6 +279,7 @@ const Question = props => {
   };
   const OpenCamera = async () => {
     setLoading(true);
+    
     Geolocation.getCurrentPosition(
       async position => {
         const {latitude, longitude} = position.coords;
@@ -389,7 +390,7 @@ const Question = props => {
         requestCameraPermission();
       },
       {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+    ); 
   };
 
   const renderImage = (item, index) => {
@@ -463,8 +464,19 @@ const Question = props => {
     setshowModalIMG(props.camImg[index]);
     setmaxIMG(!maxIMG);
   };
-  const showModal = () => {
-    setssDropDown(!ssDropDown);
+  const showModal = async () => {
+ 
+    const questionQuantity = await AsyncStorage.getItem('questionQuantity');
+    const value = JSON.parse(questionQuantity);
+    console.log("The question quantity ==>>",value);
+    console.log("The length of camIMG is -->>",props.camImg.length )
+    console.log("the balue ==>>>",question?.question_id===571)
+    if(question?.data?.question_id===571 && props.camImg.length >= value)
+    {
+         Alert.alert("You can't select further images!");
+    }else{
+      setssDropDown(!ssDropDown);
+    }
   };
   // console.log("StartAudit;", startAudit);
  // console.log('question=======>', branchDetailData);

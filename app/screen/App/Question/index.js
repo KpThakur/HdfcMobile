@@ -14,6 +14,7 @@ import {LoadingContext} from '../../../utils/LoadingContext';
 import { LocationContext } from '../../../utils/LocationContext';
 import { requestGeolocationPermission } from '../../../utils/constant';
 import { showMessage } from 'react-native-flash-message';
+import AsyncStorage from '@react-native-community/async-storage';
 const Question = ({navigation, route}) => {
   const [question, setquestion] = useContext(QuestionContext);
   const [remark, setremark] = useState('');
@@ -559,7 +560,9 @@ const Question = ({navigation, route}) => {
     }
   };
   const handleQuality = async text => {
+
     setquality(text);
+    await AsyncStorage.setItem('questionQuantity',JSON.stringify(text));
     const params = {
       audit_id: question?.audit_id,
       question_id: question?.data?.question_id,
