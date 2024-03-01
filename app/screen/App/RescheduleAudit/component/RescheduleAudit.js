@@ -66,11 +66,16 @@ export default function RescheduleAudit(props) {
     setEmployeeRole,
     employeeDesignation,
     setEmployeeDesignation,
+    employeeID,
+    setEmployeeID
   } = props;
   console.log('The bm availabitty ====>>>', editAudit.bm_availability);
-  // useEffect(() => {
-  //     setAvailability((prev) => prev=editAudit.bm_availability)
-  // })
+  useEffect(() => {
+       const value = editAudit.bm_code;
+       const arr = value.split('@');
+       setEmployeeID(arr);
+       console.log("The bm_code is ===>>",arr[0]);
+  },[])
 
   function handleBMDropdown() {
     setBmDropDown(!bmDropDown);
@@ -638,13 +643,13 @@ export default function RescheduleAudit(props) {
                                   paddingVertical: 10,
                                   paddingHorizontal: 10,
                                   marginVertical: 5,
-                                  width : '62%'
+                                  width : '60%'
                                 }}
-                                value={editAudit.emp_email}
+                                value={ employeeID}
                                 placeholder={'Employee email *'}
                                 onFocus={() => setAllDropDown()}
                                 onChangeText={text =>
-                                  seteditAudit({...editAudit, emp_email: text})
+                                  seteditAudit({...editAudit, emp_email: `${text}@hdfcbank.com`})
                                 }
                               />
                               <Text

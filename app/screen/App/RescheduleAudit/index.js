@@ -27,6 +27,7 @@ export default function Index({ navigation }) {
     const [employeEmail, setEmployeeEmail] = useState();
     const [employeeRole, setEmployeeRole] = useState(1);
     const [employeeDesignation, setEmployeeDesignation] = useState();
+    const [employeeID, setEmployeeID] = useState();
     useEffect(() => {
         // getCityName()
         getBranchName(editAudit.city_id)
@@ -195,6 +196,8 @@ export default function Index({ navigation }) {
             setEmployeeRole = {setEmployeeRole}
             employeeDesignation = {employeeDesignation}
             setEmployeeDesignation = {setEmployeeDesignation}
+            employeeID={employeeID}
+            setEmployeeID={setEmployeeID}
         />
         </>
     )
